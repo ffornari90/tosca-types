@@ -3245,7 +3245,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://gist.githubusercontent.com/maricaantonacci/1fb401f3919b53833d96b8f583fbe944/raw/d057ffb27a0968f25208b1f40bafa236618950e7/docker-compose.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/docker-compose.yml
           inputs:
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
@@ -3283,7 +3283,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://gist.githubusercontent.com/maricaantonacci/35777b9d617232d5effb1b7d83790520/raw/a64b17529cbc13d5b0572ce41561a819a85dd4a8/luks.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/luks.yml
           inputs:
             passphrase:  { get_property: [ SELF, passphrase ] }
             mountpoint: { get_property: [ SELF, mountpoint ] }

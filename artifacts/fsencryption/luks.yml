@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars:
+    script_path: /tmp
+
+    #cipher: 'aes-xts-plain64' # set cipher algorithm [default: aes-xts-plain64]
+    #keysize: '256'            # set key size [default: 256]
+    #hash_algorithm: 'sha256'  # set hash algorithm used for key derivation
+    #device: '/dev/vdb'        # set device [default: /dev/vdb]
+    #mountpoint: '/export'     # set mount point [default: /export]
+    #filesystem: 'ext4'        # filesystem [default: ext4]
+    paranoic_mode: false      # enable paranoic mode [default false]
+
+    user_passphrase: "{{passphrase}}" # A passphrase with at least 8 char long alphanumeric string
+
+  tasks:
+  
+    - name: install ntpdate
+      package:
+        name: python-pexpect
+        state: present
+
+    - name: get script
+      get_url:
+        url: 'https://raw.githubusercontent.com/Laniakea-elixir-it/fast-luks/v3.0.2/legacy/fast_luks.sh'
+        dest: '{{ script_path }}/fast_luks.sh'
+        mode: a+x
+
+    - name: get utility script
+      get_url:
+        url: 'https://raw.githubusercontent.com/Laniakea-elixir-it/fast-luks/master/utils/luksctl.sh'
+        dest: '{{ script_path }}/luksctl.sh'
+        mode: a+x
+
+    - name: Encrypt volume
+      expect:
+        timeout: 60
+        command: "{{ script_path }}/fast_luks.sh -c {{cipher}} -k {{keysize}} -a {{hash_algorithm}} -d {{device}} -m {{mountpoint}} -f {{filesystem}} --non-interactive"
+        responses:
+          (.*)passphrase(.*): "{{ user_passphrase }}"
+      when: paranoic_mode|bool == False
+
+
+    - name: Install pv to wipe data
+      apt:
+        name: pv
+        state: present
+      when: paranoic_mode|bool == True
+
+    - name: Encrypt volume
+      expect:
+        timeout: 60
+        command: "{{ script_path }}/fast_luks.sh  -c {{cipher}} -k {{keysize}} -a {{hash_algorithm}} -d {{device}} -m {{mountpoint}} -f {{filesystem}} --paranoid-mode --non-interactive"
+        responses:
+          (.*)passphrase(.*): "{{ user_passphrase }}"
+      when: paranoic_mode|bool == True

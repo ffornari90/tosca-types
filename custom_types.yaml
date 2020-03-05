@@ -1996,7 +1996,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -2040,7 +2040,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
@@ -2086,7 +2086,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/kube_wn_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/kube_wn_install.yaml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2133,7 +2133,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/kube_fe_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/kube_fe_install.yaml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2161,7 +2161,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/nfs_client.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/nfs_client.yml
           inputs:
             remote_path: { get_property: [ SELF, remote_path ] }
             local_path: { get_property: [ SELF, local_path ] }
@@ -2202,7 +2202,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -2231,7 +2231,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -3214,7 +3214,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             image: { get_property: [ SELF, docker_image ] }

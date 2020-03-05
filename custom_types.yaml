@@ -1747,7 +1747,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/k8s/artifacts/mesos/htcondor_client_config.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/htcondor_client_config.yml
           inputs:
             condor_host: { get_property: [ SELF, condor_host ] }
             schedd_name: { get_property: [ SELF, schedd_name ] }
@@ -1863,7 +1863,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/k8s/artifacts/mesos/htcondor_master_config.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/htcondor_master_config.yml
           inputs:
             prepare_only: { get_property: [ SELF, prepare_only ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
@@ -1910,10 +1910,6 @@ node_types:
         type: string
         description: chart name
         required: yes
-      labels:
-        type: list
-        entry_schema:
-          type: string
       repos:
         type: list
         entry_schema:
@@ -1938,22 +1934,18 @@ node_types:
         type: string
         required: no
         default: ""
-      # externalParams:
-      #   type: string
-      #   required: no
-      #   default: "" 
       role_name:
         type: string
         required: no
-        default: dciangot.ansible_role_helmtest
+        default: dodas.helm
     artifacts:
       helm_config_role:
-        file: dciangot.ansible_role_helmtest
+        file: dodas.helm,v2.0.0-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -1963,8 +1955,6 @@ node_types:
             inline_options: { get_property: [ SELF, inline_options ] }
             kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
             repos: { get_property: [ SELF, repos ] }
-            labels: { get_property: [ SELF, labels ] }
-            #externalParams: { get_property: [ SELF, externalParams ] }
 
   tosca.nodes.DODAS.KubeCreate:
     derived_from: tosca.nodes.SoftwareComponent
@@ -1992,22 +1982,21 @@ node_types:
         default: ""
       externalParams:
         type: list
+        required: no
         entry_schema:
           type: string
-        required: no
-        default: []
       role_name:
         type: string
         required: no
-        default: dciangot.ansible_role_kubecreate
+        default: dodas.kubecreate
     artifacts:
       kubecreate_config_role:
-        file: dciangot.ansible_role_kubecreate
+        file: dodas.kubecreate,v2.0.0-rc1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -2043,15 +2032,15 @@ node_types:
       role_name:
         type: string
         required: no
-        default: dciangot.k3s
+        default: dodas.k3s
     artifacts:
       k3s_config_role:
-        file: dciangot.k3s
+        file: dodas.k3s,v2.0.0-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
@@ -2080,9 +2069,13 @@ node_types:
         required: no
         type: string
         default: 1.16.4
+      nodelabel:
+        type: string
+        required: no
+        default: "testme=true"
     artifacts:
       kube_role:
-        file: dciangot.kubernetes,v2.0.0-dodas-rc23
+        file: dodas.kubernetes,v2.0.0-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2093,7 +2086,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/kube_wn_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/kube_wn_install.yml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2101,6 +2094,7 @@ node_types:
             kube_version:  { get_property: [ SELF, kube_version] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
+            nodelabel: { get_property: [ SELF, nodelabel] }
 
   tosca.nodes.DODAS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -2115,17 +2109,17 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
-      #kube_version:
-      #  required: no
-      #  type: string
-      #  default: 1.14.1
+      kube_version:
+        required: no
+        type: string
+        default: 1.16.4
       kube_deploy_dashboard:
         required: no
         type: boolean
         default: true
     artifacts:
       kube_role:
-        file: dciangot.kubernetes,v2.0.0-dodas-rc23
+        file: dodas.kubernetes,v2.0.0-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2139,13 +2133,13 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/kube_fe_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/kube_fe_install.yml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
-            #kube_version:  { get_property: [ SELF, kube_version] }
+            kube_version:  { get_property: [ SELF, kube_version] }
 
   #TO IMPROVE with DIEGO
   tosca.nodes.indigo.NfsClient:
@@ -2167,7 +2161,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/dodas-1.1.0/artifacts/nfs/nfs_slave.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/nfs_client.yml
           inputs:
             remote_path: { get_property: [ SELF, remote_path ] }
             local_path: { get_property: [ SELF, local_path ] }
@@ -2178,20 +2172,20 @@ node_types:
     properties:
       condor_host:
         type: string
-        required: yes
+        required: no
+        default: "DUMMY"
       ccb_address:
         type: string
-        required: yes
+        required: no
+        default: "DUMMY"
       schedd_netinterface:
         type: string
-        required: yes
+        required: no
+        default: "DUMMY"
       k8s_master_ip:
         type: string
         required: yes
       iam_token:
-        type: string
-        required: yes
-      proxycache_docker_image:
         type: string
         required: yes
       htcondor_docker_image:
@@ -2199,14 +2193,16 @@ node_types:
         required: yes
       nfs_master_ip:
         type: string
-        required: yes
+        required: no
+        default: ""
       nfs_path:
         type: string
-        required: yes
+        required: no
+        default: ""
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -2220,12 +2216,10 @@ node_types:
             ccb_address: { get_property: [ SELF, ccb_address ] }
             schedd_netinterface: { get_property: [ SELF, schedd_netinterface ] }
             iam_token: { get_property: [ SELF, iam_token ] }
-            proxycache_docker_image: { get_property: [ SELF, proxycache_docker_image ] }
             htcondor_docker_image: { get_property: [ SELF, htcondor_docker_image ] }
             k8s_master_ip: { get_property: [ SELF, k8s_master_ip ] }
             nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
             nfs_path:  { get_property: [ SELF, nfs_path ] }
-            labels: { get_property: [ SELF, labels ] }
 
   tosca.nodes.DODAS.HelmInstall.Spark:
     derived_from: tosca.nodes.DODAS.HelmInstall
@@ -2237,7 +2231,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/dodas-ts/dodas-templates/master/tosca-types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -2248,7 +2242,6 @@ node_types:
             kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
-            labels: { get_property: [ SELF, labels ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -3221,7 +3214,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             image: { get_property: [ SELF, docker_image ] }

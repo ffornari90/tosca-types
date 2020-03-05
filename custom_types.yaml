@@ -1747,7 +1747,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/artifacts/mesos/htcondor_client_config.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/htcondor_client_config.yml
           inputs:
             condor_host: { get_property: [ SELF, condor_host ] }
             schedd_name: { get_property: [ SELF, schedd_name ] }
@@ -1863,7 +1863,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/artifacts/mesos/htcondor_master_config.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/htcondor_master_config.yml
           inputs:
             prepare_only: { get_property: [ SELF, prepare_only ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }

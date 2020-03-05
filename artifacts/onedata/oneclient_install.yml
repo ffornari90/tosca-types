@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    URL_BASE: http://packages.onedata.org
+  tasks:
+  - name: Download REL 7 Repo file
+    get_url: url={{URL_BASE}}/yum/centos/7x/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: (ansible_distribution == "CentOS" or ansible_distribution == "ScientificLinux") and ansible_distribution_major_version == "7"
+    
+  - name: Download REL 6 Repo file
+    get_url: url={{URL_BASE}}/yum/scientific/6x/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: (ansible_distribution == "CentOS" or ansible_distribution == "ScientificLinux") and ansible_distribution_major_version == "6"
+    
+  - name: Download Fedora Repo file
+    get_url: url={{URL_BASE}}/yum/fedora/{{ansible_distribution_version}}/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: ansible_distribution == "Fedora" and (ansible_distribution_version == "21" or ansible_distribution_version == "23") 
+    
+  - name: Ubuntu add repo key
+    apt_key: url={{URL_BASE}}/onedata.gpg.key state=present
+    when: ansible_distribution == "Ubuntu"
+    
+  - name: Ubuntu 14 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/trusty trusty main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
+
+  - name: Ubuntu 15 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/wily wily main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "15"
+
+  - name: Ubuntu 16 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/xenial xenial main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16"
+
+  - name: Apt-get update Ubuntu
+    apt: update_cache=yes
+    when: ansible_distribution == "Ubuntu"
+    ignore_errors: yes
+
+  - name: Install Ubuntu oneclient package
+    apt: pkg=oneclient
+    when: ansible_distribution == "Ubuntu"
+    
+  - name: Install REL oneclient package
+    yum: name=oneclient enablerepo=onedata
+    when: ansible_os_family == "RedHat"
+    
+  - name: Install Ubuntu oneclient package
+    apt: pkg=libtbb2 state=latest only_upgrade=yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Create {{ onedata_location }} directory
+    file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
+
+  - name: Mount onedata path at {{ onedata_location }} using as provider {{ oneprovider_host[0] }}
+    shell: oneclient --token {{ onedata_token }} --host {{ oneprovider_host[0] }} --insecure {{ onedata_location }} creates={{ onedata_location }}/spaces
+    become: no

@@ -18,6 +18,12 @@
         state: directory
         mode: 0755
 
+    - name: Create .env file with useful variables
+      copy:
+        dest: "/opt/{{ project_name }}/.env"
+        content: |
+          HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}
+
     - name:
       get_url:
         url: "{{ docker_compose_file_url }}"

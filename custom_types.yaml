@@ -2179,6 +2179,8 @@ node_types:
         packages: 
             type: list
             required: no
+            entry_schema:
+              type: string
             default: []
         
         role_name:
@@ -2225,6 +2227,8 @@ node_types:
         cvmfs_repositories:
             type: list     
             required: no
+            entry_schema:
+              type: string
             default: [cms.cern.ch]
 
         role_name:

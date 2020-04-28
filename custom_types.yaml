@@ -1940,7 +1940,7 @@ node_types:
         default: dodas.helm
     artifacts:
       helm_config_role:
-        file: dodas.helm,v2.0.0-rc2
+        file: dodas.helm,v2.0.0-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2376,6 +2376,10 @@ node_types:
         type: string
         required: no
         default: ""
+      jupyter_token:
+        type: string
+        required: no
+        default: testme
     interfaces:
       Standard:
         start:
@@ -2390,6 +2394,7 @@ node_types:
             kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
+            jupyter_token: { get_property: [ SELF, jupyter_token ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode

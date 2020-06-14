@@ -2176,11 +2176,13 @@ node_types:
             required: no
             default: python3-pip
 
-        packages: 
+        packages:          
             type: list
             required: no
             entry_schema:
-              type: string
+              type: map
+              entry_schema:
+                type: string
             default: []
         
         role_name:
@@ -2237,7 +2239,7 @@ node_types:
             default: dodas.ml_infn
 
     artifacts:
-        jupytervm_config_role:
+        ml_infn_config_role:
             file: dodas.ml_infn
             type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -2251,6 +2253,67 @@ node_types:
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
             cvmfs_repositories: { get_property: [ SELF, cvmfs_repositories ] }
 
+  tosca.nodes.DODAS.cygno:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+        cygno_user:
+            type: string
+            required: no
+            default: cloudadm
+            
+        jupyter_port:
+            type: string
+            required: no
+            default: 8888
+        jupyter_token:
+            type: string
+            required: yes
+            default: testme
+            
+        role_name:
+            type: string
+            required: no
+            default: dodas.cygno
+
+    artifacts:
+        cygno_config_role:
+            file: dodas.cygno
+            type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            cygno_user: { get_property: [ SELF, cygno_user ] }
+            jupyter_port: { get_property: [ SELF, jupyter_port ] }
+            jupyter_token: { get_property: [ SELF, jupyter_token ] }
+            
+  tosca.nodes.DODAS.root_cern:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+        centos_url:
+            type: string
+            required: no
+            default: https://root.cern/download/root_v6.20.04.Linux-centos7-x86_64-gcc4.8.tar.gz
+            
+        role_name:
+            type: string
+            required: no
+            default: dodas.root_cern
+
+    artifacts:
+        root_cern_config_role:
+            file: dodas.root_cern
+            type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            centos_url: { get_property: [ SELF, centos_url ] }
+            
   tosca.nodes.DODAS.JupyterVM:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -3459,4 +3522,3 @@ policy_types:
       subscription_id:
         required: false
         type: string
-

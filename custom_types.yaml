@@ -2166,6 +2166,34 @@ node_types:
             remote_path: { get_property: [ SELF, remote_path ] }
             local_path: { get_property: [ SELF, local_path ] }
             server_host: { get_property: [ SELF, server_host ] }
+            
+  # TO REMOVE. TEMP WORKAROUND TO AVOID PaaS Orchestrator parser issue          
+  tosca.nodes.DODAS.pip_manager_cygno:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+
+        pip_package:
+            type: string
+            required: no
+            default: python3-pip
+
+        role_name:
+            type: string
+            required: no
+            default: dodas.pip_manager_cygno
+
+    artifacts:
+        pip_manager_cygno_config_role:
+            file: dodas.pip_manager_cygno
+            type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            pip_package: { get_property: [ SELF, pip_package ] }
+       
 
   tosca.nodes.DODAS.pip_manager:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2191,7 +2219,7 @@ node_types:
             default: dodas.pip_manager
 
     artifacts:
-        jupytervm_config_role:
+        pip_manager_config_role:
             file: dodas.pip_manager
             type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:

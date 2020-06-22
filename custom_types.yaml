@@ -3465,6 +3465,7 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, docker_name ] }
             image: { get_property: [ SELF, docker_image ] }
             tag: { get_property: [ SELF, docker_tag ] }
             ports: { get_property: [ SELF, docker_ports ] }

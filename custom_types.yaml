@@ -3435,7 +3435,7 @@ node_types:
         type: string
         required: no
         default: indigo-dc.ansible_role_docker_run
-      docker_name:
+      docker_appname:
         type: string
         required: no
         default: ubuntu
@@ -3465,7 +3465,7 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
-            name: { get_property: [ SELF, docker_name ] }
+            appname: { get_property: [ SELF, docker_appname ] }
             image: { get_property: [ SELF, docker_image ] }
             tag: { get_property: [ SELF, docker_tag ] }
             ports: { get_property: [ SELF, docker_ports ] }

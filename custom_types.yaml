@@ -3435,6 +3435,10 @@ node_types:
         type: string
         required: no
         default: indigo-dc.ansible_role_docker_run
+      docker_name:
+        type: string
+        required: no
+        default: ubuntu
       docker_image:
         type: string
         required: no

@@ -137,7 +137,7 @@ capability_types:
   tosca.capabilities.indigo.ClusterMaster:
     derived_from: tosca.capabilities.Container
 
-  tosca.capabilities.indigo.MesosMaster:        
+  tosca.capabilities.indigo.MesosMaster:
     derived_from: tosca.capabilities.indigo.ClusterMaster
 
   tosca.capabilities.indigo.KubernetesMaster:
@@ -549,7 +549,7 @@ node_types:
             export_dir: { get_property: [ SELF, export_dir ] }
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
- 
+
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
     metadata:
@@ -733,7 +733,7 @@ node_types:
         default: 'DIRECT'
         required: false
       refdata_cvmfs_proxy_port:
-        type: integer 
+        type: integer
         description: CernVM-FS proxy port
         default: 80
         required: false
@@ -1409,8 +1409,8 @@ node_types:
       marathon_port:
         required: no
         type: integer
-        default: 8443      
-      tensorflow_image: 
+        default: 8443
+      tensorflow_image:
         required: no
         type: string
         default: 'tensorflow/tensorflow:latest-gpu'
@@ -1439,7 +1439,7 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/start_tensorflow.yml
           inputs:
             marathon_username: { get_property: [ SELF, marathon_username ] }
-            marathon_password: { get_property: [ SELF, marathon_password ] }      
+            marathon_password: { get_property: [ SELF, marathon_password ] }
             marathon_protocol: { get_property: [ SELF, marathon_protocol ] }
             marathon_host:  { get_property: [ SELF, marathon_host ] }
             marathon_port: { get_property: [ SELF, marathon_port ] }
@@ -1497,11 +1497,11 @@ node_types:
       mesos_username:
         type: string
         required: no
-        default: 'admin'       
+        default: 'admin'
       mesos_password:
         type: string
         required: no
-        default: 'admin'         
+        default: 'admin'
       marathon_enable_ssl:
         type: boolean
         required: no
@@ -1587,7 +1587,7 @@ node_types:
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             marathon_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
-            chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }  
+            chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
@@ -1664,11 +1664,11 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
-      oneclient_token: 
+      oneclient_token:
         type: string
         required: no
         default: 'dummy'
-      oneprovider_name: 
+      oneprovider_name:
         type: string
         required: no
         default: 'dummy'
@@ -1698,7 +1698,7 @@ node_types:
             cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
-            zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
             proxy_cache_manager: { get_property: [ SELF, cms_proxycache_token_manager ] }
             proxy_tts: { get_property: [ SELF, watts_endpoint ] }
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
@@ -1715,23 +1715,23 @@ node_types:
 
   tosca.nodes.indigo.HTCondorClient:
     derived_from: tosca.nodes.SoftwareComponent
-    properties:  
+    properties:
       condor_host:
         type: string
         required: yes
-        default: DUMMY 
+        default: DUMMY
       schedd_name:
         type: string
         required: yes
-        default: DUMMY 
+        default: DUMMY
       iam_client_id:
         type: string
         required: yes
-        default: DUMMY       
+        default: DUMMY
       iam_client_secret:
         type: string
         required: yes
-        default: DUMMY 
+        default: DUMMY
       iam_access_token:
         type: string
         required: yes
@@ -1872,7 +1872,7 @@ node_types:
             hostname_schedd:  { get_property: [ SELF, hostname_schedd ] }
             condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
-            zookeeper_host_list: { get_property: [ SELF, master_ips ] } 
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
             lb_peers: { get_property: [ SELF, lb_ips ] }
             htcondor_config_schedd_ip_pub: { get_property: [ SELF, htcondor_config_schedd_ip_pub ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
@@ -1934,13 +1934,17 @@ node_types:
         type: string
         required: no
         default: ""
+      helm_version:
+        type: string
+        required: no
+        default: "v2"
       role_name:
         type: string
         required: no
         default: dodas.helm
     artifacts:
       helm_config_role:
-        file: dodas.helm,v2.0.0-rc3
+        file: dodas.helm,v2.0.0-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1954,6 +1958,7 @@ node_types:
             values_url: { get_property: [ SELF, values_url ] }
             inline_options: { get_property: [ SELF, inline_options ] }
             kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
             repos: { get_property: [ SELF, repos ] }
 
   tosca.nodes.DODAS.KubeCreate:
@@ -2005,6 +2010,28 @@ node_types:
             inline_options: { get_property: [ SELF, inline_options ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalParams: { get_property: [ SELF, externalParams ] }
+
+  tosca.nodes.DODAS.KubeCreate.Grafana:
+    derived_from: tosca.nodes.DODAS.KubeCreate
+    properties:
+      admin_pwd:
+        type: string
+        description: admin password for Grafana
+        required: no
+        default: "testme"
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name: { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, name ] }
+            namespace:   { get_property: [ SELF, namespace ] }
+            url: { get_property: [ SELF, url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            manifest_file: { get_property: [ SELF, manifest_file ] }
+            externalParams: { get_property: [ SELF, externalParams ] }
+            admin_pwd:  { get_property: [ SELF, admin_pwd ] }
 
   # ORCHESTRATORS
   ############################################################
@@ -2068,14 +2095,14 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.16.4
+        default: 1.17.0
       nodelabel:
         type: string
         required: no
         default: "testme=true"
     artifacts:
       kube_role:
-        file: dodas.kubernetes,v2.0.0-rc5
+        file: dodas.kubernetes,v2.0.0-rc15
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2112,14 +2139,14 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.16.4
+        default: 1.17.0
       kube_deploy_dashboard:
         required: no
-        type: boolean
-        default: true
+        type: string
+        default: k8s
     artifacts:
       kube_role:
-        file: dodas.kubernetes,v2.0.0-rc5
+        file: dodas.kubernetes,v2.0.0-rc15
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2136,10 +2163,12 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/kube_fe_install.yaml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            kube_api_server_public: { get_attribute: [ HOST, public_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
             kube_version:  { get_property: [ SELF, kube_version] }
+            kube_deploy_dashboard: { get_property: [ SELF, kube_deploy_dashboard ] }
 
   #TO IMPROVE with DIEGO
   tosca.nodes.indigo.NfsClient:
@@ -2147,10 +2176,10 @@ node_types:
     properties:
       remote_path:
         type: string
-        required: yes 
+        required: yes
       local_path:
         type: string
-        required: yes 
+        required: yes
       server_host:
         type: string
         required: yes
@@ -2204,7 +2233,7 @@ node_types:
             required: no
             default: python3-pip
 
-        packages:          
+        packages:
             type: list
             required: no
             entry_schema:
@@ -2212,7 +2241,7 @@ node_types:
               entry_schema:
                 type: string
             default: []
-        
+
         role_name:
             type: string
             required: no
@@ -2239,7 +2268,7 @@ node_types:
             type: string
             required: no
             default: cloudadm
-            
+
         jupyter_port:
             type: string
             required: no
@@ -2248,14 +2277,14 @@ node_types:
             type: string
             required: yes
             default: testme
- 
+
         ml_test_url:
             type: string
             required: no
             default: ""
 
         cvmfs_repositories:
-            type: list     
+            type: list
             required: no
             entry_schema:
               type: string
@@ -2288,7 +2317,7 @@ node_types:
             type: string
             required: no
             default: cloudadm
-            
+
         jupyter_port:
             type: string
             required: no
@@ -2297,7 +2326,7 @@ node_types:
             type: string
             required: yes
             default: testme
-            
+
         role_name:
             type: string
             required: no
@@ -2316,7 +2345,7 @@ node_types:
             cygno_user: { get_property: [ SELF, cygno_user ] }
             jupyter_port: { get_property: [ SELF, jupyter_port ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
-            
+
   tosca.nodes.DODAS.root_cern:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -2324,7 +2353,7 @@ node_types:
             type: string
             required: no
             default: https://root.cern/download/root_v6.20.04.Linux-centos7-x86_64-gcc4.8.tar.gz
-            
+
         role_name:
             type: string
             required: no
@@ -2341,7 +2370,7 @@ node_types:
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             centos_url: { get_property: [ SELF, centos_url ] }
-            
+
   tosca.nodes.DODAS.JupyterVM:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -2378,7 +2407,7 @@ node_types:
             type: string
             required: no
             default: ""
-        s3_mount_prefix: 
+        s3_mount_prefix:
             type: string
             required: no
             default: ""
@@ -2400,7 +2429,7 @@ node_types:
             jupyter_port: { get_property: [ SELF, jupyter_port ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
             persistence: { get_property: [ SELF, persistence ] }
-            s3_access_id: { get_property: [ SELF, s3_access_id ] } 
+            s3_access_id: { get_property: [ SELF, s3_access_id ] }
             s3_access_key: { get_property: [ SELF, s3_access_key ] }
             s3_bucket: { get_property: [ SELF, s3_bucket ] }
             s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
@@ -2486,6 +2515,29 @@ node_types:
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
+
+  tosca.nodes.DODAS.HelmInstall.Grafana:
+    derived_from: tosca.nodes.DODAS.HelmInstall
+    properties:
+      prometheus_host:
+        type: string
+        required: no
+        default: "localhost"
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            values_url: { get_property: [ SELF, values_url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
+            repos: { get_property: [ SELF, repos ] }
+            prometheus_host: { get_property: [ SELF, prometheus_host ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -2663,7 +2715,7 @@ node_types:
       marathon_password:
         type: string
         required: yes
-      enable_consul_sd: 
+      enable_consul_sd:
         type: boolean
         required: false
         default: true
@@ -2721,7 +2773,7 @@ node_types:
         type: string
         required: false
         default: ''
-      spark_swift_auth_url: 
+      spark_swift_auth_url:
         type: string
         required: false
         default: ''
@@ -2729,7 +2781,7 @@ node_types:
         type: string
         required: false
         default: '8080'
-      spark_swift_region: 
+      spark_swift_region:
         type: string
         required: false
         default: ''
@@ -2737,23 +2789,23 @@ node_types:
         type: string
         required: false
         default: ''
-      spark_swift_username: 
+      spark_swift_username:
         type: string
         required: false
         default: ''
-      spark_swift_password: 
+      spark_swift_password:
         type: string
         required: false
         default: ''
-      spark_swift_provider: 
+      spark_swift_provider:
         type: string
         required: false
         default: 'Test'
-      spark_cores_max: 
+      spark_cores_max:
         type: integer
         required: false
         default: '-1'
-      spark_executor_cores: 
+      spark_executor_cores:
         type: integer
         required: false
         default: '-1'
@@ -2761,11 +2813,11 @@ node_types:
         type: scalar-unit.size
         required: false
         default: '0 GB'
-      spark_driver_mem: 
+      spark_driver_mem:
         type: scalar-unit.size
         required: false
         default: '0 GB'
-      spark_driver_cores: 
+      spark_driver_cores:
         type: integer
         required: false
         default: '-1'
@@ -3079,7 +3131,7 @@ node_types:
       node_name:
         required: no
         type: string
-        default: "AUTO" 
+        default: "AUTO"
       kube_network:
         required: no
         type: string
@@ -3186,7 +3238,7 @@ node_types:
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
-            
+
 
   tosca.nodes.indigo.OnedataSpace:
     derived_from: tosca.nodes.Root
@@ -3340,7 +3392,7 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        configure: 
+        configure:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/deepaas/deepaas_cont.yml
           inputs:
             deepaas_dockerhub_img: { get_property: [ SELF, dockerhub_img ] }
@@ -3394,7 +3446,7 @@ node_types:
             enable_security: { get_property: [ SELF, enable_security ] }
             elastic_password: { get_property: [ SELF, elastic_password ] }
             kibana_system_password: { get_property: [ SELF, kibana_system_password ] }
-   
+
   tosca.nodes.indigo.Kibana:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -3446,7 +3498,7 @@ node_types:
       docker_options:
         type: string
         required: no
-        default: "" 
+        default: ""
       docker_command:
         type: string
         required: no
@@ -3501,18 +3553,18 @@ node_types:
         type: string
         required: no
         default: aes-xts-plain64
-      keysize: 
+      keysize:
         type: integer
         required: no
         default: 256            # set key size [default: 256]
-      hash_algorithm: 
+      hash_algorithm:
         type: string
         required: no
         default: 'sha256'  # set hash algorithm used for key derivation
       filesystem:
         type: string
         required: no
-        default: 'ext4'      
+        default: 'ext4'
       device:
         type: string
         required: no

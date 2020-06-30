@@ -23,4 +23,8 @@
           { option: "--insecure-port", value: "8080" },
           { option: "--token-auth-file", value: "/etc/kubernetes/pki/auth" },
         ]
-      kube_deploy_dashboard: true
+      kube_deploy_dashboard: k8s
+      network_manager: flannel
+      nginx_ingress:
+        enabled: false
+        nodePort: 31443

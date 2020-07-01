@@ -2195,8 +2195,8 @@ node_types:
             remote_path: { get_property: [ SELF, remote_path ] }
             local_path: { get_property: [ SELF, local_path ] }
             server_host: { get_property: [ SELF, server_host ] }
-            
-  # TO REMOVE. TEMP WORKAROUND TO AVOID PaaS Orchestrator parser issue          
+
+  # TO REMOVE. TEMP WORKAROUND TO AVOID PaaS Orchestrator parser issue
   tosca.nodes.DODAS.pip_manager_cygno:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -2222,7 +2222,7 @@ node_types:
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             pip_package: { get_property: [ SELF, pip_package ] }
-       
+
 
   tosca.nodes.DODAS.pip_manager:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2515,29 +2515,6 @@ node_types:
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
-
-  tosca.nodes.DODAS.HelmInstall.Grafana:
-    derived_from: tosca.nodes.DODAS.HelmInstall
-    properties:
-      prometheus_host:
-        type: string
-        required: no
-        default: "localhost"
-    interfaces:
-      Standard:
-        start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
-          inputs:
-            role_name:  { get_property: [ SELF, role_name ] }
-            name: { get_property: [ SELF, name ] }
-            chart: { get_property: [ SELF, chart ] }
-            values_file: { get_property: [ SELF, values_file ] }
-            values_url: { get_property: [ SELF, values_url ] }
-            inline_options: { get_property: [ SELF, inline_options ] }
-            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
-            repos: { get_property: [ SELF, repos ] }
-            prometheus_host: { get_property: [ SELF, prometheus_host ] }
-            helm_version: { get_property: [ SELF, helm_version ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode

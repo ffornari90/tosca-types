@@ -3521,6 +3521,7 @@ node_types:
           inputs:
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
 
   tosca.nodes.indigo.FSEncrypt:
     derived_from: tosca.nodes.SoftwareComponent

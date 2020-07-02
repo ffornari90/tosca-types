@@ -3506,7 +3506,6 @@ node_types:
         type: map
         entry_schema:
           type: string
-        default: {}
       project_name:
         type: string
         required: yes

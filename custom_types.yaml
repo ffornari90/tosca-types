@@ -3501,6 +3501,12 @@ node_types:
       docker_compose_file_url:
         type: string
         required: yes
+      environment_variables:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+        default: {}
       project_name:
         type: string
         required: yes

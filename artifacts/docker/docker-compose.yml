@@ -24,6 +24,10 @@
         content: |
           HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}
 
+    - name: debug
+      debug: 
+        var: environment_variables
+
     - name:
       get_url:
         url: "{{ docker_compose_file_url }}"

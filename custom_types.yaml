@@ -3503,9 +3503,12 @@ node_types:
         required: yes
       environment_variables:
         required: no
-        type: map
+        default: []
+        type: list
         entry_schema:
-          type: string
+          type: map
+          entry_schema:
+            type: string
       project_name:
         type: string
         required: yes

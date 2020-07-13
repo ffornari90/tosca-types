@@ -24,6 +24,16 @@
         content: |
           HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}
 
+    - name: debug
+      debug: 
+        var: environment_variables
+
+    - name: Set environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+      with_dict: "{{ environment_variables }}"
+
     - name:
       get_url:
         url: "{{ docker_compose_file_url }}"

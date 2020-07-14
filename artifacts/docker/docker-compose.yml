@@ -33,6 +33,7 @@
       lineinfile:
         path: /opt/{{ project_name }}/.env
         line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
+        create: yes
 
     - name:
       get_url:

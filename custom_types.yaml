@@ -3519,7 +3519,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose.yml
+          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose.yml
           inputs:
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }

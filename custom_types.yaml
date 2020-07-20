@@ -3455,6 +3455,14 @@ node_types:
         type: string
         required: no
         default: ""
+      environment_variables:
+        required: no
+        default: []
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
     artifacts:
       helm_config_role:
         file: indigo-dc.ansible_role_docker_run
@@ -3470,6 +3478,7 @@ node_types:
             tag: { get_property: [ SELF, docker_tag ] }
             ports: { get_property: [ SELF, docker_ports ] }
             command: { get_property: [ SELF, docker_command ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
 
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent

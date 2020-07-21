@@ -18,11 +18,22 @@
         state: directory
         mode: 0755
 
-    - name: Create .env file with useful variables
-      copy:
-        dest: "/opt/{{ project_name }}/.env"
-        content: |
-          HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}
+    - name: debug
+      debug: 
+        var: environment_variables
+
+    - name: Set environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+        create: yes
+      with_dict: "{{ environment_variables }}"
+
+    - name: Add HOST_PUBLIC_IP environment variable
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
+        create: yes
 
     - name:
       get_url:

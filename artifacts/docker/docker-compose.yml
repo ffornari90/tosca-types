@@ -10,7 +10,7 @@
         name: indigo-dc.docker
 
     - name: "Install docker-compose"
-      pip: name="docker-compose" state="present"
+      pip: name="docker-compose" state="present" version="{{ docker_compose_version }}"
 
     - name: "create directory path to store the configuration files"
       file:

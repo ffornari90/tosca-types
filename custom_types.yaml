@@ -2488,6 +2488,7 @@ node_types:
             k8s_master_ip: { get_property: [ SELF, k8s_master_ip ] }
             nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
             nfs_path:  { get_property: [ SELF, nfs_path ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
 
   tosca.nodes.DODAS.HelmInstall.Spark:
     derived_from: tosca.nodes.DODAS.HelmInstall
@@ -2515,6 +2516,7 @@ node_types:
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -3463,7 +3465,11 @@ node_types:
       role_name:
         type: string
         required: no
-        default: cloud-pg.ansible_role_docker_run
+        default: indigo-dc.ansible_role_docker_run
+      docker_appname:
+        type: string
+        required: no
+        default: ubuntu
       docker_image:
         type: string
         required: no
@@ -3472,17 +3478,25 @@ node_types:
         type: string
         required: no
         default: latest
-      docker_options:
+      docker_ports:
         type: string
         required: no
-        default: ""
+        default: "80" 
       docker_command:
         type: string
         required: no
         default: ""
+      environment_variables:
+        required: no
+        default: []
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
     artifacts:
       helm_config_role:
-        file: cloud-pg.ansible_role_docker_run
+        file: indigo-dc.ansible_role_docker_run
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -3490,10 +3504,12 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
+            appname: { get_property: [ SELF, docker_appname ] }
             image: { get_property: [ SELF, docker_image ] }
             tag: { get_property: [ SELF, docker_tag ] }
-            options: { get_property: [ SELF, docker_options ] }
+            ports: { get_property: [ SELF, docker_ports ] }
             command: { get_property: [ SELF, docker_command ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
 
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent

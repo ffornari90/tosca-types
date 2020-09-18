@@ -3543,7 +3543,7 @@ node_types:
           inputs:
             project_name:  { get_property: [ SELF, project_name ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
-        start:	
+        start:
           implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }

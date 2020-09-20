@@ -3568,7 +3568,7 @@ node_types:
             project_name:  { get_property: [ SELF, project_name ] }
             owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
             nagios_hostname: { get_property: [ SELF, nagios_hostname ] }
-            duplicati_hostname { get_property: [ SELF, duplicati_hostname ] }
+            duplicati_hostname: { get_property: [ SELF, duplicati_hostname ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml

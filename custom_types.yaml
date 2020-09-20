@@ -3553,9 +3553,15 @@ node_types:
   tosca.nodes.indigo.DockerCompose.CloudStorageService:
     derived_from: tosca.nodes.indigo.DockerCompose
     properties:
-      owncloud_hostname: { concat: [ "oc.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
-      nagios_hostname: { concat: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
-      duplicati_hostname: { concat: [ "backup.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      owncloud_hostname:
+        type: string
+        default: { concat: [ "oc.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      nagios_hostname:
+        type: string
+        default: { concat: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      duplicati_hostname:
+        type: string
+        default: { concat: [ "backup.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
     artifacts:
       docker_role:
         file: indigo-dc.docker

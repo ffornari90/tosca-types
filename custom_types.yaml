@@ -3555,13 +3555,13 @@ node_types:
     properties:
       owncloud_hostname:
         type: string
-        default: { concat: [ "oc.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+        #default: { concat: [ "oc.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
       nagios_hostname:
         type: string
-        default: { concat: [ "nagios.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+        #default: { concat: [ "nagios.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
       duplicati_hostname:
         type: string
-        default: { concat: [ "backup.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+        #default: { concat: [ "backup.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
     artifacts:
       docker_role:
         file: indigo-dc.docker

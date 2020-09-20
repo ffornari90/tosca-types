@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+
+    - name: "create directory path to store the configuration files"
+      file:
+        path: "/opt/{{ project_name }}"
+        state: directory
+        mode: 0755
+
+    - name: debug
+      debug: 
+        var: environment_variables
+
+    - name: Set environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+        create: yes
+      with_dict: "{{ environment_variables }}"
+
+    - name: Add HOST_PUBLIC_IP and additional environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+        create: yes
+      with_items:
+         - { key: "OWNCLOUD_HOSTNAME", value: "{{ owncloud_hostname }}" }
+         - { key: "NAGIOS_HOSTNAME", value: "{{ nagios_hostname }}" }
+         - { key: "DUPLICATY_HOSTNAME", value: "{{ duplicaty_hostname }}" }
+         - { key: "HOST_PUBLIC_IP" , value: "{{ IM_NODE_PUBLIC_IP }}" }
+

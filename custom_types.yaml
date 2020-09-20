@@ -3550,6 +3550,33 @@ node_types:
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
 
+  tosca.nodes.indigo.DockerCompose.CloudStorageService:
+    derived_from: tosca.nodes.indigo.DockerCompose
+    properties:
+      owncloud_hostname: { concat: [ "oc.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      nagios_hostname: { concat: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      duplicati_hostname: { backup: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/cloud-storage_configure.yml
+          inputs:
+            project_name:  { get_property: [ SELF, project_name ] }
+            owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
+            nagios_hostname: { get_property: [ SELF, nagios_hostname ] }
+            duplicati_hostname { get_property: [ SELF, duplicati_hostname ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          inputs:
+            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
+            docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
+            project_name:  { get_property: [ SELF, project_name ] }
+
 
   tosca.nodes.indigo.FSEncrypt:
     derived_from: tosca.nodes.SoftwareComponent

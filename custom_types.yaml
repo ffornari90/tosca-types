@@ -3555,7 +3555,7 @@ node_types:
     properties:
       owncloud_hostname: { concat: [ "oc.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
       nagios_hostname: { concat: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
-      duplicati_hostname: { backup: [ "nagios.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      duplicati_hostname: { concat: [ "backup.",  get_attribute: [ server, public_address, 0 ], ".myip.cloud.infn.it" ] }
     artifacts:
       docker_role:
         file: indigo-dc.docker

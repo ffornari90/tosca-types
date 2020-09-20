@@ -28,6 +28,6 @@
       with_items:
          - { key: "OWNCLOUD_HOSTNAME", value: "{{ owncloud_hostname }}" }
          - { key: "NAGIOS_HOSTNAME", value: "{{ nagios_hostname }}" }
-         - { key: "DUPLICATY_HOSTNAME", value: "{{ duplicaty_hostname }}" }
+         - { key: "DUPLICATI_HOSTNAME", value: "{{ duplicati_hostname }}" }
          - { key: "HOST_PUBLIC_IP" , value: "{{ IM_NODE_PUBLIC_IP }}" }
 

@@ -3552,20 +3552,26 @@ node_types:
 
 
   tosca.nodes.indigo.S3Bucket:
-    derived_from: tosca.nodes.Root
+    derived_from: tosca.nodes.SoftwareComponent
     properties:
       bucket_name:
         type: string
-      mode: 
-        type: string
-        default: create
       aws_access_key:
         type: string
       aws_secret_key:
         type: string
       s3_url: 
         type: string
-    
+    interfaces:
+      Standard:
+        create:
+          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
+          inputs:
+            bucket:  { get_property: [ SELF, bucket_name ] }
+            mode: { get_property: [ SELF, mode ] }
+            aws_access_key: { get_property: [ SELF, aws_access_key ]}
+            aws_secret_key: { get_property: [ SELF, aws_secret_key ]}
+            s3_url: { get_property: [ SELF, s3_url ]}
 
   tosca.nodes.indigo.DockerCompose.CloudStorageService:
     derived_from: tosca.nodes.indigo.DockerCompose

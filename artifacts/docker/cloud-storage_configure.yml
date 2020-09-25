@@ -31,5 +31,8 @@
          - { key: "OWNCLOUD_HOSTNAME", value: "{{ owncloud_hostname }}" }
          - { key: "NAGIOS_HOSTNAME", value: "{{ nagios_hostname }}" }
          - { key: "DUPLICATI_HOSTNAME", value: "{{ duplicati_hostname }}" }
-         - { key: "HOST_PUBLIC_IP" , value: "{{ IM_NODE_PUBLIC_IP }}" }
-
+         - { key: "HOST_PUBLIC_IP", value: "{{ IM_NODE_PUBLIC_IP }}" }
+         - { key: "S3_ENDPOINT", value: "{{ s3_endpoint }}"
+         - { key: "S3_SECRET_KEY", value: "{{ s3_bucket }}"
+         - { key: "S3_ACCESS_KEY", value: "{{ s3_access_key }}"
+         - { key: "S3_BUCKET", value: "{{ s3_secret_key }}"

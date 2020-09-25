@@ -3562,6 +3562,12 @@ node_types:
       duplicati_hostname:
         type: string
         #default: { concat: [ "backup.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      traefik_version:
+        type: version
+        default: 2.3
+      owncloud_version:
+        type: version
+        default: 10
     artifacts:
       docker_role:
         file: indigo-dc.docker
@@ -3575,6 +3581,8 @@ node_types:
             owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
             nagios_hostname: { get_property: [ SELF, nagios_hostname ] }
             duplicati_hostname: { get_property: [ SELF, duplicati_hostname ] }
+            traefik_version: { get_property: [ SELF, traefik_version ] }
+            owncloud_version: { get_property: [ SELF, owncloud_version ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
           implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml

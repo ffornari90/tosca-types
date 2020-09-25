@@ -3563,11 +3563,11 @@ node_types:
         type: string
         #default: { concat: [ "backup.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
       traefik_version:
-        type: version
-        default: 2.3
+        type: string
+        default: "'2.3'"
       owncloud_version:
-        type: version
-        default: 10
+        type: string
+        default: "'10'"
     artifacts:
       docker_role:
         file: indigo-dc.docker

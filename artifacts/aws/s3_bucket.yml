@@ -9,7 +9,7 @@
 
     - name: "Create bucket"
       aws_s3:
-        bucket: "{{ bucket }}"
+        bucket: "{{ bucket_name }}"
         mode: create
         aws_access_key: "{{ aws_access_key  }}"
         aws_secret_key: "{{ aws_secret_key  }}"

@@ -3568,7 +3568,6 @@ node_types:
           implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
           inputs:
             bucket:  { get_property: [ SELF, bucket_name ] }
-            mode: { get_property: [ SELF, mode ] }
             aws_access_key: { get_property: [ SELF, aws_access_key ]}
             aws_secret_key: { get_property: [ SELF, aws_secret_key ]}
             s3_url: { get_property: [ SELF, s3_url ]}

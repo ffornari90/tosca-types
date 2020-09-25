@@ -3617,7 +3617,7 @@ node_types:
             s3_bucket: { get_property: [ SELF, s3_bucket ] }
             s3_access_key: { get_property: [ SELF, s3_access_key ] }
             s3_secret_key: { get_property: [ SELF, s3_secret_key ] }
-            s3_endpoint: { get_property: [ SELF, [ SELF, s3_endpoint ] }
+            s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
           implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml

@@ -2,6 +2,9 @@
 - hosts: localhost
   connection: local
   tasks:
+    - name: set timezone to Europe/Rome
+      timezone:
+        name: Europe/Rome
 
     - name: "create directory path to store the configuration files"
       file:

@@ -3539,12 +3539,12 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_configure.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_configure.yml
           inputs:
             project_name:  { get_property: [ SELF, project_name ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
@@ -3565,7 +3565,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
           inputs:
             bucket_name:  { get_property: [ SELF, bucket_name ] }
             aws_access_key: { get_property: [ SELF, aws_access_key ]}
@@ -3605,7 +3605,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/cloud-storage_configure.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/cloud-storage_configure.yml
           inputs:
             project_name:  { get_property: [ SELF, project_name ] }
             owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
@@ -3619,7 +3619,7 @@ node_types:
             s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }

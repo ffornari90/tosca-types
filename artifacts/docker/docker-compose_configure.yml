@@ -1,17 +1,7 @@
 ---
 - hosts: localhost
   connection: local
-  vars:
-    docker_bridge_ip_cidr: "172.0.17.1/24"
   tasks:
-
-    - name: Call Docker role
-      include_role:
-        name: indigo-dc.docker
-
-    - name: "Install docker-compose"
-      pip: name="docker-compose" state="present" version="{{ docker_compose_version }}"
-
     - name: "create directory path to store the configuration files"
       file:
         path: "/opt/{{ project_name }}"
@@ -35,12 +25,3 @@
         line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
         create: yes
 
-    - name:
-      get_url:
-        url: "{{ docker_compose_file_url }}"
-        dest: "/opt/{{ project_name }}/docker-compose.yaml"
-
-    - name: "Start the service"
-      docker_service:
-        project_src: "/opt/{{ project_name }}"
-        state: present

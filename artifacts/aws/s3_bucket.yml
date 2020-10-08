@@ -1,0 +1,17 @@
+- hosts: localhost
+  connection: local
+  tasks:
+
+    - name: Install dependencies
+      pip:
+        name: boto3 
+        state: present
+
+    - name: "Create bucket"
+      aws_s3:
+        bucket: "{{ bucket_name }}"
+        mode: create
+        aws_access_key: "{{ aws_access_key  }}"
+        aws_secret_key: "{{ aws_secret_key  }}"
+        s3_url: "{{ s3_url  }}"
+

@@ -3538,13 +3538,93 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_configure.yml
+          inputs:
+            project_name:  { get_property: [ SELF, project_name ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
+
+
+  tosca.nodes.indigo.S3Bucket:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      bucket_name:
+        type: string
+      aws_access_key:
+        type: string
+      aws_secret_key:
+        type: string
+      s3_url: 
+        type: string
+    interfaces:
+      Standard:
+        create:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
+          inputs:
+            bucket_name:  { get_property: [ SELF, bucket_name ] }
+            aws_access_key: { get_property: [ SELF, aws_access_key ]}
+            aws_secret_key: { get_property: [ SELF, aws_secret_key ]}
+            s3_url: { get_property: [ SELF, s3_url ]}
+
+  tosca.nodes.indigo.DockerCompose.CloudStorageService:
+    derived_from: tosca.nodes.indigo.DockerCompose
+    properties:
+      owncloud_hostname:
+        type: string
+        #default: { concat: [ "oc.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      nagios_hostname:
+        type: string
+        #default: { concat: [ "nagios.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      duplicati_hostname:
+        type: string
+        #default: { concat: [ "backup.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      traefik_version:
+        type: string
+        default: "'2.3'"
+      owncloud_version:
+        type: string
+        default: "'10'"
+      s3_bucket:
+        type: string
+      s3_access_key:
+        type: string
+      s3_secret_key:
+        type: string
+      s3_endpoint:
+        type: string
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/cloud-storage_configure.yml
+          inputs:
+            project_name:  { get_property: [ SELF, project_name ] }
+            owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
+            nagios_hostname: { get_property: [ SELF, nagios_hostname ] }
+            duplicati_hostname: { get_property: [ SELF, duplicati_hostname ] }
+            traefik_version: { get_property: [ SELF, traefik_version ] }
+            owncloud_version: { get_property: [ SELF, owncloud_version ] }
+            s3_bucket: { get_property: [ SELF, s3_bucket ] }
+            s3_access_key: { get_property: [ SELF, s3_access_key ] }
+            s3_secret_key: { get_property: [ SELF, s3_secret_key ] }
+            s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          inputs:
+            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
+            docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
+            project_name:  { get_property: [ SELF, project_name ] }
+
 
   tosca.nodes.indigo.FSEncrypt:
     derived_from: tosca.nodes.SoftwareComponent

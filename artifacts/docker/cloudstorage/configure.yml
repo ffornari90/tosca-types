@@ -8,9 +8,18 @@
 
     - name: "create directory path to store the configuration files"
       file:
-        path: "/opt/{{ project_name }}"
+        path: "{{ item }}"
         state: directory
         mode: 0755
+      loop:
+        - "/opt/{{ project_name }}"
+        - "/opt/{{ project_name }}/traefik"
+
+    - name: download tls.toml
+      get_url:
+        url:  "https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/cloudstorage/tls.toml"
+        dest: "/opt/{{ project_name }}/traefik/tls.toml"
+        mode: 0440
 
     - name: debug
       debug: 

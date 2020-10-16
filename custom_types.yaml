@@ -3605,7 +3605,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/cloud-storage_configure.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/cloudstorage/configure.yml
           inputs:
             project_name:  { get_property: [ SELF, project_name ] }
             owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }

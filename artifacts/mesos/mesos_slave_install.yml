@@ -59,6 +59,8 @@
         mesos_install_mode: "slave"
         zookeeper_peers: "{{ mesos_masters_list_ips }}"
         mesos_masters_list: "{{ mesos_masters_list_ips }}"
+        mesos_version: '1.9.0'
+        mesos_apt_package: 'mesos=1.9.0-2.0.1.ubuntu1604'
 
     - name: Call NFS role as client
       include_role:

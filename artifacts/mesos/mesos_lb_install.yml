@@ -59,3 +59,4 @@
         marathon_lb_marathon_servers: "{{ master_ips }}"
         marathon_lb_chronos_servers: "{{ master_ips }}"
         marathon_lb_mesos_servers: "{{ master_ips }}"
+        marathon_lb_image: 'mesosphere/marathon-lb:v1.15.0'

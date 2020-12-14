@@ -2501,6 +2501,14 @@ node_types:
         type: string
         required: no
         default: testme
+      s3_bucket:
+        type: string
+        required: no
+        default: ""
+      s3_endpoint:
+        type: string
+        required: no
+        default: ""
     interfaces:
       Standard:
         start:
@@ -2516,6 +2524,8 @@ node_types:
             repos: { get_property: [ SELF, repos ] }
             externalIp: { get_property: [ SELF, externalIp ] }
             jupyter_token: { get_property: [ SELF, jupyter_token ] }
+            s3_bucket: { get_property: [ SELF, s3_bucket ] }
+            s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
             helm_version: { get_property: [ SELF, helm_version ] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:

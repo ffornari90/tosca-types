@@ -3399,7 +3399,7 @@ node_types:
       es_version:
         type: string
         required: false
-        default: 7.4.1
+        default: 7.9.3
       bind_address:
         type: string
         required: false
@@ -3422,7 +3422,7 @@ node_types:
         default: changeme
     artifacts:
       es_role:
-        file: elastic.elasticsearch,7.4.1
+        file: elastic.elasticsearch,7.9.3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

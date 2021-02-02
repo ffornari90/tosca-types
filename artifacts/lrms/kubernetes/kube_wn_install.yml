@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    docker_pip_package: python-pip
   tasks:
   - block:
     - name: Call IndigoVR role as standalone

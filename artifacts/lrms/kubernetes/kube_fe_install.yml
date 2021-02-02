@@ -2,6 +2,7 @@
 - hosts: localhost
   connection: local
   vars:
+     docker_pip_package: python-pip
      vnode_prefix: vnode-
   pre_tasks:
   - name: Create dir for the NFS PV

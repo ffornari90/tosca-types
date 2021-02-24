@@ -1,5 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
+
+
 metadata:
   template_author: INDIGO/DEEP
   template_name: indigo_custom_types
@@ -2376,6 +2378,72 @@ node_types:
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             centos_url: { get_property: [ SELF, centos_url ] }
+
+  tosca.nodes.DODAS.single-node-jupyterhub:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      use_gpu:
+        type: boolean
+        default: true
+      install_docker:
+        type: boolean
+        default: true
+      install_docker_compose:
+        type: boolean
+        default: true
+      monitoring:
+        type: boolean
+        default: true
+      iam_url:
+        type: string
+        default: "https://iam.cloud.infn.it/"
+      iam_groups:
+        type: string
+        default: "beta_tester"
+      prepare_jupyter:
+        type: boolean
+        default: true
+      run_jupyter:
+        type: boolean
+        default: false
+      jupyter_repo_url:
+        type: string
+        default: "https://github.com/dodas-ts/single-node-jupyterhub"
+      jupyter_image:
+        type: string
+        default: "dodasts/ml_infn:beta-v2"
+      cvmfs_repos:
+        type: string
+        default: ""
+      server_ip:
+        type: string
+        default: ""
+      role_name:
+        type: string
+        required: false
+        default: ansible-role-jupyterhub-env
+    artifacts:
+      ml_role:
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name: { get_property: [ SELF, role_name ] }
+            use_gpu: { get_property: [ SELF, use_gpu ] }
+            install_docker: { get_property: [ SELF, install_docker ] }
+            install_docker_compose: { get_property: [ SELF, install_docker_compose ] }
+            monitoring: { get_property: [ SELF, monitoring ] }
+            iam_url: { get_property: [ SELF, iam_url ] }
+            iam_groups: { get_property: [ SELF, iam_groups ] }
+            prepare_jupyter: { get_property: [ SELF, prepare_jupyter ] }
+            run_jupyter: { get_property: [ SELF, run_jupyter ] }
+            jupyter_repo_url: { get_property: [ SELF, jupyter_repo_url ] }
+            jupyter_image: { get_property: [ SELF, jupyter_image ] }
+            cvmfs_repos: { get_property: [ SELF, cvmfs_repos ] }
+            server_ip: { get_property: [ SELF, server_ip ] }
 
   tosca.nodes.DODAS.JupyterVM:
     derived_from: tosca.nodes.SoftwareComponent

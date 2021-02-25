@@ -2384,7 +2384,7 @@ node_types:
     properties:
       use_gpu:
         type: boolean
-        default: true
+        default: false
       install_docker:
         type: boolean
         default: true
@@ -2405,7 +2405,7 @@ node_types:
         default: true
       run_jupyter:
         type: boolean
-        default: false
+        default: true
       jupyter_repo_url:
         type: string
         default: "https://github.com/dodas-ts/single-node-jupyterhub"

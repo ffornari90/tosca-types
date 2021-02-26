@@ -3531,7 +3531,7 @@ node_types:
         required: false
         default: changeme
     artifacts:
-      es_role:
+      kibana_role:
         file: maricaantonacci.kibana,7.4.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:

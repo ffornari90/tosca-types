@@ -375,7 +375,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/remove_zabbix/artifacts/os/configure_users.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/os/configure_users.yml
           inputs:
             os_users: { get_property: [ SELF, os_users] }
 

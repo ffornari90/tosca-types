@@ -2441,6 +2441,9 @@ node_types:
       iam_groups:
         type: string
         default: "beta_tester"
+      iam_admin_groups:
+        type: string
+        default: "beta_tester"
       prepare_jupyter:
         type: boolean
         default: true
@@ -2479,6 +2482,7 @@ node_types:
             monitoring: { get_property: [ SELF, monitoring ] }
             iam_url: { get_property: [ SELF, iam_url ] }
             iam_groups: { get_property: [ SELF, iam_groups ] }
+            iam_admin_groups: { get_property: [ SELF, iam_admin_groups ] }
             prepare_jupyter: { get_property: [ SELF, prepare_jupyter ] }
             run_jupyter: { get_property: [ SELF, run_jupyter ] }
             jupyter_repo_url: { get_property: [ SELF, jupyter_repo_url ] }

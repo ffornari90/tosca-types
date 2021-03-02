@@ -2453,7 +2453,7 @@ node_types:
       jupyter_repo_url:
         type: string
         default: "https://github.com/dodas-ts/single-node-jupyterhub"
-      jupyter_image:
+      jupyter_images:
         type: string
         default: "dodasts/ml_infn:beta-v2"
       cvmfs_repos:
@@ -2486,7 +2486,7 @@ node_types:
             prepare_jupyter: { get_property: [ SELF, prepare_jupyter ] }
             run_jupyter: { get_property: [ SELF, run_jupyter ] }
             jupyter_repo_url: { get_property: [ SELF, jupyter_repo_url ] }
-            jupyter_image: { get_property: [ SELF, jupyter_image ] }
+            jupyter_images: { get_property: [ SELF, jupyter_images ] }
             cvmfs_repos: { get_property: [ SELF, cvmfs_repos ] }
             server_ip: { get_property: [ SELF, server_ip ] }
 

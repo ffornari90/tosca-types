@@ -2148,7 +2148,7 @@ node_types:
         file: indigo-dc.docker,2.1.2-beta
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: dodas.kubernetes,v2.1.0-ingress-pre4
+        file: dodas.kubernetes,v2.1.0-ingress-pre5
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2195,7 +2195,7 @@ node_types:
         file: indigo-dc.docker,2.1.2-beta
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file:  dodas.kubernetes,v2.1.0-ingress-pre4
+        file:  dodas.kubernetes,v2.1.0-ingress-pre5
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs

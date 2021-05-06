@@ -3671,7 +3671,7 @@ node_types:
         required: yes
     artifacts:
       docker_role:
-        file: indigo-dc.docker
+        file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -3737,7 +3737,7 @@ node_types:
         type: string
     artifacts:
       docker_role:
-        file: indigo-dc.docker
+        file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

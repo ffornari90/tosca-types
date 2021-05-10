@@ -3632,7 +3632,10 @@ node_types:
           entry_schema:
             type: string
     artifacts:
-      helm_config_role:
+      docker_role:
+        file: indigo-dc.docker,v2.1.2
+        type: tosca.artifacts.AnsibleGalaxy.role
+      dockerrun_role:
         file: indigo-dc.ansible_role_docker_run
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:

@@ -38,8 +38,8 @@
         line: "{{ item.key }}={{ item.value }}"
         create: yes
       with_items:
-         - { key: "TRAEFIK_VERSION", value: "{{ traefik_version | trim(\"'\") }}" }
-         - { key: "OWNCLOUD_VERSION", value: "{{ owncloud_version | trim(\"'\") }}" }
+         - { key: "TRAEFIK_VERSION", value: "{{ traefik_version | replace(\"'\",\"\") }}" }
+         - { key: "OWNCLOUD_VERSION", value: "{{ owncloud_version | replace(\"'\",\"\") }}" }
          - { key: "OWNCLOUD_HOSTNAME", value: "{{ owncloud_hostname }}" }
          - { key: "NAGIOS_HOSTNAME", value: "{{ nagios_hostname }}" }
          - { key: "DUPLICATI_HOSTNAME", value: "{{ duplicati_hostname }}" }

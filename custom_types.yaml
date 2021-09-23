@@ -1533,13 +1533,21 @@ node_types:
           type: tosca.capabilities.indigo.MesosMaster
     properties:
       # Set the current data of the mesos server
-      # but it can also specified in the TOSCA document
+      # but it can also be specified in the TOSCA document
       mesos_masters_list:
         type: list
         entry_schema:
           type: string
         required: no
         default: ['127.0.0.1']
+      dns_name:
+        type: string 
+        required: yes
+        default: ""
+      certbot_admin_email:
+        type: string
+        default: ""
+        required: no  
       mesos_authenticate_http:
         type: boolean
         required: no
@@ -1552,6 +1560,14 @@ node_types:
         type: string
         required: no
         default: 'admin'
+      mesos_enable_ssl:
+        type: boolean  
+        required: no
+        default: true
+      ssl_cert_gen:
+        type: string
+        required: no
+        default: letsencrypt       
       marathon_enable_ssl:
         type: boolean
         required: no
@@ -1593,23 +1609,20 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,2.1.2-beta
+        file: indigo-dc.docker,v2.1.2
         #file: git+https://github.com/indigo-dc/ansible-role-docker.git,fix/issue_13
         type: tosca.artifacts.AnsibleGalaxy.role
-      consul_agent_role:
-        file: indigo-dc.consul,master
-        type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
-        file: indigo-dc.zookeeper,master
+        file: git+https://github.com/indigo-dc/ansible-role-zookeeper.git,devel
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,master
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,dev
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
-        file: indigo-dc.marathon,master
+        file: git+https://github.com/indigo-dc/ansible-role-marathon.git,dev
         type: tosca.artifacts.AnsibleGalaxy.role
       chronos_agent_role:
-        file: indigo-dc.chronos,master
+        file: git+https://github.com/indigo-dc/ansible-role-chronos.git,dev
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs,master
@@ -1626,18 +1639,25 @@ node_types:
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
             mesos_username: { get_property: [ SELF, mesos_username ] }
             mesos_password: { get_property: [ SELF, mesos_password ] }
+            mesos_enable_ssl: { get_property: [ SELF, mesos_enable_ssl ] }
+            mesos_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
             marathon_enable_ssl: { get_property: [ SELF, marathon_enable_ssl ] }
-            marathon_user: { get_property: [ SELF, marathon_username ] }
-            marathon_pass: { get_property: [ SELF, marathon_password ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            marathon_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
             enable_chronos: { get_property: [ SELF, enable_chronos ] }
             chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
-            chronos_user: { get_property: [ SELF, chronos_username ] }
-            chronos_pass: { get_property: [ SELF, chronos_password ] }
-            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
+            chronos_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
+            chronos_username: { get_property: [ SELF, chronos_username ] }
+            chronos_password: { get_property: [ SELF, chronos_password ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             marathon_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            dns_name: { get_property: [ SELF, dns_name ] }
+            mesos_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
+            marathon_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
+            chronos_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
@@ -2152,10 +2172,10 @@ node_types:
         default: "testme=true"
     artifacts:
       docker_role:
-        file: indigo-dc.docker,2.1.2-beta
+        file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: dodas.kubernetes,v2.1.0-ingress-pre5
+        file: dodas.kubernetes,v2.1.0-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2199,10 +2219,10 @@ node_types:
         default: k8s
     artifacts:
       docker_role:
-        file: indigo-dc.docker,2.1.2-beta
+        file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file:  dodas.kubernetes,v2.1.0-ingress-pre5
+        file:  dodas.kubernetes,v2.1.0-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2686,11 +2706,8 @@ node_types:
         file: indigo-dc.docker,2.1.2-beta
         #file: git+https://github.com/indigo-dc/ansible-role-docker.git,fix/issue_13
         type: tosca.artifacts.AnsibleGalaxy.role
-      consul_agent_role:
-        file: indigo-dc.consul,master
-        type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,master
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,dev
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs,master
@@ -2831,10 +2848,6 @@ node_types:
       marathon_password:
         type: string
         required: yes
-      enable_consul_sd:
-        type: boolean
-        required: false
-        default: true
       hybrid:
         type: boolean
         description: Flag to specify that this ElasticCluster will work in a hybrid environment
@@ -2843,9 +2856,6 @@ node_types:
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker,master
-        type: tosca.artifacts.AnsibleGalaxy.role
-      consul_agent_role:
-        file: indigo-dc.consul,master
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
         file: indigo-dc.marathon-lb,master
@@ -2858,7 +2868,6 @@ node_types:
         create:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/mesos_lb_install.yml
           inputs:
-            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             master_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }

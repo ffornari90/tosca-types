@@ -1582,7 +1582,7 @@ node_types:
       enable_chronos:
         type: boolean
         required: no
-        default: true
+        default: false
       chronos_enable_ssl:
         type: boolean
         required: no

@@ -2450,9 +2450,6 @@ node_types:
   tosca.nodes.DODAS.single-node-jupyterhub:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      use_gpu:
-        type: boolean
-        default: false
       install_docker:
         type: boolean
         default: true
@@ -2477,12 +2474,24 @@ node_types:
       run_jupyter:
         type: boolean
         default: true
-      jupyter_repo_url:
-        type: string
-        default: "https://github.com/dodas-ts/single-node-jupyterhub"
       jupyter_images:
         type: string
-        default: "dodasts/ml_infn:beta-v2"
+        default: "dodasts/snj-base-lab:v1.0.0-snj"
+      jupyter_use_gpu:
+        type: boolean
+        default: false
+      jupyter_post_start_cmd:
+        type: string
+        default: ""
+      jupyterlab_collaborative:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_use_gpu:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_image:
+        type: string
+        default: "dodasts/snj-base-jlabc:v1.0.0-snj"
       cvmfs_repos:
         type: string
         default: ""
@@ -2495,7 +2504,7 @@ node_types:
         default: ansible-role-jupyterhub-env
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,jupyterlab_collaborative
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2503,19 +2512,22 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
-            use_gpu: { get_property: [ SELF, use_gpu ] }
-            install_docker: { get_property: [ SELF, install_docker ] }
-            install_docker_compose: { get_property: [ SELF, install_docker_compose ] }
-            monitoring: { get_property: [ SELF, monitoring ] }
-            iam_url: { get_property: [ SELF, iam_url ] }
-            iam_groups: { get_property: [ SELF, iam_groups ] }
-            iam_admin_groups: { get_property: [ SELF, iam_admin_groups ] }
-            prepare_jupyter: { get_property: [ SELF, prepare_jupyter ] }
-            run_jupyter: { get_property: [ SELF, run_jupyter ] }
-            jupyter_repo_url: { get_property: [ SELF, jupyter_repo_url ] }
-            jupyter_images: { get_property: [ SELF, jupyter_images ] }
-            cvmfs_repos: { get_property: [ SELF, cvmfs_repos ] }
-            server_ip: { get_property: [ SELF, server_ip ] }
+            install_docker: { get_property: [SELF, install_docker] }
+            install_docker_compose: { get_property: [SELF, install_docker_compose] }
+            monitoring: { get_property: [SELF, monitoring] }
+            iam_url: { get_property: [SELF, iam_url] }
+            iam_groups: { get_property: [SELF, iam_groups] }
+            iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
+            prepare_jupyter: { get_property: [SELF, prepare_jupyter] }
+            run_jupyter: { get_property: [SELF, run_jupyter] }
+            jupyter_images: { get_property: [SELF, jupyter_images] }
+            jupyter_use_gpu: { get_property: [SELF, jupyter_use_gpu] }
+            jupyter_post_start_cmd: { get_property: [SELF, jupyter_post_start_cmd] }
+            jupyterlab_collaborative: { get_property: [SELF, jupyterlab_collaborative] }
+            jupyterlab_collaborative_use_gpu: { get_property: [SELF, jupyterlab_collaborative_use_gpu] }
+            jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
+            cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
+            server_ip: { get_property: [SELF, server_ip] }
 
   tosca.nodes.DODAS.JupyterVM:
     derived_from: tosca.nodes.SoftwareComponent

@@ -9,34 +9,35 @@
       include_role:
         name: ansible-role-docker
 
-    - block:    
+    - name: "Create env file, download and start the docker compose file"
+      block:    
 
-       - name: "create directory path to store the configuration files"
-         file:
-           path: "/opt/{{ project_name }}"
-           state: directory
-           mode: 0755
-   
-       - name: Set environment variables
-         lineinfile:
-           path: /opt/{{ project_name }}/.env
-           line: "{{ item.key }}={{ item.value }}"
-           create: yes
-         with_dict: "{{ environment_variables }}"
-   
-       - name: Add HOST_PUBLIC_IP environment variable
-         lineinfile:
-           path: /opt/{{ project_name }}/.env
-           line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
-           create: yes        
-   
-       - name: "Download the docker-compose file"
-         get_url:
-           url: "{{ docker_compose_file_url }}"
-           dest: "/opt/{{ project_name }}/docker-compose.yaml"
-
-       - name: "Start the service"
-         docker_service:
-           project_src: "/opt/{{ project_name }}"
-           state: present
-    when: docker_compose_file_url != ""       
+        - name: "create directory path to store the configuration files"
+          file:
+            path: "/opt/{{ project_name }}"
+            state: directory
+            mode: 0755
+    
+        - name: Set environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_dict: "{{ environment_variables }}"
+    
+        - name: Add HOST_PUBLIC_IP environment variable
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
+            create: yes        
+    
+        - name: "Download the docker-compose file"
+          get_url:
+            url: "{{ docker_compose_file_url }}"
+            dest: "/opt/{{ project_name }}/docker-compose.yaml"
+ 
+        - name: "Start the service"
+          docker_service:
+            project_src: "/opt/{{ project_name }}"
+            state: present
+      when: docker_compose_file_url != ""       

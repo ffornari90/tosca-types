@@ -3685,10 +3685,11 @@ node_types:
       docker_compose_version:
         type: version
         required: no
-        default: 1.24.1
+        default: 1.25.5
       docker_compose_file_url:
         type: string
-        required: yes
+        required: no
+        default: ""
       environment_variables:
         required: no
         default: []
@@ -3702,21 +3703,18 @@ node_types:
         required: yes
     artifacts:
       docker_role:
-        file: indigo-dc.docker,v2.1.2
+        #file: indigo-dc.docker,v2.1.2
+        file: git+https://github.com/indigo-dc/ansible-role-docker.git,add_compose
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_configure.yml
-          inputs:
-            project_name:  { get_property: [ SELF, project_name ] }
-            environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/improve_docker_compose/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
 
 
   tosca.nodes.indigo.S3Bucket:

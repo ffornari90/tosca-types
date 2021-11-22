@@ -2476,7 +2476,7 @@ node_types:
         default: true
       jupyter_images:
         type: string
-        default: "dodasts/snj-base-lab:v1.0.0-snj"
+        default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
       jupyter_use_gpu:
         type: boolean
         default: false

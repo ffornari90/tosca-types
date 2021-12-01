@@ -30,6 +30,7 @@
             path: /opt/{{ project_name }}/.env
             line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
             create: yes        
+          when: IM_NODE_PUBLIC_IP is defined
     
         - name: "Download the docker-compose file"
           get_url:

@@ -3630,7 +3630,7 @@ node_types:
       role_name:
         type: string
         required: no
-        default: ansible_role_docker_run
+        default: ansible-role-docker_run
       docker_appname:
         type: string
         required: no

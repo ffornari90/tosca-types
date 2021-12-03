@@ -3678,7 +3678,7 @@ node_types:
             docker_run_tag: { get_property: [ SELF, docker_tag ] }
             docker_run_ports: { get_property: [ SELF, docker_ports ] }
             docker_run_command: { get_property: [ SELF, docker_command ] }
-            docker_env_variables: { get_property: [ SELF, environment_variables ] }
+            docker_run_env_variables: { get_property: [ SELF, environment_variables ] }
 
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent

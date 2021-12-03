@@ -3673,12 +3673,12 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
-            appname: { get_property: [ SELF, docker_appname ] }
-            image: { get_property: [ SELF, docker_image ] }
-            tag: { get_property: [ SELF, docker_tag ] }
-            ports: { get_property: [ SELF, docker_ports ] }
-            command: { get_property: [ SELF, docker_command ] }
-            environment_variables: { get_property: [ SELF, environment_variables ] }
+            docker_run_appname: { get_property: [ SELF, docker_appname ] }
+            docker_run_image: { get_property: [ SELF, docker_image ] }
+            docker_run_tag: { get_property: [ SELF, docker_tag ] }
+            docker_run_ports: { get_property: [ SELF, docker_ports ] }
+            docker_run_command: { get_property: [ SELF, docker_command ] }
+            docker_env_variables: { get_property: [ SELF, environment_variables ] }
 
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent

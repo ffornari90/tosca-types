@@ -3630,7 +3630,7 @@ node_types:
       role_name:
         type: string
         required: no
-        default: ansible-role-docker_run
+        default: indigo-dc.docker_run
       docker_appname:
         type: string
         required: no
@@ -3664,8 +3664,7 @@ node_types:
         file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       dockerrun_role:
-        #file: indigo-dc.ansible_role_docker_run
-        file: git+https://github.com/indigo-dc/ansible-role-docker_run.git,devel
+        file: indigo-dc.docker_run,v1.0.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

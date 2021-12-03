@@ -3704,8 +3704,7 @@ node_types:
         required: yes
     artifacts:
       docker_role:
-        #file: indigo-dc.docker,v2.1.2
-        file: git+https://github.com/indigo-dc/ansible-role-docker.git,add_compose
+        file: indigo-dc.docker,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

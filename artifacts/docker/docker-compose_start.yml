@@ -7,7 +7,7 @@
 
     - name: Call Docker role
       include_role:
-        name: ansible-role-docker
+        name: indigo-dc.docker
 
     - name: "Create env file, download and start the docker compose file"
       block:    

@@ -3708,7 +3708,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/improve_docker_compose/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }

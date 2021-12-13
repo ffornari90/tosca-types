@@ -2483,6 +2483,9 @@ node_types:
       jupyter_post_start_cmd:
         type: string
         default: ""
+      jupyter_host_mount_dir:
+        type: string
+        default: ""
       jupyterlab_collaborative:
         type: boolean
         default: no
@@ -2523,6 +2526,7 @@ node_types:
             jupyter_images: { get_property: [SELF, jupyter_images] }
             jupyter_use_gpu: { get_property: [SELF, jupyter_use_gpu] }
             jupyter_post_start_cmd: { get_property: [SELF, jupyter_post_start_cmd] }
+            jupyter_host_mount_dir: { get_property: [SELF, jupyter_host_mount_dir] }
             jupyterlab_collaborative: { get_property: [SELF, jupyterlab_collaborative] }
             jupyterlab_collaborative_use_gpu: { get_property: [SELF, jupyterlab_collaborative_use_gpu] }
             jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }

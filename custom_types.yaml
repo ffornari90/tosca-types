@@ -365,28 +365,6 @@ node_types:
           type: string
         default: {}
         required: false  
-      fail2ban_enabled: 
-        type: boolean
-        default: true
-      fail2ban_bantime: 
-        type: integer
-        default: 300
-      fail2ban_maxretry: 
-        type: integer
-        default: 10
-      fail2ban_jail_config:
-        type: list
-        entry_schema:
-          type: map
-          entry_schema:
-            type: string
-        default:
-        - option: enabled
-          value: 'true'
-          section: sshd
-        - option: action
-          value: '%(action_)s'
-          section: DEFAULT
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
@@ -401,19 +379,12 @@ node_types:
       os_users_role:
         file: indigo-dc.os_users
         type: tosca.artifacts.AnsibleGalaxy.role
-      security_role:
-        file: maricaantonacci.security
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/os/configure_system.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/os/configure_users.yml
           inputs:
             os_users: { get_property: [ SELF, os_users] }
-            security_fail2ban_enabled: { get_property: [ SELF, fail2ban_enabled ] }
-            security_fail2ban_bantime: { get_property: [ SELF, fail2ban_bantime ] }
-            security_fail2ban_maxretry: { get_property: [ SELF, fail2ban_maxretry ] }
-            security_fail2ban_jail_configuration: { get_property: [ SELF, fail2ban_jail_config ] }
 
   tosca.nodes.indigo.ZabbixAgent:
     derived_from: tosca.nodes.SoftwareComponent

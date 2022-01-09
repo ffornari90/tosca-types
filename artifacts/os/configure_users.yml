@@ -3,4 +3,3 @@
   connection: local
   roles:
   - role: indigo-dc.os_users
-  - role: maricaantonacci.security

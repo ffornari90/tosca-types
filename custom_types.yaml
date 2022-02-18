@@ -3552,6 +3552,35 @@ node_types:
             deepaas_rclone_pass: { get_property: [ SELF, rclone_password ] }
 
 
+  tosca.nodes.indigo.DockerCompose.Elastic:
+    derived_from: tosca.nodes.indigo.DockerCompose
+    properties:
+      docker_compose_file_url:
+        type: string
+        default: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/elastic/docker-compose.yml
+      #environment_variables:
+      #  - ELASTIC_PASSWORD
+      #  - KIBANA_PASSWORD
+      #  - ELASTIC_VERSION
+      #  - CERT_MAIL
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.3
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/elastic/configure.yml
+          inputs:
+            project_name:  { get_property: [ SELF, project_name ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          inputs:
+            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
+            docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
+            project_name:  { get_property: [ SELF, project_name ] }
+
   tosca.nodes.indigo.Elasticsearch:
     derived_from: tosca.nodes.SoftwareComponent
     properties:

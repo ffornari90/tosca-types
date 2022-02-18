@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: set timezone to Europe/Rome
+      timezone:
+        name: Europe/Rome
+    
+    - name: 
+      shell: sysctl -w vm.max_map_count=1048576 && echo "vm.max_map_count = 1048576" > /etc/sysctl.d/30-vm.max_map_count.conf 
+
+    - name: "create directory path to store the configuration files"
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - "/opt/{{ project_name }}"
+        - "/opt/{{ project_name }}/traefik"
+
+    - name: set data dir
+      set_fact:
+        data_dir: "{{ item.value }}"
+      with_dict: "{{ environment_variables }}"
+      when: "'DATA_DIR' in item.key"
+
+
+    - name: "create data directory (if it does not exist)"
+      file:
+        path: "{{ data_dir }}"
+        state: directory
+        mode: 0755
+        owner: 1000
+        recurse: yes
+
+    - name: download tls.toml
+      get_url:
+        url:  "https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/elastic/tls.toml"
+        dest: "/opt/{{ project_name }}/traefik/tls.toml"
+        mode: 0440
+
+
+    - name: Set environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+        create: yes
+      with_dict: "{{ environment_variables }}"
+
+
+    - name: Add HOST_PUBLIC_IP and additional environment variables
+      lineinfile:
+        path: /opt/{{ project_name }}/.env
+        line: "{{ item.key }}={{ item.value }}"
+        create: yes
+      with_items:
+         - { key: "HOST_PUBLIC_IP", value: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" }

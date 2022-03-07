@@ -25,12 +25,13 @@
             create: yes
           with_dict: "{{ environment_variables }}"
     
-        - name: Add HOST_PUBLIC_IP environment variable
+        - name: Add HOST_PUBLIC_IP and additional environment variables
           lineinfile:
             path: /opt/{{ project_name }}/.env
-            line: "HOST_PUBLIC_IP={{IM_NODE_PUBLIC_IP}}"
-            create: yes        
-          when: IM_NODE_PUBLIC_IP is defined
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "HOST_PUBLIC_IP", value: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" }
     
         - name: "Download the docker-compose file"
           get_url:

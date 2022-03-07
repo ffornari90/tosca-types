@@ -3827,7 +3827,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/antonacci/tosca-types/raw/master/artifacts/cloudstorage/configure.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/cloudstorage/configure.yml
           inputs:
             cloudstorage_owncloud_version: { get_property: [ SELF, owncloud_version ] }
             cloudstorage_owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }

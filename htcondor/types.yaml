@@ -11,6 +11,8 @@ metadata:
 
 description: Contains the custom types definition htcondor specific
 
+artifact_types:
+
 node_types:
   tosca.nodes.DODAS.HelmInstall.HTCondor:
     derived_from: tosca.nodes.DODAS.HelmInstall

@@ -3684,6 +3684,14 @@ node_types:
         type: string
         required: no
         default: ""
+      docker_volume:
+        type: string
+        required: no
+        default: "/data"
+      volume_path:
+        type: string
+        required: no
+        default: "/data"  
       environment_variables:
         required: no
         default: []

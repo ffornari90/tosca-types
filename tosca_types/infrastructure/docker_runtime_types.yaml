@@ -1,0 +1,159 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+# Import Indigo datacloud base types
+imports:
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/base/basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: docker_runtime_types
+  template_version: 1.0.0
+
+capability_types:
+
+  tosca.capabilities.indigo.Container.Application.Docker.Chronos:
+    derived_from: tosca.capabilities.Root
+
+  tosca.capabilities.indigo.Container.Docker:
+    derived_from: tosca.capabilities.Container.Docker
+    properties:
+      num_cpus:
+        type: float
+        required: false
+        constraints:
+          - greater_or_equal: 0.0
+      num_gpus:
+        type: integer
+        required: false
+
+
+artifact_types:
+
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
+
+node_types:
+
+  tosca.nodes.indigo.Container.Runtime.Docker:
+    derived_from: tosca.nodes.Root
+    metadata:
+      icon: /images/docker.png
+    capabilities:
+      host:
+        type: tosca.capabilities.indigo.Container.Docker
+      scalable:
+        type: tosca.capabilities.Scalable
+
+  tosca.nodes.indigo.Container.Application.Docker:
+    derived_from: tosca.nodes.Container.Application.Docker
+    properties:
+      command:
+        required: no
+        type: string
+      uris:
+        required: no
+        type: list
+        entry_schema:
+          type: string
+      environment_variables:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+      constraints:
+        required: no
+        type: list
+        entry_schema:
+          type: list
+          entry_schema:
+            type: string
+      secrets:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+      constraints:
+        required: no
+        type: list
+        entry_schema:
+          type: list
+          entry_schema:
+            type: string
+      labels:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+      privileged:
+        required: no
+        type: boolean
+        default: false
+      force_pull_image:
+        required: no
+        type: boolean
+        default: false
+
+
+  tosca.nodes.indigo.Container.Application.Docker.Chronos:
+    derived_from: tosca.nodes.indigo.Container.Application.Docker
+    metadata:
+      icon: /images/chronos.jpg
+    properties:
+      schedule:
+        required: no
+        type: string
+      command:
+        required: yes
+        type: string
+      description:
+        required: no
+        type: string
+      retries:
+        required: no
+        type: integer
+      epsilon:
+        required: no
+        type: string
+        default: PT10S
+      privileged:
+        required: no
+        type: boolean
+        default: true
+      force_pull_image:
+        required: no
+        type: boolean
+        default: true
+    capabilities:
+      parent_job:
+        type: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+        valid_source_types: [tosca.nodes.indigo.Container.Application.Docker.Chronos]
+        occurrences: [0, UNBOUNDED]
+    requirements:
+      - parent_job:
+          capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+          node: tosca.nodes.indigo.Container.Application.Docker.Chronos
+          relationship: tosca.relationships.DependsOn
+          occurrences: [0, 1]
+
+  tosca.nodes.indigo.Container.Application.Docker.Marathon:
+    derived_from: tosca.nodes.indigo.Container.Application.Docker
+    metadata:
+      icon: /images/marathon.png
+    attributes:
+      load_balancer_ips:
+        type: list
+        entry_schema: string
+    properties:
+      force_pull_image:
+        required: no
+        type: boolean
+        default: true
+      enable_https:
+        required: no
+        type: boolean
+        default: false
+    artifacts:
+      image:
+        file: ""
+        type: "tosca.artifacts.Deployment.Image.Container.Docker"

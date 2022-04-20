@@ -1,0 +1,312 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+metadata:
+  template_author: INDIGO/INFN-CLOUD
+  template_name: indigo_custom_types
+  template_version: 1.0.0
+description: Contains the custom types definition as defined by the INDIGO/INFN-CLOUD team
+
+
+data_types:
+
+  tosca.datatypes.Root:
+    description: The TOSCA root Data Type all other TOSCA base Data Types derive from.
+  tosca.datatypes.indigo.User:
+    derived_from: tosca.datatypes.Root
+    description: The Tosca User type is a complex TOSCA data Type used when describing a user account, allowing to set the user name, the user GUID (optional) and user SSH public key (optional). 
+    properties:
+      os_user_name:
+        type: string
+        description: The username
+        required: false
+      os_user_guid:
+        type: integer
+        description: The optional user guid
+        required: false
+      os_user_add_to_sudoers:
+        type: boolean
+        description: Add user to sudoers
+        required: false
+      os_user_ssh_public_key:
+        type: string
+        description: The optional user ssh public key
+        required: false
+
+  tosca.datatypes.indigo.network.PortSpec:
+    derived_from: tosca.datatypes.network.PortSpec
+    properties:
+      remote_cidr:
+        description: CIDR of the remote allowed IPs.
+        type: string
+        required: no
+
+
+capability_types:
+
+  tosca.capabilities.indigo.OperatingSystem:
+    derived_from: tosca.capabilities.OperatingSystem
+    properties:
+      gpu_driver:
+        type: boolean
+        required: no
+      cuda_support:
+        type: boolean
+        required: no
+      cuda_min_version:
+        type: string
+        required: no
+      cuDNN_version:
+        type: string
+        required: no
+      image:
+        type: string
+        required: no
+      credential:
+        type: tosca.datatypes.Credential
+        required: no
+
+  tosca.capabilities.indigo.Scalable:
+    derived_from: tosca.capabilities.Scalable
+    properties:
+      min_instances:
+        type: integer
+        default: 1
+        required: no
+      max_instances:
+        type: integer
+        default: 1
+        required: no
+      count:
+        type: integer
+        description: the number of resources
+        required: no
+        default: 1
+      removal_list:
+        type: list
+        description: list of IDs of the resources to be removed
+        required: no
+        entry_schema:
+          type: string
+
+  tosca.capabilities.indigo.Container:
+    derived_from: tosca.capabilities.Container
+    properties:
+      preemtible_instance:
+        type: boolean
+        required: no
+      instance_type:
+        type: string
+        required: no
+      num_gpus:
+        type: integer
+        required: false
+      gpu_vendor:
+        type: string
+        required: false
+      gpu_model:
+        type: string
+        required: false
+      sgx:
+        type: boolean
+        required: no
+
+
+  tosca.capabilities.indigo.Endpoint:
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      dns_name:
+        description: The optional name to register with DNS
+        type: string
+        required: false
+      private_ip:
+        description: Flag used to specify that this endpoint will require also a private IP although it is a public one.
+        type: boolean
+        required: false
+        default: true
+      ports:
+        type: map
+        description: The optional map of ports the Endpoint supports (if more than one).
+        required: false
+        constraints:
+          - min_length: 1
+        entry_schema:
+          type: tosca.datatypes.indigo.network.PortSpec
+    attributes:
+      credential:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.Credential
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
+relationship_types:
+
+  tosca.relationships.indigo.Manages:
+    derived_from: tosca.relationships.Root
+
+  tosca.relationships.indigo.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties:
+      fs_type:
+        type: string
+        required: false
+        default:
+
+node_types:
+
+  # Standard types defined in TOSCA with interfaces to install
+  tosca.nodes.indigo.Compute:
+    derived_from: tosca.nodes.Compute
+    metadata:
+      icon: /images/compute.png
+    attributes:
+      private_address:
+        type: list
+        entry_schema:
+          type: string
+      public_address:
+        type: list
+        entry_schema:
+          type: string
+      ctxt_log:
+        type: string
+    properties:
+      os_users:
+        type: list
+        description: Users creation
+        entry_schema:
+          type: tosca.datatypes.indigo.User
+        default: []
+        required: false
+      tags:
+        type: map
+        description: Map of tags to associate to the Compute instance
+        entry_schema:
+          type: string
+        default: {}
+        required: false  
+      fail2ban_enabled: 
+        type: boolean
+        default: true
+      fail2ban_bantime: 
+        type: integer
+        default: 200
+      fail2ban_maxretry: 
+        type: integer
+        default: 10
+      fail2ban_jail_config:
+        type: string
+        default: |
+          - option: 'enabled'
+            value: 'true'
+            section: 'sshd'
+          - option: 'action'
+            value: '%(action_)s'
+            section: DEFAULT
+          - option: 'ignoreip'
+            value: '90.147.174.227 192.135.24.30'
+            section: DEFAULT
+    capabilities:
+      scalable:
+        type: tosca.capabilities.indigo.Scalable
+      os:
+         type: tosca.capabilities.indigo.OperatingSystem
+      endpoint:
+        type: tosca.capabilities.indigo.Endpoint
+      host:
+        type: tosca.capabilities.indigo.Container
+        valid_source_types: [tosca.nodes.SoftwareComponent]
+    artifacts:
+      os_users_role:
+        file: indigo-dc.os_users
+        type: tosca.artifacts.AnsibleGalaxy.role
+      security_role:
+        file: maricaantonacci.security
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/os/configure_system.yml
+          inputs:
+            os_users: { get_property: [ SELF, os_users] }
+            security_fail2ban_enabled: { get_property: [ SELF, fail2ban_enabled ] }
+            security_fail2ban_bantime: { get_property: [ SELF, fail2ban_bantime ] }
+            security_fail2ban_maxretry: { get_property: [ SELF, fail2ban_maxretry ] }
+            fail2ban_jail_configuration: { get_property: [ SELF, fail2ban_jail_config ] }
+
+
+  tosca.nodes.indigo.network.Network:
+    derived_from: tosca.nodes.network.Network
+    properties:
+      proxy_host:
+        type: string
+        required: false
+      proxy_credential:
+        type: tosca.datatypes.Credential
+        required: false
+
+
+  tosca.nodes.indigo.BlockStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      type:
+        type: string
+        required: false
+
+
+  tosca.nodes.indigo.S3Bucket:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      bucket_name:
+        type: string
+      aws_access_key:
+        type: string
+      aws_secret_key:
+        type: string
+      s3_url:
+        type: string
+    interfaces:
+      Standard:
+        create:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/aws/s3_bucket.yml
+          inputs:
+            bucket_name:  { get_property: [ SELF, bucket_name ] }
+            aws_access_key: { get_property: [ SELF, aws_access_key ]}
+            aws_secret_key: { get_property: [ SELF, aws_secret_key ]}
+            s3_url: { get_property: [ SELF, s3_url ]}
+
+policy_types:
+  tosca.policies.indigo.SlaPlacement:
+    derived_from: tosca.policies.Placement
+    properties:
+      sla_id:
+        required: true
+        type: string
+
+  tosca.policies.indigo.CredentialsAwareSlaPlacement:
+    derived_from: tosca.policies.indigo.SlaPlacement
+    properties:
+      username:
+        required: true
+        type: string
+      password:
+        required: true
+        type: string
+      subscription_id:
+        required: false
+        type: string

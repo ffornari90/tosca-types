@@ -1,0 +1,70 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/infrastructure/kubernetes_types.yaml
+
+metadata:
+  template_author: INFN-CLOUD
+  template_name: docker_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
+
+node_types:
+
+
+
+  tosca.nodes.DODAS.HelmInstall.Spark:
+    derived_from: tosca.nodes.DODAS.HelmInstall
+    properties:
+      externalIp:
+        type: string
+        required: no
+        default: ""
+      jupyter_token:
+        type: string
+        required: no
+        default: testme
+      s3_bucket:
+        type: string
+        required: no
+        default: ""
+      s3_endpoint:
+        type: string
+        required: no
+        default: ""
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            values_url: { get_property: [ SELF, values_url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
+            repos: { get_property: [ SELF, repos ] }
+            externalIp: { get_property: [ SELF, externalIp ] }
+            jupyter_token: { get_property: [ SELF, jupyter_token ] }
+            s3_bucket: { get_property: [ SELF, s3_bucket ] }
+            s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
+

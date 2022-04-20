@@ -28,4 +28,4 @@
       nginx_ingress:
         enabled: true
         master_private_ip: "{{ kube_front_end_ip }}"
-        master_public_ip: "{{ kube_api_server_public }}"
+        master_public_ip: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" 

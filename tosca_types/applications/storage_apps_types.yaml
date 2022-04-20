@@ -1,0 +1,104 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/base/basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: storage_apps_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+node_types:
+
+
+  tosca.nodes.indigo.CloudStorageService:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      owncloud_hostname:
+        type: string
+        #default: { concat: [ "data.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      nagios_hostname:
+        type: string
+        #default: { concat: [ "status.",  get_attribute: [ HOST, public_address, 0 ], ".myip.cloud.infn.it" ] }
+      owncloud_version:
+        type: string
+        default: "'10'"
+      mysql_root_passw:
+        type: string
+      owncloud_admin_user:
+        type: string
+        default: "admin"
+      owncloud_admin_passw:
+        type: string
+      nagios_admin_user:
+        type: string
+        default: "admin"
+      nagios_admin_passw:
+        type: string
+      backup_passphrase:
+        type: string
+      contact_email:
+        type: string
+      smtp_username:
+        type: string
+      smtp_password:
+        type: string
+      s3_data_bucket:
+        type: string
+      s3_backup_bucket:
+        type: string
+      s3_access_key:
+        type: string
+      s3_secret_key:
+        type: string
+      s3_endpoint:
+        type: string
+      iam_url:
+        type: string
+        default: "https://iam.cloud.infn.it"
+      iam_group:
+        type: string
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.3
+        type: tosca.artifacts.AnsibleGalaxy.role
+      cloudstorage_role:
+        file: git+https://baltig.infn.it/infn-cloud/ansible-role-cloudstorage.git
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/cloudstorage/configure.yml
+          inputs:
+            cloudstorage_owncloud_version: { get_property: [ SELF, owncloud_version ] }
+            cloudstorage_owncloud_hostname: { get_property: [ SELF, owncloud_hostname ] }
+            cloudstorage_owncloud_admin_user: { get_property: [ SELF, owncloud_admin_user ] }
+            cloudstorage_owncloud_admin_passw: { get_property: [ SELF, owncloud_admin_passw ] }
+            cloudstorage_mysql_root_passw: { get_property: [ SELF, mysql_root_passw ] }
+            cloudstorage_nagios_hostname: { get_property: [ SELF, nagios_hostname ] }
+            cloudstorage_nagios_admin_user: { get_property: [ SELF, nagios_admin_user ] }
+            cloudstorage_nagios_admin_passw: { get_property: [ SELF, nagios_admin_passw ] }
+            cloudstorage_backup_passphrase: { get_property: [ SELF, backup_passphrase ] }
+            cloudstorage_contact_email: { get_property: [ SELF, contact_email ] }
+            cloudstorage_smtp_username: { get_property: [ SELF, smtp_username ] }
+            cloudstorage_smtp_password: { get_property: [ SELF, smtp_password ] }
+            cloudstorage_s3_data_bucket: { get_property: [ SELF, s3_data_bucket ] }
+            cloudstorage_s3_backup_bucket: { get_property: [ SELF, s3_backup_bucket ] }
+            cloudstorage_s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
+            cloudstorage_s3_access_key: { get_property: [ SELF, s3_access_key ] }
+            cloudstorage_s3_secret_key: { get_property: [ SELF, s3_secret_key ] }
+            cloudstorage_iam_url: { get_property: [ SELF, iam_url ] }
+            cloudstorage_iam_group: { get_property: [ SELF, iam_group ] }
+

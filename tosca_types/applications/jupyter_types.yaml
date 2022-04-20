@@ -1,0 +1,116 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/base/basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: jupyter_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
+
+node_types:
+
+  tosca.nodes.DODAS.single-node-jupyterhub:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      install_docker:
+        type: boolean
+        default: true
+      install_docker_compose:
+        type: boolean
+        default: true
+      monitoring:
+        type: boolean
+        default: true
+      iam_url:
+        type: string
+        default: "https://iam.cloud.infn.it/"
+      iam_groups:
+        type: string
+        default: "beta_tester"
+      iam_admin_groups:
+        type: string
+        default: "beta_tester"
+      prepare_jupyter:
+        type: boolean
+        default: true
+      run_jupyter:
+        type: boolean
+        default: true
+      jupyter_images:
+        type: string
+        default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
+      jupyter_use_gpu:
+        type: boolean
+        default: false
+      jupyter_post_start_cmd:
+        type: string
+        default: ""
+      jupyter_host_mount_dir:
+        type: string
+        default: ""
+      jupyterlab_collaborative:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_use_gpu:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_image:
+        type: string
+        default: "dodasts/snj-base-jlabc:v1.0.0-snj"
+      cvmfs_repos:
+        type: string
+        default: ""
+      server_ip:
+        type: string
+        default: ""
+      role_name:
+        type: string
+        required: false
+        default: ansible-role-jupyterhub-env
+    artifacts:
+      ml_role:
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.0.3
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name: { get_property: [ SELF, role_name ] }
+            install_docker: { get_property: [SELF, install_docker] }
+            install_docker_compose: { get_property: [SELF, install_docker_compose] }
+            monitoring: { get_property: [SELF, monitoring] }
+            iam_url: { get_property: [SELF, iam_url] }
+            iam_groups: { get_property: [SELF, iam_groups] }
+            iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
+            prepare_jupyter: { get_property: [SELF, prepare_jupyter] }
+            run_jupyter: { get_property: [SELF, run_jupyter] }
+            jupyter_images: { get_property: [SELF, jupyter_images] }
+            jupyter_use_gpu: { get_property: [SELF, jupyter_use_gpu] }
+            jupyter_post_start_cmd: { get_property: [SELF, jupyter_post_start_cmd] }
+            jupyter_host_mount_dir: { get_property: [SELF, jupyter_host_mount_dir] }
+            jupyterlab_collaborative: { get_property: [SELF, jupyterlab_collaborative] }
+            jupyterlab_collaborative_use_gpu: { get_property: [SELF, jupyterlab_collaborative_use_gpu] }
+            jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
+            cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
+            server_ip: { get_property: [SELF, server_ip] }
+
+

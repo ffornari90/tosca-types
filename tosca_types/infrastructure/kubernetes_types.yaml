@@ -1,0 +1,202 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/base/cluster_basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: kubernetes_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+
+capability_types:
+
+  tosca.capabilities.indigo.LRMS.Kubernetes:
+    derived_from: tosca.capabilities.indigo.LRMS
+    properties:
+      type:
+        type: string
+        required: true
+        default: kubernetes
+        constraints:
+          - equal: kubernetes
+
+
+node_types:
+
+  tosca.nodes.DODAS.FrontEnd.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/kubernetesFE.png
+    properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: string
+        default: some_insecure_token
+      kube_version:
+        required: no
+        type: string
+        default: 1.17.0
+      kube_deploy_dashboard:
+        required: no
+        type: string
+        default: k8s
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.2
+        type: tosca.artifacts.AnsibleGalaxy.role
+      kube_role:
+        file:  dodas.kubernetes,v2.1.0-patch3
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+        lrms:
+          type: tosca.capabilities.indigo.LRMS.Kubernetes
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/dodas/kube_fe_install.yaml
+          inputs:
+            kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            kube_api_server_public: { get_attribute: [ HOST, public_address, 0 ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }
+            kube_version:  { get_property: [ SELF, kube_version] }
+            kube_deploy_dashboard: { get_property: [ SELF, kube_deploy_dashboard ] }
+
+  tosca.nodes.DODAS.WorkerNode.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/kubernetesWN.png
+    properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: string
+        default: some_insecure_token
+      kubelet_extra_args:
+        required: no
+        type: string
+        default: ""
+      kube_version:
+        required: no
+        type: string
+        default: 1.17.0
+      nodelabel:
+        type: string
+        required: no
+        default: "testme=true"
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.2
+        type: tosca.artifacts.AnsibleGalaxy.role
+      kube_role:
+        file: dodas.kubernetes,v2.1.0-patch3
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/dodas/kube_wn_install.yaml
+          inputs:
+            kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args] }
+            kube_version:  { get_property: [ SELF, kube_version] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }
+            nodelabel: { get_property: [ SELF, nodelabel] }
+
+
+  tosca.nodes.DODAS.HelmInstall:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: yes
+      chart:
+        type: string
+        description: chart name
+        required: yes
+      repos:
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
+      values_file:
+        type: string
+        description: values.yaml file content
+        required: no
+        default: ""
+      values_url:
+        type: string
+        description: values.yaml file url
+        required: no
+        default: ""
+      kubeconfig_path:
+        type: string
+        required: no
+        default: /etc/kubernetes/admin.conf
+      inline_options:
+        type: string
+        required: no
+        default: ""
+      helm_version:
+        type: string
+        required: no
+        default: "v2"
+      role_name:
+        type: string
+        required: no
+        default: dodas.helm
+    artifacts:
+      helm_config_role:
+        file: dodas.helm,v2.0.0-rc5
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            values_url: { get_property: [ SELF, values_url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
+            helm_version: { get_property: [ SELF, helm_version ] }
+            repos: { get_property: [ SELF, repos ] }
+

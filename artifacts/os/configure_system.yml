@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    security_fail2ban_jail_configuration: "{{ fail2ban_jail_configuration | from_yaml }}"
+  roles:
+  - role: indigo-dc.os_users
+  - role: maricaantonacci.security

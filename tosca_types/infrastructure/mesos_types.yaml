@@ -1,0 +1,292 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/refactoring/tosca_types/base/cluster_basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: mesos_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+
+capability_types:
+
+  tosca.capabilities.indigo.LRMS.Mesos:
+    derived_from: tosca.capabilities.indigo.LRMS
+    properties:
+      type:
+        type: string
+        required: true
+        default: mesos
+        constraints:
+          - equal: mesos
+
+  tosca.capabilities.indigo.MesosSlave:
+    derived_from: tosca.capabilities.Container
+
+  tosca.capabilities.indigo.MesosMaster:
+    derived_from: tosca.capabilities.indigo.ClusterMaster
+
+node_types:
+
+  tosca.nodes.indigo.MesosMaster:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
+
+  tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/mesos.png
+    capabilities:
+        lrms:
+          type: tosca.capabilities.indigo.LRMS.Mesos
+        host:
+          type: tosca.capabilities.indigo.MesosMaster
+    properties:
+      # Set the current data of the mesos server
+      # but it can also be specified in the TOSCA document
+      mesos_masters_list:
+        type: list
+        entry_schema:
+          type: string
+        required: no
+        default: ['127.0.0.1']
+      dns_name:
+        type: string 
+        required: yes
+        default: ""
+      certbot_admin_email:
+        type: string
+        default: ""
+        required: no  
+      mesos_authenticate_http:
+        type: boolean
+        required: no
+        default: true
+      mesos_username:
+        type: string
+        required: no
+        default: 'admin'
+      mesos_password:
+        type: string
+        required: no
+        default: 'admin'
+      mesos_enable_ssl:
+        type: boolean  
+        required: no
+        default: true
+      ssl_cert_gen:
+        type: string
+        required: no
+        default: letsencrypt       
+      marathon_enable_ssl:
+        type: boolean
+        required: no
+        default: true
+      marathon_username:
+        type: string
+        required: no
+        default: admin
+      marathon_password:
+        type: string
+        required: yes
+      enable_chronos:
+        type: boolean
+        required: no
+        default: false
+      chronos_enable_ssl:
+        type: boolean
+        required: no
+        default: true
+      chronos_username:
+        type: string
+        required: no
+        default: admin
+      chronos_password:
+        type: string
+        required: no
+        default: admin
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
+      enable_nfs_share:
+        type: boolean
+        required: no
+        default: false
+      enable_gpu_support:
+        type: boolean
+        required: no
+        default: false
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker,v2.1.2
+        #file: git+https://github.com/indigo-dc/ansible-role-docker.git,fix/issue_13
+        type: tosca.artifacts.AnsibleGalaxy.role
+      zookeeper_agent_role:
+        file: git+https://github.com/indigo-dc/ansible-role-zookeeper.git,devel
+        type: tosca.artifacts.AnsibleGalaxy.role
+      mesos_agent_role:
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,dev
+        type: tosca.artifacts.AnsibleGalaxy.role
+      marathon_agent_role:
+        file: git+https://github.com/indigo-dc/ansible-role-marathon.git,dev
+        type: tosca.artifacts.AnsibleGalaxy.role
+      chronos_agent_role:
+        file: git+https://github.com/indigo-dc/ansible-role-chronos.git,dev
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/mesos/mesos_master_install.yml
+          inputs:
+            mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
+            mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
+            mesos_username: { get_property: [ SELF, mesos_username ] }
+            mesos_password: { get_property: [ SELF, mesos_password ] }
+            mesos_enable_ssl: { get_property: [ SELF, mesos_enable_ssl ] }
+            mesos_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
+            marathon_enable_ssl: { get_property: [ SELF, marathon_enable_ssl ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            marathon_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
+            enable_chronos: { get_property: [ SELF, enable_chronos ] }
+            chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
+            chronos_ssl_cert_gen: { get_property: [ SELF, ssl_cert_gen ] }
+            chronos_username: { get_property: [ SELF, chronos_username ] }
+            chronos_password: { get_property: [ SELF, chronos_password ] }
+            enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            marathon_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            dns_name: { get_property: [ SELF, dns_name ] }
+            mesos_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
+            marathon_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
+            chronos_certbot_admin_email: { get_property: [ SELF, certbot_admin_email ] }
+            wn_ips: { get_property: [ SELF, wn_ips ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+
+  tosca.nodes.indigo.MesosSlave:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
+
+  tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/mesos.png
+    capabilities:
+        host:
+          type: tosca.capabilities.indigo.MesosSlave
+    properties:
+      # Set the current data of the mesos server
+      # but it can also specified in the TOSCA document
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      enable_nfs_share:
+        type: boolean
+        required: no
+        default: false
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
+      enable_gpu_support:
+        type: boolean
+        required: no
+        default: false
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker,2.1.2-beta
+        #file: git+https://github.com/indigo-dc/ansible-role-docker.git,fix/issue_13
+        type: tosca.artifacts.AnsibleGalaxy.role
+      mesos_agent_role:
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,dev
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/mesos/mesos_slave_install.yml
+          inputs:
+            mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
+            enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+
+
+
+  tosca.nodes.indigo.MesosLoadBalancer:
+    derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/mesos.png
+    properties:
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      marathon_username:
+        type: string
+        required: no
+        default: admin
+      marathon_password:
+        type: string
+        required: yes
+      hybrid:
+        type: boolean
+        description: Flag to specify that this ElasticCluster will work in a hybrid environment
+        default: false
+        required: false
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+      marathon_lb_role:
+        file: indigo-dc.marathon-lb,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/refactoring/artifacts/mesos/mesos_lb_install.yml
+          inputs:
+            master_ips: { get_property: [ SELF, master_ips ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            lb_hybrid_cluster: { get_property: [ SELF, hybrid ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.Compute
+          relationship: tosca.relationships.HostedOn
+
+

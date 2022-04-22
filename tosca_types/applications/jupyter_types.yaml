@@ -39,6 +39,9 @@ node_types:
       monitoring:
         type: boolean
         default: true
+      monitoring_image:
+        type: string
+        default: dodasts/monitoring-grafana:v1.0.4-monitoring
       iam_url:
         type: string
         default: "https://iam.cloud.infn.it/"
@@ -54,6 +57,9 @@ node_types:
       run_jupyter:
         type: boolean
         default: true
+      jupyter_hub_image:
+        type: string
+        default: "dodasts/snj-base-jhub:v1.0.0-snj"
       jupyter_images:
         type: string
         default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
@@ -87,7 +93,7 @@ node_types:
         default: ansible-role-jupyterhub-env
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.0.3
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.0.4
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -98,11 +104,13 @@ node_types:
             install_docker: { get_property: [SELF, install_docker] }
             install_docker_compose: { get_property: [SELF, install_docker_compose] }
             monitoring: { get_property: [SELF, monitoring] }
+            grafana_image: { get_property: [SELF, monitoring_image] }
             iam_url: { get_property: [SELF, iam_url] }
             iam_groups: { get_property: [SELF, iam_groups] }
             iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
             prepare_jupyter: { get_property: [SELF, prepare_jupyter] }
             run_jupyter: { get_property: [SELF, run_jupyter] }
+            jupyter_hub_image: { get_property: [SELF, jupyter_hub_image] }
             jupyter_images: { get_property: [SELF, jupyter_images] }
             jupyter_use_gpu: { get_property: [SELF, jupyter_use_gpu] }
             jupyter_post_start_cmd: { get_property: [SELF, jupyter_post_start_cmd] }

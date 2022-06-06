@@ -62,7 +62,7 @@ node_types:
         default: true
       jupyter_hub_image:
         type: string
-        default: "dodasts/snj-base-jhub:v1.0.0-snj"
+        default: "dodasts/snj-base-jhub:v1.0.2-snj"
       jupyter_images:
         type: string
         default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"

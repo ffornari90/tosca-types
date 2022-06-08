@@ -45,6 +45,9 @@ node_types:
       iam_url:
         type: string
         default: "https://iam.cloud.infn.it/"
+      iam_subject:
+        type: string
+        required: yes
       iam_groups:
         type: string
         default: "beta_tester"
@@ -59,7 +62,7 @@ node_types:
         default: true
       jupyter_hub_image:
         type: string
-        default: "dodasts/snj-base-jhub:v1.0.0-snj"
+        default: "dodasts/snj-base-jhub:v1.0.2-snj"
       jupyter_images:
         type: string
         default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
@@ -93,7 +96,7 @@ node_types:
         default: ansible-role-jupyterhub-env
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.0.4
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -106,6 +109,7 @@ node_types:
             monitoring: { get_property: [SELF, monitoring] }
             grafana_image: { get_property: [SELF, monitoring_image] }
             iam_url: { get_property: [SELF, iam_url] }
+            iam_subject: { get_property: [SELF, iam_subject] }
             iam_groups: { get_property: [SELF, iam_groups] }
             iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
             prepare_jupyter: { get_property: [SELF, prepare_jupyter] }

@@ -14,7 +14,7 @@
       openvpn_type_of_node: "front"
       openvpn_frontname: "kubeserver"
       when: fe_hybrid_cluster
-    - role: dodas.kubernetes
+    - role: ansible-role-kubernetes
       kube_server: "{{ kube_front_end_ip }}"
       kube_api_server: "{{ kube_front_end_ip }}"
       kube_apiserver_options:

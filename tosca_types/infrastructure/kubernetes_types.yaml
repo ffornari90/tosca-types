@@ -52,7 +52,31 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.17.0
+        default: 1.23.8
+      nginx_ingress_helm_version:
+        required: no
+        type: string
+        default: 4.1.4
+      cert_manager_helm_version:
+        required: no
+        type: string
+        default: v1.8.1
+      dashboard_helm_version:
+        required: no
+        type: string
+        default: 5.7.0
+      prometheus_helm_version: 
+        required: no
+        type: string
+        default: 15.10.1
+      kube_eagle_helm_version:
+        required: no
+        type: string
+        default: 2.0.0
+      grafana_helm_version:
+        required: no
+        type: string
+        default:  6.30.3
       kube_deploy_dashboard:
         required: no
         type: string
@@ -85,6 +109,13 @@ node_types:
             kube_admin_token:  { get_property: [ SELF, admin_token] }
             kube_version:  { get_property: [ SELF, kube_version] }
             kube_deploy_dashboard: { get_property: [ SELF, kube_deploy_dashboard ] }
+            nginx_ingress_helm_version: { get_property: [ SELF, nginx_ingress_helm_version ] }
+            cert_manager_helm_version: { get_property: [ SELF, cert_manager_helm_version ] }
+            dashboard_helm_version: { get_property: [ SELF, dashboard_helm_version ] }
+            prometheus_helm_version: { get_property: [ SELF, prometheus_helm_version ] }
+            kube_eagle_helm_version: { get_property: [ SELF, kube_eagle_helm_version ] } 
+            grafana_helm_version: { get_property: [ SELF, grafana_helm_version ] }
+
 
   tosca.nodes.DODAS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -106,7 +137,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.17.0
+        default: 1.23.8
       nodelabel:
         type: string
         required: no

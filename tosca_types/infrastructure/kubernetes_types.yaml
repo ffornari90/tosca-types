@@ -82,11 +82,11 @@ node_types:
         type: string
         default: k8s
     artifacts:
-      docker_role:
-        file: indigo-dc.docker,v2.1.2 # ---> !!!
+      containerd_role:
+        file: indigo-dc.containerd,v1.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file:  dodas.kubernetes,v3.0.0-patch1 # ---> !!!
+        file:  dodas.kubernetes,v4.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -100,7 +100,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/CLOUD-1394/artifacts/dodas/kube_fe_install.yaml # ---> !!!
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/k8s_1_24/artifacts/dodas/kube_fe_install.yaml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             kube_api_server_public: { get_attribute: [ HOST, public_address, 0 ] }
@@ -143,11 +143,11 @@ node_types:
         required: no
         default: "testme=true"
     artifacts:
-      docker_role:
-        file: indigo-dc.docker,v2.1.2 # ---> !!!
+      containerd_role:
+        file: indigo-dc.containerd,v1.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: dodas.kubernetes,v3.0.0-patch1 # ---> !!!
+        file: dodas.kubernetes,v4.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -158,7 +158,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/CLOUD-1394/artifacts/dodas/kube_wn_install.yaml # ---> !!!
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/k8s_1_24/artifacts/dodas/kube_wn_install.yaml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -207,19 +207,19 @@ node_types:
       helm_version:
         type: string
         required: no
-        default: "v2" # ---> !!!
+        default: "v3"
       role_name:
         type: string
         required: no
         default: dodas.helm
     artifacts:
       helm_config_role:
-        file: dodas.helm,v2.0.0-rc5 # ---> !!!
+        file: dodas.helm,v3.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml # ---> !!!
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }

@@ -83,10 +83,10 @@ node_types:
         default: k8s
     artifacts:
       containerd_role:
-        file: indigo-dc.containerd,v1.0.0
+        file: geerlingguy.containerd,v1.3.0
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file:  dodas.kubernetes,v4.0.0
+        file: git+https://github.com/zinus92/ansible-role-kubernetes.git,k8s_1_24
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -144,10 +144,10 @@ node_types:
         default: "testme=true"
     artifacts:
       containerd_role:
-        file: indigo-dc.containerd,v1.0.0
+        file: geerlingguy.containerd,v1.3.0
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: dodas.kubernetes,v4.0.0
+        file: git+https://github.com/zinus92/ansible-role-kubernetes.git,k8s_1_24
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -214,7 +214,7 @@ node_types:
         default: dodas.helm
     artifacts:
       helm_config_role:
-        file: dodas.helm,v3.0.0
+        file: dodas.helm,v2.0.0-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

@@ -100,7 +100,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/CLOUD-1394/artifacts/dodas/kube_fe_install.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/kube_fe_install.yaml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             kube_api_server_public: { get_attribute: [ HOST, public_address, 0 ] }
@@ -158,7 +158,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/CLOUD-1394/artifacts/dodas/kube_wn_install.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/kube_wn_install.yaml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }

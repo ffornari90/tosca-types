@@ -1,11 +1,11 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/tosca_types/infrastructure/kubernetes_types.yaml
+  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/CLOUD-1394/tosca_types/infrastructure/kubernetes_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
-  template_name: docker_types
+  template_name: spark_types
   template_version: 1.0.0
 
 
@@ -49,6 +49,18 @@ node_types:
         type: string
         required: no
         default: ""
+      iam_url:
+        type: string
+        default: "https://iam.cloud.infn.it/"
+      iam_subject:
+        type: string
+        required: yes
+      iam_groups:
+        type: string
+        default: ""
+      iam_admin_groups:
+        type: string
+        default: ""
     interfaces:
       Standard:
         start:
@@ -67,4 +79,8 @@ node_types:
             s3_bucket: { get_property: [ SELF, s3_bucket ] }
             s3_endpoint: { get_property: [ SELF, s3_endpoint ] }
             helm_version: { get_property: [ SELF, helm_version ] }
+            iam_endpoint: { get_property: [SELF, iam_url] }
+            iam_subject: { get_property: [SELF, iam_subject] }
+            iam_groups: { get_property: [SELF, iam_groups] }
+            iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
 

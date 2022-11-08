@@ -6,7 +6,7 @@
       openvpn_type_of_node: "wn"
       openvpn_frontname: "kubeserver"
       when: wn_hybrid_cluster
-    - role: kube_role
+    - role: git+https://github.com/zinus92/ansible-role-kubernetes.git,k8s_1_24
       kube_type_of_node: "wn"
       kube_server: "{{kube_front_end_ip}}"
       kube_api_server: "{{ kube_front_end_ip }}"

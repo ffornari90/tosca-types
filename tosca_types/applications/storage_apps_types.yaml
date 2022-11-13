@@ -82,7 +82,7 @@ node_types:
         file: indigo-dc.docker,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role
       cloudstorage_role:
-        file: git+https://baltig.infn.it/infn-cloud/ansible-role-cloudstorage.git,nexcloud
+        file: git+https://baltig.infn.it/infn-cloud/ansible-role-cloudstorage.git,nextcloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

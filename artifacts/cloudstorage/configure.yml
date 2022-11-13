@@ -7,12 +7,12 @@
     cloudstorage_mariadb_version: 10.5.11    
   tasks:
     - include_role:
-      name: ansible-role-cloudstorage
+        name: ansible-role-cloudstorage
       vars:
         cloudstorage_app_version: 10.11.0
       when: cloudstorage_app == owncloud
     - include_role:
-      name: ansible-role-cloudstorage
+        name: ansible-role-cloudstorage
       vars:
         cloudstorage_app_version: 25.0.1
       when: cloudstorage_app == nextcloud

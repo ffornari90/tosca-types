@@ -27,7 +27,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       test_flag:
-        type: bool
+        type: boolean
         default: true
       data_service_implementation:
         type: string

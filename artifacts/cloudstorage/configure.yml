@@ -10,11 +10,11 @@
         name: ansible-role-cloudstorage
       vars:
         cloudstorage_app_version: 10.11.0
-      when: cloudstorage_app == owncloud
+      when: cloudstorage_app == 'owncloud'
     - include_role:
         name: ansible-role-cloudstorage
       vars:
         cloudstorage_app_version: 25.0.1
-      when: cloudstorage_app == nextcloud
+      when: cloudstorage_app == 'nextcloud'
     
 

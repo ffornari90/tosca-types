@@ -90,6 +90,7 @@ node_types:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/nexcloud_patch/artifacts/cloudstorage/configure.yml
           inputs:
             cloudstorage_letsencrypt_test: { get_property: [ SELF, test_flag ] }
+            cloudstorage_app: { get_property: [ SELF, data_service_implementation ] }
             cloudstorage_service_hostname: { get_property: [ SELF, data_service_hostname ] }
             cloudstorage_nagios_hostname: { get_property: [ SELF, mon_service_hostname ] }
             cloudstorage_admin_user: { get_property: [ SELF, admin_user ] }

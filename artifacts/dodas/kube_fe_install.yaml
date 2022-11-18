@@ -23,7 +23,7 @@
           { option: "--token-auth-file", value: "/etc/kubernetes/pki/auth" },
         ]
       kube_deploy_dashboard: k8s
-      network_manager: calico
+      network_manager: flannel
       nginx_ingress:
         enabled: true
         master_private_ip: "{{ kube_front_end_ip }}"

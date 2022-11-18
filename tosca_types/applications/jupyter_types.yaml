@@ -41,7 +41,7 @@ node_types:
         default: true
       monitoring_image:
         type: string
-        default: dodasts/monitoring-grafana:v1.0.6-monitoring
+        default: dodasts/monitoring-grafana:v1.0.7-monitoring
       iam_url:
         type: string
         default: "https://iam.cloud.infn.it/"

@@ -52,7 +52,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.24.7
+        default: 1.24.8
       nginx_ingress_helm_version:
         required: no
         type: string
@@ -137,7 +137,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.24.7
+        default: 1.24.8
       nodelabel:
         type: string
         required: no

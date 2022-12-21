@@ -44,9 +44,11 @@ node_types:
         required: no
         default: latest
       docker_ports:
-        type: string
+        type: list
+        entry_schema:
+          type: string   
         required: no
-        default: "80" 
+        default: [] 
       docker_command:
         type: string
         required: no
@@ -86,7 +88,7 @@ node_types:
       docker_compose_version:
         type: version
         required: no
-        default: 1.25.5
+        default: 1.29.2
       docker_compose_file_url:
         type: string
         required: no

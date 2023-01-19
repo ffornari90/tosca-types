@@ -93,7 +93,7 @@ node_types:
       role_name:
         type: string
         required: false
-        default: ansible-role-jupyterhub-env
+        default: ansible-role-jupyterhub
     artifacts:
       ml_role:
         file: git+https://baltig.infn.it/fornari/ansible-role-jupyterhub,v0.0.1

@@ -96,7 +96,7 @@ node_types:
         default: ansible-role-jupyterhub
     artifacts:
       ml_role:
-        file: git+https://baltig.infn.it/fornari/ansible-role-jupyterhub,v0.0.1
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

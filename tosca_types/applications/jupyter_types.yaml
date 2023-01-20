@@ -98,6 +98,14 @@ node_types:
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      docker_compose_version:
+        type: version
+        required: no
+        default: 1.29.2
+      docker_compose_file_url:
+        type: string
+        required: no
+        default: ""
       environment_variables:
         required: no
         default: []
@@ -106,6 +114,9 @@ node_types:
           type: map
           entry_schema:
             type: string
+      project_name:
+        type: string
+        required: no
     artifacts:
       docker_role:
         file: indigo-dc.docker,v2.1.3

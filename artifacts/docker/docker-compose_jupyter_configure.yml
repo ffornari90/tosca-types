@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  roles:
+    - role: "{{ role_name }}"
   vars:
     docker_bridge_ip_cidr: "172.0.17.1/24"
   tasks:

@@ -108,6 +108,10 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
+        configure:
+          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/jupyter_traefik/artifacts/docker/docker-compose_jupyter_configure.yml
+          inputs:
+            environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
@@ -132,25 +136,3 @@ node_types:
             jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
             server_ip: { get_property: [SELF, server_ip] }
-
-  tosca.nodes.indigo.DockerCompose:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      environment_variables:
-        required: no
-        default: []
-        type: list
-        entry_schema:
-          type: map
-          entry_schema:
-            type: string
-    artifacts:
-      docker_role:
-        file: indigo-dc.docker,v2.1.3
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        start:
-          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/jupyter_traefik/artifacts/docker/docker-compose_jupyter_configure.yml
-          inputs:
-            environment_variables: { get_property: [ SELF, environment_variables ] }

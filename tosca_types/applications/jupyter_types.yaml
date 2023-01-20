@@ -98,6 +98,10 @@ node_types:
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      role_name:
+        type: string
+        required: false
+        default: ansible-role-jupyterhub
       docker_compose_version:
         type: version
         required: no

@@ -151,6 +151,6 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/jupyter_traefik/artifacts/docker/docker-compose_jupyter_configure.yml
           inputs:
             environment_variables: { get_property: [ SELF, environment_variables ] }

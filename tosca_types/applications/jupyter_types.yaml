@@ -94,6 +94,14 @@ node_types:
         type: string
         required: false
         default: ansible-role-jupyterhub
+      environment_variables:
+        required: no
+        default: []
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
     artifacts:
       ml_role:
         file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.1

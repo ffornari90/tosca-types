@@ -129,4 +129,3 @@ node_types:
             jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
             server_ip: { get_property: [SELF, server_ip] }
-            environment_variables: { get_property: [ SELF, environment_variables ] }

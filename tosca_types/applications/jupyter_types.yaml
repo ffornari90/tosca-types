@@ -94,23 +94,20 @@ node_types:
         type: string
         required: false
         default: ansible-role-jupyterhub
-      environment_variables:
-        required: no
-        default: []
-        type: list
-        entry_schema:
-          type: map
-          entry_schema:
-            type: string
+      contact_email:
+        type: string
+        required: false
+        default: ""
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.7
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/artifacts/dodas/ansible.yaml
           inputs:
+            contact_email: { get_property: [ SELF, contact_email ] }
             role_name: { get_property: [ SELF, role_name ] }
             install_docker: { get_property: [SELF, install_docker] }
             install_docker_compose: { get_property: [SELF, install_docker_compose] }

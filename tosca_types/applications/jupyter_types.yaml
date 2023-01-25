@@ -104,7 +104,7 @@ node_types:
             type: string
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.6
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.7
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

@@ -98,15 +98,19 @@ node_types:
         type: string
         required: false
         default: ""
+      test_flag:
+        type: boolean
+        default: true
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.0.9
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/artifacts/dodas/ansible.yaml
           inputs:
+            letsencrypt_test: { get_property: [ SELF, test_flag ] }
             contact_email: { get_property: [ SELF, contact_email ] }
             role_name: { get_property: [ SELF, role_name ] }
             install_docker: { get_property: [SELF, install_docker] }

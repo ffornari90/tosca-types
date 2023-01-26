@@ -98,7 +98,7 @@ node_types:
         type: string
         required: false
         default: ""
-      test_flag:
+      letsencrypt_test:
         type: boolean
         default: true
     artifacts:
@@ -110,7 +110,7 @@ node_types:
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/artifacts/dodas/ansible.yaml
           inputs:
-            letsencrypt_test: { get_property: [ SELF, test_flag ] }
+            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
             contact_email: { get_property: [ SELF, contact_email ] }
             role_name: { get_property: [ SELF, role_name ] }
             install_docker: { get_property: [SELF, install_docker] }

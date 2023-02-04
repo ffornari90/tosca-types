@@ -132,6 +132,9 @@ node_types:
         type: string
         required: no
         default: myip.cloud.infn.it
+      dns_name:
+        type: string
+        required: no
       letsencrypt_test:
         type: boolean
         default: true

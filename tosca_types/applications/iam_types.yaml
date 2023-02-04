@@ -142,7 +142,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/iam_start.yml
+          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/iam_voms-aa/artifacts/docker/iam_start.yml
           inputs:
             letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }

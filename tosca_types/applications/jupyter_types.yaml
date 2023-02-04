@@ -95,7 +95,7 @@ node_types:
         default: "myip.cloud.infn.it"
       dns_name:
         type: string
-        value: { get_property: [ SELF, server_ip ] } ~ "." ~ { get_property: [ SELF, network_domain ] }
+        value: { get_property: [ SELF, server_ip ] + "." + get_property: [ SELF, network_domain ] }
       role_name:
         type: string
         required: false

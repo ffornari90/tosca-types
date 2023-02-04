@@ -125,9 +125,6 @@ node_types:
       active_profiles:
         type: string
         required: no
-      server_ip:
-        type: string
-        required: no
       network_domain:
         type: string
         required: no
@@ -159,6 +156,4 @@ node_types:
             notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }
             active_profiles:  { get_property: [ SELF, active_profiles ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
-            server_ip: { get_property: [ SELF, server_ip ] }
             network_domain: { get_property: [ SELF, network_domain ] }
-            dns_name: { concat: [get_property: [SELF, server_ip], ".", get_property: [SELF, network_domain]] }

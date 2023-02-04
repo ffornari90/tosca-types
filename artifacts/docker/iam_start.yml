@@ -1,0 +1,109 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    docker_bridge_ip_cidr: "172.0.17.1/24"
+  tasks:
+
+    - name: Call Docker role
+      include_role:
+        name: indigo-dc.docker
+
+    - name: "Create env file, download and start the docker compose file"
+      block:
+
+        - name: "create directory path to store the configuration files"
+          file:
+            path: "/opt/{{ project_name }}"
+            state: directory
+            mode: 0755
+
+        - name: Set environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_dict: "{{ environment_variables }}"
+
+        - name: Add CONTACT_EMAIL and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "CONTACT_EMAIL", value: "{{ contact_email }}" }
+
+        - name: Add MAIL_HOST and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "MAIL_HOST", value: "{{ mail_host }}" }
+
+        - name: Add MAIL_USERNAME and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "MAIL_USERNAME", value: "{{ mail_username }}" }
+
+        - name: Add MAIL_PASSWORD and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "MAIL_PASSWORD", value: "{{ mail_password }}" }
+
+        - name: Add NOTIFICATION_FROM and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "NOTIFICATION_FROM", value: "{{ notification_from }}" }
+
+        - name: Add NOTIFICATION_ADMIN_ADDRESS and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "NOTIFICATION_ADMIN_ADDRESS", value: "{{ notification_admin_address }}" }
+
+        - name: Add ACTIVE_PROFILES and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "ACTIVE_PROFILES", value: "{{ active_profiles }}" }
+
+        - name: Add LETSENCRYPT_TEST and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "LETSENCRYPT_TEST", value: "{{ letsencrypt_test }}" }
+
+        - name: Add HOST_PUBLIC_IP and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "HOST_PUBLIC_IP", value: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" }
+
+        - name: "Download the docker-compose file"
+          get_url:
+            url: "{{ docker_compose_file_url }}"
+            dest: "/opt/{{ project_name }}/docker-compose.yaml"
+
+        - name: "Start the service"
+          docker_service:
+            project_src: "/opt/{{ project_name }}"
+            state: present
+      when: docker_compose_file_url != ""

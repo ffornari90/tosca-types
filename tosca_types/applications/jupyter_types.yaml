@@ -109,7 +109,7 @@ node_types:
         default: ".myip.cloud.infn.it"
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.1.5
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.1.7
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

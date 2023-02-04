@@ -138,6 +138,7 @@ node_types:
       dns_name:
         type: string
         required: no
+        default: server_ip.myip.cloud.infn.it
       letsencrypt_test:
         type: boolean
         default: true

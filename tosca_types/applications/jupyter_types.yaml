@@ -90,9 +90,12 @@ node_types:
       server_ip:
         type: string
         default: ""
+      network_domain:
+        type: string
+        default: ".myip.cloud.infn.it"
       dns_name:
         type: string
-        default: ""
+        value: { get_property: [ SELF, server_ip ] } + { get_property: [ SELF, network_domain ] }
       role_name:
         type: string
         required: false
@@ -104,9 +107,6 @@ node_types:
       letsencrypt_test:
         type: boolean
         default: true
-      network_domain:
-        type: string
-        default: ".myip.cloud.infn.it"
     artifacts:
       ml_role:
         file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.1.7
@@ -140,4 +140,4 @@ node_types:
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
             server_ip: { get_property: [SELF, server_ip] }
             network_domain: { get_property: [SELF, network_domain] }
-            dns_name: { get_property: [SELF, server_ip] }{ get_property: [SELF, network_domain] }
+            dns_name: { get_property: [SELF, dns_name] }

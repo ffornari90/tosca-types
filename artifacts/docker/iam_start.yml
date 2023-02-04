@@ -81,6 +81,22 @@
           with_items:
              - { key: "ACTIVE_PROFILES", value: "{{ active_profiles }}" }
 
+        - name: Add ORGANISATION_NAME and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "ORGANISATION_NAME", value: "{{ organisation_name }}" }
+
+        - name: Add LOGO_URL and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "LOGO_URL", value: "{{ logo_url }}" }
+
         - name: Add LETSENCRYPT_TEST and additional environment variables
           lineinfile:
             path: /opt/{{ project_name }}/.env

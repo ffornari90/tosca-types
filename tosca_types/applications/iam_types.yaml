@@ -125,6 +125,12 @@ node_types:
       active_profiles:
         type: string
         required: no
+      organisation_name:
+        type: string
+        required: no
+      logo_url:
+        type: string
+        required: no
       network_domain:
         type: string
         required: no
@@ -155,5 +161,7 @@ node_types:
             notification_from:  { get_property: [ SELF, notification_from ] }
             notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }
             active_profiles:  { get_property: [ SELF, active_profiles ] }
+            organisation_name:  { get_property: [ SELF, organisation_name ] }
+            logo_url:  { get_property: [ SELF, logo_url ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
             network_domain: { get_property: [ SELF, network_domain ] }

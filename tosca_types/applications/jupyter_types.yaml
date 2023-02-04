@@ -140,4 +140,4 @@ node_types:
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
             server_ip: { get_property: [SELF, server_ip] }
             network_domain: { get_property: [SELF, network_domain] }
-            dns_name: { get_property: [SELF, server_ip], get_property: [SELF, network_domain] }
+            dns_name: { get_property: [SELF, server_ip] + [SELF, network_domain] }

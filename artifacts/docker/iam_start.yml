@@ -89,6 +89,14 @@
           with_items:
              - { key: "LETSENCRYPT_TEST", value: "{{ letsencrypt_test }}" }
 
+        - name: Add DNS_NAME and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "DNS_NAME", value: "{{ dns_name }}" }
+
         - name: Add HOST_PUBLIC_IP and additional environment variables
           lineinfile:
             path: /opt/{{ project_name }}/.env

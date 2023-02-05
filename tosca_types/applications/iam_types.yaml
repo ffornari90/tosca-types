@@ -131,6 +131,9 @@ node_types:
       logo_url:
         type: string
         required: no
+      server_ip:
+        type: string
+        required: no
       network_domain:
         type: string
         required: no
@@ -164,5 +167,6 @@ node_types:
             organisation_name:  { get_property: [ SELF, organisation_name ] }
             logo_url:  { get_property: [ SELF, logo_url ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
+            server_ip: { get_property: [SELF, server_ip] }
             network_domain: { get_property: [ SELF, network_domain ] }
-            dns_name: { concat: [ "server_ip.", get_property: [ SELF, network_domain ]] }
+            dns_name: { concat: [ get_property: [SELF, server_ip], ".", get_property: [ SELF, network_domain ]] }

@@ -141,6 +141,9 @@ node_types:
       dns_name:
         type: string
         required: no
+      local_authn_login_page_visibility:
+        type: string
+        required: no
       letsencrypt_test:
         type: boolean
         default: true
@@ -167,6 +170,7 @@ node_types:
             organisation_name:  { get_property: [ SELF, organisation_name ] }
             logo_url:  { get_property: [ SELF, logo_url ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
+            local_authn_login_page_visibility: { get_property: [SELF, local_authn_login_page_visibility] }
             server_ip: { get_property: [SELF, server_ip] }
             network_domain: { get_property: [ SELF, network_domain ] }
             dns_name: { concat: [ get_property: [SELF, server_ip], ".", get_property: [ SELF, network_domain ]] }

@@ -105,6 +105,14 @@
           with_items:
              - { key: "LETSENCRYPT_TEST", value: "{{ letsencrypt_test }}" }
 
+        - name: Add LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY and additional environment variables
+          lineinfile:
+            path: /opt/{{ project_name }}/.env
+            line: "{{ item.key }}={{ item.value }}"
+            create: yes
+          with_items:
+             - { key: "LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY", value: "{{ local_authn_login_page_visibility }}" }
+
         - name: Add DNS_NAME and additional environment variables
           lineinfile:
             path: /opt/{{ project_name }}/.env

@@ -9,6 +9,35 @@
       include_role:
         name: indigo-dc.docker
 
+    - name: Create a directory for traefik configuration
+      file:
+        path: /opt/traefik
+        state: directory
+
+    - name: Create configuration file for traefik
+      file:
+        path: /opt/traefik/tls.toml
+        state: touch
+        content: |
+          [tls.options]
+
+            [tls.options.default]
+              min = "VersionTLS12"
+              curvePreferences = ["CurveP521", "CurveP384"]
+              sniStrict = true
+
+              cipherSuites = [
+                 "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                 "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                 "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+                 "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+                 "TLS_RSA_WITH_AES_128_GCM_SHA256",
+                 "TLS_RSA_WITH_AES_256_GCM_SHA384",
+                 "TLS_RSA_WITH_AES_128_CBC_SHA",
+                 "TLS_RSA_WITH_AES_256_CBC_SHA"
+              ]
+
     - name: "Create env file, download and start the docker compose file"
       block:
 
@@ -31,102 +60,86 @@
             line: "{{ item.key }}={{ item.value }}"
             create: yes
           with_items:
-             - { key: "CONTACT_EMAIL", value: "{{ contact_email }}" }
-
-        - name: Add MAIL_HOST and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "MAIL_HOST", value: "{{ mail_host }}" }
-
-        - name: Add MAIL_USERNAME and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "MAIL_USERNAME", value: "{{ mail_username }}" }
-
-        - name: Add MAIL_PASSWORD and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "MAIL_PASSWORD", value: "{{ mail_password }}" }
-
-        - name: Add NOTIFICATION_FROM and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "NOTIFICATION_FROM", value: "{{ notification_from }}" }
-
-        - name: Add NOTIFICATION_ADMIN_ADDRESS and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "NOTIFICATION_ADMIN_ADDRESS", value: "{{ notification_admin_address }}" }
-
-        - name: Add ACTIVE_PROFILES and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "ACTIVE_PROFILES", value: "{{ active_profiles }}" }
-
-        - name: Add ORGANISATION_NAME and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "ORGANISATION_NAME", value: "{{ organisation_name }}" }
-
-        - name: Add LOGO_URL and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
-             - { key: "LOGO_URL", value: "{{ logo_url }}" }
-
-        - name: Add LETSENCRYPT_TEST and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
              - { key: "LETSENCRYPT_TEST", value: "{{ letsencrypt_test }}" }
-
-        - name: Add LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
+             - { key: "CONTACT_EMAIL", value: "{{ contact_email }}" }
+             - { key: "ACTIVE_PROFILES", value: "{{ active_profiles }}" }
+             - { key: "IAM_VERSION", value: "{{ iam_version }}" }
+             - { key: "KEY_STORE_LOCATION", value: "{{ key_store_location }}" }
+             - { key: "JWK_CACHE_LIFETIME", value: "{{ jwk_cache_lifetime }}" }
+             - { key: "X509_TRUST_ANCHORS_DIR", value: "{{ x509_trust_anchors_dir }}" }
+             - { key: "X509_TRUST_ANCHORS_REFRESH", value: "{{ x509_trust_anchors_refresh }}" }
+             - { key: "FORWARD_HEADERS_STRATEGY", value: "{{ forward_headers_strategy }}" }
+             - { key: "TOMCAT_ACCESS_LOG_ENABLED", value: "{{ tomcat_access_log_enabled }}" }
+             - { key: "TOMCAT_ACCESS_LOG_DIRECTORY", value: "{{ tomcat_access_log_directory }}" }
+             - { key: "ACTUATOR_USER_USERNAME", value: "{{ actuator_user_username }}" }
+             - { key: "ACTUATOR_USER_PASSWORD", value: "{{ actuator_user_password }}" }
+             - { key: "LOCAL_RESOURCES_ENABLE", value: "{{ local_resources_enable }}" }
+             - { key: "LOCAL_RESOURCES_LOCATION", value: "{{ local_resources_location }}" }
+             - { key: "ORGANISATION_NAME", value: "{{ organisation_name }}" }
+             - { key: "LOGO_URL", value: "{{ logo_url }}" }
+             - { key: "LOGO_DIMENSION", value: "{{ logo_dimension }}" }
+             - { key: "LOGO_HEIGTH", value: "{{ logo_heigth }}" }
+             - { key: "LOGO_WIDTH", value: "{{ logo_width }}" }
+             - { key: "TOPBAR_TITLE", value: "{{ topbar_title }}" }
+             - { key: "ACCESS_TOKEN_INCLUDE_AUTHN_INFO", value: "{{ access_token_include_authn_info }}" }
+             - { key: "ACCESS_TOKEN_INCLUDE_NBF", value: "{{ access_token_include_nbf }}" }
+             - { key: "ACCESS_TOKEN_INCLUDE_SCOPE", value: "{{ access_token_include_scope }}" }
+             - { key: "DB_HOST", value: "{{ db_host }}" }
+             - { key: "DB_PORT", value: "{{ db_port }}" }
+             - { key: "DB_NAME", value: "{{ db_name }}" }
+             - { key: "DB_USERNAME", value: "{{ db_username }}" }
+             - { key: "DB_PASSWORD", value: "{{ db_password }}" }
+             - { key: "DB_MAX_ACTIVE", value: "{{ db_max_active }}" }
+             - { key: "DB_MAX_IDLE", value: "{{ db_max_idle }}" }
+             - { key: "DB_INITIAL_SIZE", value: "{{ db_initial_size }}" }
+             - { key: "DB_TEST_WHILE_IDLE", value: "{{ db_test_while_idle }}" }
+             - { key: "DB_TEST_ON_BORROW", value: "{{ db_test_on_borrow }}" }
+             - { key: "DB_VALIDATION_QUERY", value: "{{ db_validation_query }}" }
+             - { key: "DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS", value: "{{ db_time_between_eviction_runs_millis }}" }
+             - { key: "DB_MIN_EVICTABLE_IDLE_TIME_MILLIS", value: "{{ db_min_evictable_idle_time_millis }}" }
+             - { key: "CLIENT_ID", value: "{{ client_id }}" }
+             - { key: "CLIENT_SECRET", value: "{{ client_secret }}" }
+             - { key: "CLIENT_SCOPES", value: "{{ client_scopes }}" }
+             - { key: "CLIENT_FORWARD_HEADERS_STRATEGY", value: "{{ client_forward_headers_strategy }}" }
+             - { key: "SPRING_REDIS_HOST", value: "{{ spring_redis_host }}" }
+             - { key: "SPRING_REDIS_PORT", value: "{{ spring_redis_port }}" }
+             - { key: "SPRING_REDIS_PASSWORD", value: "{{ spring_redis_password }}" }
+             - { key: "SESSION_TIMEOUT_SECS", value: "{{ session_timeout_secs }}" }
+             - { key: "SPRING_SESSION_STORE_TYPE", value: "{{ spring_session_store_type }}" }
+             - { key: "HEALTH_REDIS_PROBE_ENABLED", value: "{{ health_redis_probe_enabled }}" }
              - { key: "LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY", value: "{{ local_authn_login_page_visibility }}" }
-
-        - name: Add DNS_NAME and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
+             - { key: "LOCAL_AUTHN_ENABLED_FOR", value: "{{ local_authn_enabled_for }}" }
+             - { key: "GOOGLE_CLIENT_ID", value: "{{ google_client_id }}" }
+             - { key: "GOOGLE_CLIENT_SECRET", value: "{{ google_client_secret }}" }
+             - { key: "SAML_ENTITY_ID", value: "{{ saml_entity_id }}" }
+             - { key: "SAML_LOGIN_BUTTON_TEXT", value: "{{ saml_login_button_text }}" }
+             - { key: "SAML_KEYSTORE", value: "{{ saml_keystore }}" }
+             - { key: "SAML_KEYSTORE_PASSWORD", value: "{{ saml_keystore_password }}" }
+             - { key: "SAML_KEY_ID", value: "{{ saml_key_id }}" }
+             - { key: "SAML_KEY_PASSWORD", value: "{{ saml_key_password }}" }
+             - { key: "SAML_IDP_METADATA", value: "{{ saml_idp_metadata }}" }
+             - { key: "SAML_IDP_CERT_URL", value: "{{ saml_idp_cert_url }}" }
+             - { key: "SAML_METADATA_LOOKUP_SERVICE_REFRESH_PERIOD_SEC", value: "{{ saml_metadata_lookup_service_refresh_period_sec }}" }
+             - { key: "SAML_METADATA_REQUIRE_VALID_SIGNATURE", value: "{{ saml_metadata_require_valid_signature }}" }
+             - { key: "SAML_METADATA_REQUIRE_SIRTFI", value: "{{ saml_metadata_require_sirtfi }}" }
+             - { key: "SAML_IDP_ENTITY_ID_WHITELIST", value: "{{ saml_idp_entity_id_whitelist }}" }
+             - { key: "SAML_MAX_ASSERTION_TIME", value: "{{ saml_max_assertion_time }}" }
+             - { key: "SAML_MAX_AUTHENTICATION_AGE", value: "{{ saml_max_authentication_age }}" }
+             - { key: "SAML_ID_RESOLVERS", value: "{{ saml_id_resolvers }}" }
+             - { key: "MAIL_HOST", value: "{{ mail_host }}" }
+             - { key: "MAIL_PORT", value: "{{ mail_port }}" }
+             - { key: "MAIL_USERNAME", value: "{{ mail_username }}" }
+             - { key: "MAIL_PASSWORD", value: "{{ mail_password }}" }
+             - { key: "NOTIFICATION_DISABLE", value: "{{ notification_disable }}" }
+             - { key: "NOTIFICATION_FROM", value: "{{ notification_from }}" }
+             - { key: "NOTIFICATION_ADMIN_ADDRESS", value: "{{ notification_admin_address }}" }
+             - { key: "NOTIFICATION_TASK_DELAY", value: "{{ notification_task_delay }}" }
+             - { key: "NOTIFICATION_CLEANUP_AGE", value: "{{ notification_cleanup_age }}" }
+             - { key: "ACCOUNT_LINKING_DISABLE", value: "{{ account_linking_disable }}" }
+             - { key: "PRIVACY_POLICY_URL", value: "{{ privacy_policy_url }}" }
+             - { key: "PRIVACY_POLICY_TEXT", value: "{{ privacy_policy_text }}" }
+             - { key: "JWT_DEFAULT_PROFILE", value: "{{ jwt_default_profile }}" }
              - { key: "DNS_NAME", value: "{{ dns_name }}" }
-
-        - name: Add HOST_PUBLIC_IP and additional environment variables
-          lineinfile:
-            path: /opt/{{ project_name }}/.env
-            line: "{{ item.key }}={{ item.value }}"
-            create: yes
-          with_items:
              - { key: "HOST_PUBLIC_IP", value: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" }
 
         - name: "Download the docker-compose file"
@@ -138,4 +151,12 @@
           docker_service:
             project_src: "/opt/{{ project_name }}"
             state: present
+
+        - name: "Wait for the https port to become responsive"
+          wait_for:
+            host: "{{ dns_name }}"
+            port: 443
+            state: started
+          timeout: 600
+
       when: docker_compose_file_url != ""

@@ -164,12 +164,9 @@
           docker_service:
             project_src: "/opt/{{ project_name }}"
             state: present
-
-        - name: "Wait for the https port to become responsive"
           wait_for:
             host: "{{ dns_name }}"
             port: 443
             state: started
           timeout: 600
-
       when: docker_compose_file_url != ""

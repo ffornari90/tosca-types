@@ -164,6 +164,8 @@
           docker_service:
             project_src: "/opt/{{ project_name }}"
             state: present
+
+        - name: "Wait for the IAM service to be ready"
           wait_for:
             host: "{{ dns_name }}"
             port: 443

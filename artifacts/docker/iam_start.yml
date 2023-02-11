@@ -107,6 +107,19 @@
              - { key: "SESSION_TIMEOUT_SECS", value: "{{ session_timeout_secs }}" }
              - { key: "SPRING_SESSION_STORE_TYPE", value: "{{ spring_session_store_type }}" }
              - { key: "HEALTH_REDIS_PROBE_ENABLED", value: "{{ health_redis_probe_enabled }}" }
+             - { key: "REGISTRATION_SHOW_REGISTRATION_BUTTON_IN_LOGIN_PAGE", value: "{{ registration_show_registration_button_in_login_page }}" }
+             - { key: "REGISTRATION_OIDC_ISSUER", value: "{{ registration_oidc_issuer }}" }
+             - { key: "REGISTRATION_SAML_ENTITY_ID", value: "{{ registration_saml_entity_id }}" }
+             - { key: "REGISTRATION_REQUIRE_EXTERNAL_AUTHENTICATION", value: "{{ registration_require_external_authentication }}" }
+             - { key: "REGISTRATION_AUTHENTICATION_TYPE", value: "{{ registration_authentication_type }}" }
+             - { key: "REGISTRATION_USERNAME_ATTRIBUTE", value: "{{ registration_username_attribute }}" }
+             - { key: "REGISTRATION_NAME_ATTRIBUTE", value: "{{ registration_name_attribute }}" }
+             - { key: "REGISTRATION_SURNAME_ATTRIBUTE", value: "{{ registration_surname_attribute }}" }
+             - { key: "REGISTRATION_EMAIL_ATTRIBUTE", value: "{{ registration_email_attribute }}" }
+             - { key: "REGISTRATION_USERNAME_READONLY", value: "{{ registration_username_readonly }}" }
+             - { key: "REGISTRATION_NAME_READONLY", value: "{{ registration_name_readonly }}" }
+             - { key: "REGISTRATION_SURNAME_READONLY", value: "{{ registration_surname_readonly }}" }
+             - { key: "REGISTRATION_EMAIL_READONLY", value: "{{ registration_email_readonly }}" }
              - { key: "LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY", value: "{{ local_authn_login_page_visibility }}" }
              - { key: "LOCAL_AUTHN_ENABLED_FOR", value: "{{ local_authn_enabled_for }}" }
              - { key: "GOOGLE_CLIENT_ID", value: "{{ google_client_id }}" }

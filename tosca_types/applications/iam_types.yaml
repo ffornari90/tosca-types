@@ -245,6 +245,45 @@ node_types:
       health_redis_probe_enabled:
         type: boolean
         default: false
+      registration_show_registration_button_in_login_page:
+        type: boolean
+        default: true
+      registration_oidc_issuer:
+        type: string
+        required: no
+      registration_saml_entity_id:
+        type: string
+        required: no
+      registration_require_external_authentication:
+        type: boolean
+        default: false
+      registration_authentication_type:
+        type: string
+        required: no
+      registration_username_attribute:
+        type: string
+        required: no
+      registration_name_attribute:
+        type: string
+        required: no
+      registration_surname_attribute:
+        type: string
+        required: no
+      registration_email_attribute:
+        type: string
+        required: no
+      registration_username_readonly:
+        type: boolean
+        default: false
+      registration_name_readonly:
+        type: boolean
+        default: false
+      registration_surname_readonly:
+        type: boolean
+        default: false
+      registration_email_readonly:
+        type: boolean
+        default: false
       local_authn_login_page_visibility:
         type: string
         required: no
@@ -410,6 +449,19 @@ node_types:
             session_timeout_secs:  { get_property: [ SELF, session_timeout_secs ] }
             spring_session_store_type:  { get_property: [ SELF, spring_session_store_type ] }
             health_redis_probe_enabled:  { get_property: [ SELF, health_redis_probe_enabled ] }
+            registration_show_registration_button_in_login_page:  { get_property: [ SELF, registration_show_registration_button_in_login_page ] }
+            registration_oidc_issuer:  { get_property: [ SELF, registration_oidc_issuer ] }
+            registration_saml_entity_id:  { get_property: [ SELF, registration_saml_entity_id ] }
+            registration_require_external_authentication:  { get_property: [ SELF, registration_require_external_authentication ] }
+            registration_authentication_type:  { get_property: [ SELF, registration_authentication_type ] }
+            registration_username_attribute:  { get_property: [ SELF, registration_username_attribute ] }
+            registration_name_attribute:  { get_property: [ SELF, registration_name_attribute ] }
+            registration_surname_attribute:  { get_property: [ SELF, registration_surname_attribute ] }
+            registration_email_attribute:  { get_property: [ SELF, registration_email_attribute ] }
+            registration_username_readonly:  { get_property: [ SELF, registration_username_readonly ] }
+            registration_name_readonly:  { get_property: [ SELF, registration_name_readonly ] }
+            registration_surname_readonly:  { get_property: [ SELF, registration_surname_readonly ] }
+            registration_email_readonly:  { get_property: [ SELF, registration_email_readonly ] }
             local_authn_login_page_visibility:  { get_property: [ SELF, local_authn_login_page_visibility ] }
             local_authn_enabled_for:  { get_property: [ SELF, local_authn_enabled_for ] }
             google_client_id:  { get_property: [ SELF, google_client_id ] }

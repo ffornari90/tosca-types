@@ -168,5 +168,4 @@
             host: "{{ dns_name }}"
             port: 443
             state: started
-          timeout: 600
       when: docker_compose_file_url != ""

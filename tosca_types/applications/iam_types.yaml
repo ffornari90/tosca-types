@@ -104,10 +104,208 @@ node_types:
       project_name:
         type: string
         required: yes
+      letsencrypt_test:
+        type: boolean
+        default: true
       contact_email:
         type: string
         required: no
+      active_profiles:
+        type: string
+        required: no
+      iam_version:
+        type: string
+        required: no
+      key_store_location:
+        type: string
+        required: no
+      jwk_cache_lifetime:
+        type: string
+        required: no
+      x509_trust_anchors_dir:
+        type: string
+        required: no
+      x509_trust_anchors_refresh:
+        type: string
+        required: no
+      forward_headers_strategy:
+        type: string
+        required: no
+      tomcat_access_log_enabled:
+        type: boolean
+        default: false
+      tomcat_access_log_directory:
+        type: string
+        required: no
+      actuator_user_username:
+        type: string
+        required: no
+      actuator_user_password:
+        type: string
+        required: no
+      local_resources_enable:
+        type: boolean
+        default: false
+      local_resources_location:
+        type: string
+        required: no
+      organisation_name:
+        type: string
+        required: no
+      logo_url:
+        type: string
+        required: no
+      logo_dimension:
+        type: string
+        required: no
+      logo_heigth:
+        type: string
+        required: no
+      logo_width:
+        type: string
+        required: no
+      topbar_title:
+        type: string
+        required: no
+      access_token_include_authn_info:
+        type: boolean
+        default: true
+      access_token_include_nbf:
+        type: boolean
+        default: true
+      access_token_include_scope:
+        type: boolean
+        default: true
+      db_host:
+        type: string
+        required: no
+      db_port:
+        type: string
+        required: no
+      db_name:
+        type: string
+        required: no
+      db_username:
+        type: string
+        required: no
+      db_password:
+        type: string
+        required: no
+      db_max_active:
+        type: string
+        required: no
+      db_max_idle:
+        type: string
+        required: no
+      db_initial_size:
+        type: string
+        required: no
+      db_test_while_idle:
+        type: boolean
+        default: true
+      db_test_on_borrow:
+        type: boolean
+        default: true
+      db_validation_query:
+        type: string
+        required: no
+      db_time_between_eviction_runs_millis:
+        type: string
+        required: no
+      db_min_evictable_idle_time_millis:
+        type: string
+        required: no
+      client_id:
+        type: string
+        required: no
+      client_secret:
+        type: string
+        required: no
+      client_scopes:
+        type: string
+        required: no
+      client_forward_headers_strategy:
+        type: string
+        required: no
+      spring_redis_host:
+        type: string
+        required: no
+      spring_redis_port:
+        type: string
+        required: no
+      spring_redis_password:
+        type: string
+        required: no
+      session_timeout_secs:
+        type: string
+        required: no
+      spring_session_store_type:
+        type: string
+        required: no
+      health_redis_probe_enabled:
+        type: boolean
+        default: false
+      local_authn_login_page_visibility:
+        type: string
+        required: no
+      local_authn_enabled_for:
+        type: string
+        required: no
+      google_client_id:
+        type: string
+        required: no
+      google_client_secret:
+        type: string
+        required: no
+      saml_entity_id:
+        type: string
+        required: no
+      saml_login_button_text:
+        type: string
+        required: no
+      saml_keystore:
+        type: string
+        required: no
+      saml_keystore_password:
+        type: string
+        required: no
+      saml_key_id:
+        type: string
+        required: no
+      saml_key_password:
+        type: string
+        required: no
+      saml_idp_metadata:
+        type: string
+        required: no
+      saml_idp_cert_url:
+        type: string
+        required: no
+      saml_metadata_lookup_service_refresh_period_sec:
+        type: string
+        required: no
+      saml_metadata_require_valid_signature:
+        type: boolean
+        default: false
+      saml_metadata_require_sirtfi:
+        type: boolean
+        default: false
+      saml_idp_entity_id_whitelist:
+        type: string
+        required: no
+      saml_max_assertion_time:
+        type: string
+        required: no
+      saml_max_authentication_age:
+        type: string
+        required: no
+      saml_id_resolvers:
+        type: string
+        required: no
       mail_host:
+        type: string
+        required: no
+      mail_port:
         type: string
         required: no
       mail_username:
@@ -116,19 +314,31 @@ node_types:
       mail_password:
         type: string
         required: no
+      notification_disable:
+        type: boolean
+        default: false
       notification_from:
         type: string
         required: no
       notification_admin_address:
         type: string
         required: no
-      active_profiles:
+      notification_task_delay:
         type: string
         required: no
-      organisation_name:
+      notification_cleanup_age:
         type: string
         required: no
-      logo_url:
+      account_linking_disable:
+        type: boolean
+        default: false
+      privacy_policy_url:
+        type: string
+        required: no
+      privacy_policy_text:
+        type: string
+        required: no
+      jwt_default_profile:
         type: string
         required: no
       server_ip:
@@ -141,12 +351,6 @@ node_types:
       dns_name:
         type: string
         required: no
-      local_authn_login_page_visibility:
-        type: string
-        required: no
-      letsencrypt_test:
-        type: boolean
-        default: true
     artifacts:
       docker_role:
         file: indigo-dc.docker,v2.1.3
@@ -156,21 +360,89 @@ node_types:
         start:
           implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/iam_voms-aa/artifacts/docker/iam_start.yml
           inputs:
-            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
+            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
             contact_email:  { get_property: [ SELF, contact_email ] }
-            mail_host:  { get_property: [ SELF, mail_host ] }
-            mail_username:  { get_property: [ SELF, mail_username ] }
-            mail_password:  { get_property: [ SELF, mail_password ] }
-            notification_from:  { get_property: [ SELF, notification_from ] }
-            notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }
             active_profiles:  { get_property: [ SELF, active_profiles ] }
+            iam_version:  { get_property: [ SELF, iam_version ] }
+            key_store_location:  { get_property: [ SELF, key_store_location ] }
+            jwk_cache_lifetime:  { get_property: [ SELF, jwk_cache_lifetime ] }
+            x509_trust_anchors_dir:  { get_property: [ SELF, x509_trust_anchors_dir ] }
+            x509_trust_anchors_refresh:  { get_property: [ SELF, x509_trust_anchors_refresh ] }
+            forward_headers_strategy:  { get_property: [ SELF, forward_headers_strategy ] }
+            tomcat_access_log_enabled:  { get_property: [ SELF, tomcat_access_log_enabled ] }
+            tomcat_access_log_directory:  { get_property: [ SELF, tomcat_access_log_directory ] }
+            actuator_user_username:  { get_property: [ SELF, actuator_user_username ] }
+            actuator_user_password:  { get_property: [ SELF, actuator_user_password ] }
+            local_resources_enable:  { get_property: [ SELF, local_resources_enable ] }
+            local_resources_location:  { get_property: [ SELF, local_resources_location ] }
             organisation_name:  { get_property: [ SELF, organisation_name ] }
             logo_url:  { get_property: [ SELF, logo_url ] }
+            logo_dimension:  { get_property: [ SELF, logo_dimension ] }
+            logo_heigth:  { get_property: [ SELF, logo_heigth ] }
+            logo_width:  { get_property: [ SELF, logo_width ] }
+            topbar_title:  { get_property: [ SELF, topbar_title ] }
+            access_token_include_authn_info:  { get_property: [ SELF, access_token_include_authn_info ] }
+            access_token_include_nbf:  { get_property: [ SELF, access_token_include_nbf ] }
+            access_token_include_scope:  { get_property: [ SELF, access_token_include_scope ] }
+            db_host:  { get_property: [ SELF, db_host ] }
+            db_port:  { get_property: [ SELF, db_port ] }
+            db_name:  { get_property: [ SELF, db_name ] }
+            db_username:  { get_property: [ SELF, db_username ] }
+            db_password:  { get_property: [ SELF, db_password ] }
+            db_max_active:  { get_property: [ SELF, db_max_active ] }
+            db_max_idle:  { get_property: [ SELF, db_max_idle ] }
+            db_initial_size:  { get_property: [ SELF, db_initial_size ] }
+            db_test_while_idle:  { get_property: [ SELF, db_test_while_idle ] }
+            db_test_on_borrow:  { get_property: [ SELF, db_test_on_borrow ] }
+            db_validation_query:  { get_property: [ SELF, db_validation_query ] }
+            db_time_between_eviction_runs_millis:  { get_property: [ SELF, db_time_between_eviction_runs_millis ] }
+            db_min_evictable_idle_time_millis:  { get_property: [ SELF, db_min_evictable_idle_time_millis ] }
+            client_id:  { get_property: [ SELF, client_id ] }
+            client_secret:  { get_property: [ SELF, client_secret ] }
+            client_scopes:  { get_property: [ SELF, client_scopes ] }
+            client_forward_headers_strategy:  { get_property: [ SELF, client_forward_headers_strategy ] }
+            spring_redis_host:  { get_property: [ SELF, spring_redis_host ] }
+            spring_redis_port:  { get_property: [ SELF, spring_redis_port ] }
+            spring_redis_password:  { get_property: [ SELF, spring_redis_password ] }
+            session_timeout_secs:  { get_property: [ SELF, session_timeout_secs ] }
+            spring_session_store_type:  { get_property: [ SELF, spring_session_store_type ] }
+            health_redis_probe_enabled:  { get_property: [ SELF, health_redis_probe_enabled ] }
+            local_authn_login_page_visibility:  { get_property: [ SELF, local_authn_login_page_visibility ] }
+            local_authn_enabled_for:  { get_property: [ SELF, local_authn_enabled_for ] }
+            google_client_id:  { get_property: [ SELF, google_client_id ] }
+            google_client_secret:  { get_property: [ SELF, google_client_secret ] }
+            saml_entity_id:  { get_property: [ SELF, saml_entity_id ] }
+            saml_login_button_text:  { get_property: [ SELF, saml_login_button_text ] }
+            saml_keystore:  { get_property: [ SELF, saml_keystore ] }
+            saml_keystore_password:  { get_property: [ SELF, saml_keystore_password ] }
+            saml_key_id:  { get_property: [ SELF, saml_key_id ] }
+            saml_key_password:  { get_property: [ SELF, saml_key_password ] }
+            saml_idp_metadata:  { get_property: [ SELF, saml_idp_metadata ] }
+            saml_idp_cert_url:  { get_property: [ SELF, saml_idp_cert_url ] }
+            saml_metadata_lookup_service_refresh_period_sec:  { get_property: [ SELF, saml_metadata_lookup_service_refresh_period_sec ] }
+            saml_metadata_require_valid_signature:  { get_property: [ SELF, saml_metadata_require_valid_signature ] }
+            saml_metadata_require_sirtfi:  { get_property: [ SELF, saml_metadata_require_sirtfi ] }
+            saml_idp_entity_id_whitelist:  { get_property: [ SELF, saml_idp_entity_id_whitelist ] }
+            saml_max_assertion_time:  { get_property: [ SELF, saml_max_assertion_time ] }
+            saml_max_authentication_age:  { get_property: [ SELF, saml_max_authentication_age ] }
+            saml_id_resolvers:  { get_property: [ SELF, saml_id_resolvers ] }
+            mail_host:  { get_property: [ SELF, mail_host ] }
+            mail_port:  { get_property: [ SELF, mail_port ] }
+            mail_username:  { get_property: [ SELF, mail_username ] }
+            mail_password:  { get_property: [ SELF, mail_password ] }
+            notification_disable:  { get_property: [ SELF, notification_disable ] }
+            notification_from:  { get_property: [ SELF, notification_from ] }
+            notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }
+            notification_task_delay:  { get_property: [ SELF, notification_task_delay ] }
+            notification_cleanup_age:  { get_property: [ SELF, notification_cleanup_age ] }
+            account_linking_disable:  { get_property: [ SELF, account_linking_disable ] }
+            privacy_policy_url:  { get_property: [ SELF, privacy_policy_url ] }
+            privacy_policy_text:  { get_property: [ SELF, privacy_policy_text ] }
+            jwt_default_profile:  { get_property: [ SELF, jwt_default_profile ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
-            local_authn_login_page_visibility: { get_property: [SELF, local_authn_login_page_visibility] }
             server_ip: { get_property: [SELF, server_ip] }
             network_domain: { get_property: [ SELF, network_domain ] }
             dns_name: { concat: [ get_property: [SELF, server_ip], ".", get_property: [ SELF, network_domain ]] }

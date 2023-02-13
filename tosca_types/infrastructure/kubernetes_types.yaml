@@ -81,12 +81,17 @@ node_types:
         required: no
         type: string
         default: k8s
+      enable_gpu:
+        required: no
+        type: boolean
+        default: false
     artifacts:
       docker_role:
         file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file:  dodas.kubernetes,v3.0.0-patch1
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.0.1
+        #file: dodas.kubernetes,v3.0.0-patch1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -115,7 +120,7 @@ node_types:
             prometheus_helm_version: { get_property: [ SELF, prometheus_helm_version ] }
             kube_eagle_helm_version: { get_property: [ SELF, kube_eagle_helm_version ] } 
             grafana_helm_version: { get_property: [ SELF, grafana_helm_version ] }
-
+            enable_gpu: { get_property: [ SELF, enable_gpu ] }
 
   tosca.nodes.DODAS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -142,12 +147,22 @@ node_types:
         type: string
         required: no
         default: "testme=true"
+      enable_gpu:
+        required: no
+        type: boolean
+        default: false
+      gpu_model:
+        required: no
+        type: string
+        description: GPU model
+        default: ""
     artifacts:
       docker_role:
         file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: dodas.kubernetes,v3.0.0-patch1
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.0.1
+        #file: dodas.kubernetes,v3.0.0-patch1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -167,7 +182,8 @@ node_types:
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
             nodelabel: { get_property: [ SELF, nodelabel] }
-
+            enable_gpu: { get_property: [ SELF, enable_gpu ] }
+            gpu_model: { get_property: [ SELF, gpu_model ] }
 
   tosca.nodes.DODAS.HelmInstall:
     derived_from: tosca.nodes.SoftwareComponent

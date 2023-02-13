@@ -14,7 +14,8 @@
       openvpn_type_of_node: "front"
       openvpn_frontname: "kubeserver"
       when: fe_hybrid_cluster
-    - role: dodas.kubernetes
+    - role: ansible-role-kubernetes
+      #role: dodas.kubernetes
       kube_server: "{{ kube_front_end_ip }}"
       kube_api_server: "{{ kube_front_end_ip }}"
       kube_apiserver_options:
@@ -28,3 +29,5 @@
         enabled: true
         master_private_ip: "{{ kube_front_end_ip }}"
         master_public_ip: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" 
+      # Properties related to GPU support:
+      # gpu_support_role: git+https://baltig.infn.it/infn-cloud/ansible-role-gpu-support,v1.0.0

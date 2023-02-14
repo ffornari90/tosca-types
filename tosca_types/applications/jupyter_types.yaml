@@ -94,9 +94,14 @@ node_types:
         type: string
         required: false
         default: ansible-role-jupyterhub-env
+      gpu_model:
+        required: no
+        type: string
+        description: GPU model
+        default: ""
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.0.6
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -124,5 +129,4 @@ node_types:
             jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
             server_ip: { get_property: [SELF, server_ip] }
-
-
+            gpu_model: { get_property: [ SELF, gpu_model ] }

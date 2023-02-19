@@ -103,7 +103,8 @@ node_types:
             type: string
       project_name:
         type: string
-        required: yes
+        required: no
+        default: iam_voms-aa
       letsencrypt_test:
         type: boolean
         default: true

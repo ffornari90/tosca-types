@@ -353,6 +353,12 @@ node_types:
       mail_password:
         type: string
         required: no
+      mail_smtp_auth:
+        type: boolean
+        default: false
+      mail_smtp_starttls:
+        type: boolean
+        default: false
       notification_disable:
         type: boolean
         default: false
@@ -485,6 +491,8 @@ node_types:
             mail_port:  { get_property: [ SELF, mail_port ] }
             mail_username:  { get_property: [ SELF, mail_username ] }
             mail_password:  { get_property: [ SELF, mail_password ] }
+            mail_smtp_auth:  { get_property: [ SELF, mail_smtp_auth ] }
+            mail_smtp_starttls:  { get_property: [ SELF, mail_smtp_starttls ] }
             notification_disable:  { get_property: [ SELF, notification_disable ] }
             notification_from:  { get_property: [ SELF, notification_from ] }
             notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }

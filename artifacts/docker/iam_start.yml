@@ -143,6 +143,8 @@
              - { key: "MAIL_PORT", value: "{{ mail_port }}" }
              - { key: "MAIL_USERNAME", value: "{{ mail_username }}" }
              - { key: "MAIL_PASSWORD", value: "{{ mail_password }}" }
+             - { key: "MAIL_SMTP_AUTH", value: "{{ mail_smtp_auth }}" }
+             - { key: "MAIL_SMTP_STARTTLS", value: "{{ mail_smtp_starttls }}" }
              - { key: "NOTIFICATION_DISABLE", value: "{{ notification_disable }}" }
              - { key: "NOTIFICATION_FROM", value: "{{ notification_from }}" }
              - { key: "NOTIFICATION_ADMIN_ADDRESS", value: "{{ notification_admin_address }}" }

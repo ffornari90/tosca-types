@@ -59,7 +59,7 @@ node_types:
         default: true
       run_jupyter:
         type: boolean
-        default: false
+        default: true
       jupyter_hub_image:
         type: string
         default: "dodasts/snj-base-jhub:v1.0.2p1-snj"

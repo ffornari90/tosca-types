@@ -99,7 +99,7 @@ node_types:
       role_name:
         type: string
         required: false
-        default: ansible-role-jupyterhub
+        default: ansible-role-jupyterhub-env
       contact_email:
         type: string
         required: false

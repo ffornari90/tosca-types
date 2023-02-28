@@ -92,6 +92,7 @@ node_types:
         default: ""
       network_domain:
         type: string
+        required: false
         default: "myip.cloud.infn.it"
       dns_name:
         type: string

@@ -315,6 +315,7 @@ node_types:
       saml_key_id:
         type: string
         required: no
+        default: "self-signed"
       saml_key_password:
         type: string
         required: no

@@ -308,6 +308,7 @@ node_types:
       saml_keystore:
         type: string
         required: no
+        default: "file:///config/self-signed.jks"
       saml_keystore_password:
         type: string
         required: no

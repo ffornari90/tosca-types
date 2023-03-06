@@ -240,7 +240,7 @@ node_types:
       spring_redis_password:
         type: string
         required: no
-        default: "pwd"
+        default: pwd
       session_timeout_secs:
         type: string
         required: no

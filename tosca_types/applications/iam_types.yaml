@@ -110,7 +110,7 @@ node_types:
         default: true
       contact_email:
         type: string
-        required: yes
+        required: no
         default: user@local.io
       active_profiles:
         type: string

@@ -127,6 +127,7 @@ node_types:
       x509_trust_anchors_dir:
         type: string
         required: no
+        default: "/etc/grid-security/certificates"
       x509_trust_anchors_refresh:
         type: string
         required: no

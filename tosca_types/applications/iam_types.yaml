@@ -239,6 +239,7 @@ node_types:
       spring_redis_password:
         type: string
         required: no
+        default: "pwd"
       session_timeout_secs:
         type: string
         required: no
@@ -296,9 +297,11 @@ node_types:
       google_client_id:
         type: string
         required: no
+        default: "client_id"
       google_client_secret:
         type: string
         required: no
+        default: "client_secret"
       saml_entity_id:
         type: string
         required: no
@@ -337,6 +340,7 @@ node_types:
       saml_idp_entity_id_whitelist:
         type: string
         required: no
+        default: "idp_entity_id_1,idp_entity_id_2"
       saml_max_assertion_time:
         type: string
         required: no
@@ -355,9 +359,11 @@ node_types:
       mail_username:
         type: string
         required: no
+        default: "user"
       mail_password:
         type: string
         required: no
+        default: "password"
       mail_smtp_auth:
         type: boolean
         default: false
@@ -385,6 +391,7 @@ node_types:
       privacy_policy_url:
         type: string
         required: no
+        default: "https://privacy-policy.com"
       privacy_policy_text:
         type: string
         required: no
@@ -477,7 +484,7 @@ node_types:
             local_authn_enabled_for:  { get_property: [ SELF, local_authn_enabled_for ] }
             google_client_id:  { get_property: [ SELF, google_client_id ] }
             google_client_secret:  { get_property: [ SELF, google_client_secret ] }
-            saml_entity_id:  { get_property: [ SELF, saml_entity_id ] }
+            saml_entity_id:  { concat: [ "https://", get_property: [ SELF, dns_name ]] }
             saml_login_button_text:  { get_property: [ SELF, saml_login_button_text ] }
             saml_keystore:  { get_property: [ SELF, saml_keystore ] }
             saml_keystore_password:  { get_property: [ SELF, saml_keystore_password ] }

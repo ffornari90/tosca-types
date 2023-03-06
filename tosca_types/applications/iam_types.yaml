@@ -111,6 +111,7 @@ node_types:
       contact_email:
         type: string
         required: no
+        default: user@local.io
       active_profiles:
         type: string
         required: no

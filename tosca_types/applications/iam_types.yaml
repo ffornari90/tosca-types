@@ -120,6 +120,7 @@ node_types:
       key_store_location:
         type: string
         required: no
+        default: "classpath:keystore.jwks"
       jwk_cache_lifetime:
         type: string
         required: no

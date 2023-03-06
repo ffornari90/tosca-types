@@ -509,5 +509,4 @@ node_types:
             jwt_default_profile:  { get_property: [ SELF, jwt_default_profile ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
             server_ip: { get_property: [SELF, server_ip] }
-            network_domain: { get_property: [ SELF, network_domain ] }
             dns_name: { concat: [ get_property: [SELF, server_ip], ".", get_property: [ SELF, network_domain ]] }

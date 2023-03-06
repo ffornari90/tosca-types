@@ -120,14 +120,14 @@ node_types:
       key_store_location:
         type: string
         required: no
-        default: "classpath:keystore.jwks"
+        default: classpath:keystore.jwks
       jwk_cache_lifetime:
         type: string
         required: no
       x509_trust_anchors_dir:
         type: string
         required: no
-        default: "/etc/grid-security/certificates"
+        default: /etc/grid-security/certificates
       x509_trust_anchors_refresh:
         type: string
         required: no
@@ -297,11 +297,11 @@ node_types:
       google_client_id:
         type: string
         required: no
-        default: "client_id"
+        default: client_id
       google_client_secret:
         type: string
         required: no
-        default: "client_secret"
+        default: client_secret
       saml_entity_id:
         type: string
         required: no
@@ -311,14 +311,14 @@ node_types:
       saml_keystore:
         type: string
         required: no
-        default: "file:///config/self-signed.jks"
+        default: file:///config/self-signed.jks
       saml_keystore_password:
         type: string
         required: no
       saml_key_id:
         type: string
         required: no
-        default: "self-signed"
+        default: self-signed
       saml_key_password:
         type: string
         required: no
@@ -340,7 +340,7 @@ node_types:
       saml_idp_entity_id_whitelist:
         type: string
         required: no
-        default: "idp_entity_id_1,idp_entity_id_2"
+        default: idp_entity_id_1,idp_entity_id_2
       saml_max_assertion_time:
         type: string
         required: no
@@ -359,11 +359,11 @@ node_types:
       mail_username:
         type: string
         required: no
-        default: "user"
+        default: user
       mail_password:
         type: string
         required: no
-        default: "password"
+        default: password
       mail_smtp_auth:
         type: boolean
         default: false
@@ -391,7 +391,7 @@ node_types:
       privacy_policy_url:
         type: string
         required: no
-        default: "https://privacy-policy.com"
+        default: https://privacy-policy.com
       privacy_policy_text:
         type: string
         required: no

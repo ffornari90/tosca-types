@@ -153,6 +153,7 @@ node_types:
       local_resources_location:
         type: string
         required: no
+        default: file:/indigo-iam/local-resources
       organisation_name:
         type: string
         required: no

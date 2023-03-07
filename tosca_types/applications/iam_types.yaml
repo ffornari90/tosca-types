@@ -185,12 +185,15 @@ node_types:
       db_host:
         type: string
         required: no
+        default: db
       db_port:
         type: string
         required: no
+        default: 3306
       db_name:
         type: string
         required: no
+        default: iam
       db_username:
         type: string
         required: no
@@ -200,39 +203,51 @@ node_types:
       db_max_active:
         type: string
         required: no
+        default: 50
       db_max_idle:
         type: string
         required: no
+        default: 5
       db_initial_size:
         type: string
         required: no
+        default: 8
       db_test_while_idle:
         type: boolean
         default: true
+        required: no
       db_test_on_borrow:
         type: boolean
         default: true
+        required: no
       db_validation_query:
         type: string
         required: no
+        default: SELECT 1
       db_time_between_eviction_runs_millis:
         type: string
         required: no
+        default: 5000
       db_min_evictable_idle_time_millis:
         type: string
         required: no
+        default: 60000
       client_id:
         type: string
         required: no
+        default: client
       client_secret:
         type: string
         required: no
+        default: secret
       client_scopes:
         type: string
         required: no
+        default: openid profile email
       client_forward_headers_strategy:
         type: string
         required: no
+        default: none
       spring_redis_host:
         type: string
         required: no
@@ -242,7 +257,7 @@ node_types:
       spring_redis_password:
         type: string
         required: no
-        default: pwd
+        default: ""
       session_timeout_secs:
         type: string
         required: no
@@ -318,6 +333,7 @@ node_types:
       saml_keystore_password:
         type: string
         required: no
+        default: changeit
       saml_key_id:
         type: string
         required: no
@@ -325,6 +341,7 @@ node_types:
       saml_key_password:
         type: string
         required: no
+        default: changeit
       saml_idp_metadata:
         type: string
         required: no

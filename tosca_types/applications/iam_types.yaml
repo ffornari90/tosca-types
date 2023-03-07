@@ -149,6 +149,7 @@ node_types:
         required: no
       local_resources_enable:
         type: boolean
+        required: no
         default: false
       local_resources_location:
         type: string

@@ -251,9 +251,11 @@ node_types:
       spring_redis_host:
         type: string
         required: no
+        default: redis
       spring_redis_port:
         type: string
         required: no
+        default: 6397
       spring_redis_password:
         type: string
         required: no

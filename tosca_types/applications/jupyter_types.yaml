@@ -111,7 +111,7 @@ node_types:
     artifacts:
       ml_role:
         #file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.1
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.2.2
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.2.3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

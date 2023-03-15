@@ -62,10 +62,10 @@ node_types:
         default: true
       jupyter_hub_image:
         type: string
-        default: "dodasts/snj-base-jhub:v1.0.2p1-snj"
+        default: "dodasts/snj-base-jhub:v1.1.1-snj"
       jupyter_images:
         type: string
-        default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
+        default: "dodasts/snj-base-lab-persistence:v1.1.1-snj"
       jupyter_use_gpu:
         type: boolean
         default: false
@@ -83,7 +83,7 @@ node_types:
         default: no
       jupyterlab_collaborative_image:
         type: string
-        default: "dodasts/snj-base-jlabc:v1.0.0-snj"
+        default: "dodasts/snj-base-jlabc:v1.1.1-snj"
       cvmfs_repos:
         type: string
         default: ""

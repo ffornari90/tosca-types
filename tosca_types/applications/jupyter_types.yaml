@@ -62,10 +62,10 @@ node_types:
         default: true
       jupyter_hub_image:
         type: string
-        default: "dodasts/snj-base-jhub:v1.0.2p1-snj"
+        default: "dodasts/snj-base-jhub:v1.1.1-snj"
       jupyter_images:
         type: string
-        default: "dodasts/snj-base-lab-persistence:v1.0.0-snj"
+        default: "dodasts/snj-base-lab-persistence:v1.1.1-snj"
       jupyter_use_gpu:
         type: boolean
         default: false
@@ -83,11 +83,11 @@ node_types:
         default: no
       jupyterlab_collaborative_image:
         type: string
-        default: "dodasts/snj-base-jlabc:v1.0.0-snj"
+        default: "dodasts/snj-base-jlabc:v1.1.1-snj"
       cvmfs_repos:
         type: string
         default: ""
-      server_ip:
+      dns_name:
         type: string
         default: ""
       role_name:
@@ -99,15 +99,29 @@ node_types:
         type: string
         description: GPU model
         default: ""
+      gpu_partition_flavor:
+        required: no
+        type: string
+        description: GPU partitioning enabling and flavor
+        default: "None"
+      contact_email:
+        type: string
+        required: false
+        default: ""
+      letsencrypt_test:
+        type: boolean
+        default: true
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.0
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
+            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
+            contact_email: { get_property: [ SELF, contact_email ] }
             role_name: { get_property: [ SELF, role_name ] }
             install_docker: { get_property: [SELF, install_docker] }
             install_docker_compose: { get_property: [SELF, install_docker_compose] }
@@ -128,5 +142,7 @@ node_types:
             jupyterlab_collaborative_use_gpu: { get_property: [SELF, jupyterlab_collaborative_use_gpu] }
             jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
             cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
-            server_ip: { get_property: [SELF, server_ip] }
             gpu_model: { get_property: [ SELF, gpu_model ] }
+            gpu_partition_flavor: { get_property: [ SELF, gpu_partition_flavor ] }
+            dns_name: { get_property: [SELF, dns_name] }
+

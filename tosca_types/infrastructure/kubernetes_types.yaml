@@ -76,7 +76,7 @@ node_types:
       grafana_helm_version:
         required: no
         type: string
-        default:  6.44.2
+        default:  6.52.4
       kube_deploy_dashboard:
         required: no
         type: string

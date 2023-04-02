@@ -122,7 +122,7 @@ node_types:
         default: "27000@lm-matlab.infn.it"
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.2.7
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.2.8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

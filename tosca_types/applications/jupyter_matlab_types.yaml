@@ -101,6 +101,14 @@ node_types:
         type: string
         required: false
         default: ansible-role-jupyterhub
+      harbor_username:
+        type: string
+        required: false
+        default: ""
+      harbor_password:
+        type: string
+        required: false
+        default: ""
       contact_email:
         type: string
         required: false
@@ -122,7 +130,7 @@ node_types:
         default: "27000@lm-matlab.infn.it"
     artifacts:
       ml_role:
-        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.3.1
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.3.2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -156,3 +164,5 @@ node_types:
             matlab_release: { get_property: [SELF, matlab_release] }
             matlab_product_list: { get_property: [SELF, matlab_product_list] }
             matlab_license_server: { get_property: [SELF, matlab_license_server] }
+            harbor_username: { get_property: [SELF, harbor_username] }
+            harbor_password: { get_property: [SELF, harbor_password] }

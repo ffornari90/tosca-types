@@ -1,0 +1,158 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/tosca_types/base/basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: jupyter_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
+
+node_types:
+
+  tosca.nodes.DODAS.single-node-jupyterhub:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      install_docker:
+        type: boolean
+        default: true
+      install_docker_compose:
+        type: boolean
+        default: true
+      monitoring:
+        type: boolean
+        default: true
+      monitoring_image:
+        type: string
+        default: dodasts/monitoring-grafana:v1.0.7-monitoring
+      iam_url:
+        type: string
+        default: "https://iam.cloud.infn.it/"
+      iam_subject:
+        type: string
+        required: yes
+      iam_groups:
+        type: string
+        default: "beta_tester"
+      iam_admin_groups:
+        type: string
+        default: "beta_tester"
+      prepare_jupyter:
+        type: boolean
+        default: true
+      run_jupyter:
+        type: boolean
+        default: true
+      jupyter_hub_image:
+        type: string
+        default: "dodasts/snj-base-jhub:v1.1.1-snj"
+      jupyter_images:
+        type: string
+        default: "dodasts/snj-base-lab-persistence:v1.1.1-snj"
+      jupyter_use_gpu:
+        type: boolean
+        default: false
+      jupyter_post_start_cmd:
+        type: string
+        default: ""
+      jupyter_host_mount_dir:
+        type: string
+        default: ""
+      jupyterlab_collaborative:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_use_gpu:
+        type: boolean
+        default: no
+      jupyterlab_collaborative_image:
+        type: string
+        default: "dodasts/snj-base-jlabc:v1.1.1-snj"
+      cvmfs_repos:
+        type: string
+        default: ""
+      server_ip:
+        type: string
+        default: ""
+      network_domain:
+        type: string
+        required: false
+        default: "myip.cloud.infn.it"
+      dns_name:
+        type: string
+        default: ""
+      role_name:
+        type: string
+        required: false
+        default: ansible-role-jupyterhub
+      contact_email:
+        type: string
+        required: false
+        default: ""
+      letsencrypt_test:
+        type: boolean
+        default: true
+      matlab_release:
+        type: string
+        required: false
+        default: "r2022b"
+      matlab_product_list:
+        type: string
+        required: false
+        default: "MATLAB"
+      matlab_license_server:
+        type: string
+        required: false
+        default: "27000@lm-matlab.infn.it"
+    artifacts:
+      ml_role:
+        file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.2.6
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/artifacts/dodas/ansible.yaml
+          inputs:
+            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
+            contact_email: { get_property: [ SELF, contact_email ] }
+            role_name: { get_property: [ SELF, role_name ] }
+            install_docker: { get_property: [SELF, install_docker] }
+            install_docker_compose: { get_property: [SELF, install_docker_compose] }
+            monitoring: { get_property: [SELF, monitoring] }
+            grafana_image: { get_property: [SELF, monitoring_image] }
+            iam_url: { get_property: [SELF, iam_url] }
+            iam_subject: { get_property: [SELF, iam_subject] }
+            iam_groups: { get_property: [SELF, iam_groups] }
+            iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
+            prepare_jupyter: { get_property: [SELF, prepare_jupyter] }
+            run_jupyter: { get_property: [SELF, run_jupyter] }
+            jupyter_hub_image: { get_property: [SELF, jupyter_hub_image] }
+            jupyter_images: { get_property: [SELF, jupyter_images] }
+            jupyter_use_gpu: { get_property: [SELF, jupyter_use_gpu] }
+            jupyter_post_start_cmd: { get_property: [SELF, jupyter_post_start_cmd] }
+            jupyter_host_mount_dir: { get_property: [SELF, jupyter_host_mount_dir] }
+            jupyterlab_collaborative: { get_property: [SELF, jupyterlab_collaborative] }
+            jupyterlab_collaborative_use_gpu: { get_property: [SELF, jupyterlab_collaborative_use_gpu] }
+            jupyterlab_collaborative_image: { get_property: [SELF, jupyterlab_collaborative_image] }
+            cvmfs_repos: { get_property: [SELF, cvmfs_repos] }
+            server_ip: { get_property: [SELF, server_ip] }
+            dns_name: { concat: [get_property: [SELF, server_ip], ".", get_property: [SELF, network_domain]] }
+            matlab_release: { get_property: [SELF, matlab_release] }
+            matlab_product_list: { get_property: [SELF, matlab_product_list] }
+            matlab_license_server: { get_property: [SELF, matlab_license_server] }

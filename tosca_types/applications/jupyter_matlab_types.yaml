@@ -127,7 +127,7 @@ node_types:
       matlab_license_server:
         type: string
         required: false
-        default: "27000@lm-matlab.infn.it"
+        default: ""
     artifacts:
       ml_role:
         file: git+https://github.com/ffornari90/ansible-role-jupyterhub,v0.3.3

@@ -1,4 +1,4 @@
-i{
+{
   "branches": ["master"],
   repositoryUrl: "https://baltig.infn.it/infn-cloud/tosca-types.git",
   "gitlabUrl": "https://baltig.infn.it",

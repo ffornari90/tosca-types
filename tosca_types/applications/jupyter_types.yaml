@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v1.0.1/tosca_types/base/basic_types.yaml
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/tosca_types/base/basic_types.yaml
 metadata:
   template_author: INFN-CLOUD
   template_name: jupyter_types
@@ -113,12 +113,12 @@ node_types:
         default: true
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.2
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v1.0.1/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/dodas/ansible.yaml
           inputs:
             letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
             contact_email: { get_property: [ SELF, contact_email ] }

@@ -1,17 +1,30 @@
 - hosts: localhost
   connection: local
   tasks:
+  - name: Install dependencies
+    pip:
+      name:
+        - boto3 >= 1.17.0
+        - botocore >= 1.20.0
+      state: present
 
-    - name: Install dependencies
-      pip:
-        name: boto3 
-        state: present
+  - name: Install aws collection
+    ansible.builtin.command: 'ansible-galaxy collection install -p {{ lookup("env", "HOME") }}/.ansible/collections amazon.aws:==4.4.0'
 
-    - name: "Create bucket"
-      aws_s3:
-        bucket: "{{ bucket_name }}"
-        mode: create
-        aws_access_key: "{{ aws_access_key  }}"
-        aws_secret_key: "{{ aws_secret_key  }}"
-        s3_url: "{{ s3_url  }}"
+  - copy:
+      dest: "/tmp/s3.yml"
+      content: |
+       ---
+       - name: Create bucket and enable versioning if requested
+         amazon.aws.s3_bucket:
+           aws_access_key: '{{ aws_access_key  }}'
+           aws_secret_key: '{{ aws_secret_key  }}'
+           name: '{{ bucket_name }}'
+           versioning: "{{ enable_versioning  }}"
+           state: present
+           s3_url: '{{ s3_url  }}'
+
+  - name: Create bucket
+    ansible.builtin.include_tasks:
+      file: /tmp/s3.yml
 

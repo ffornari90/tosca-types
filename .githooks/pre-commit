@@ -10,7 +10,7 @@ CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 for file in "${FILES[@]}"; do
   if [[ $file == *.yml || $file == *.yaml ]]; then
     echo "Checking file $file"
-    python3 ./tools/prepare_release.py $CURRENT_BRANCH $file
+    python3 ./.githooks/bin/prepare_release.py $CURRENT_BRANCH $file
   fi
 done
 

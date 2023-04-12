@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v1.0.1/tosca_types/infrastructure/kubernetes_types.yaml
+  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/tosca_types/infrastructure/kubernetes_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
@@ -67,7 +67,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v1.0.1/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
@@ -87,5 +87,3 @@ node_types:
             wn_image: { get_property: [ SELF, wn_image ] }
             wn_tag: { get_property: [ SELF, wn_tag ] }
             iam_server: { get_property: [ SELF, iam_server ] }
-
-

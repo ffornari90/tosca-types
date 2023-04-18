@@ -167,7 +167,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/zinus92/ansible-role-kubernetes.git,k8s_1_24
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs

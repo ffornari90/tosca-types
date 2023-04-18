@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.0/tosca_types/base/cluster_basic_types.yaml
+  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/fix_k8s_1_24/tosca_types/base/cluster_basic_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
@@ -69,7 +69,7 @@ node_types:
       prometheus_helm_version: 
         required: no
         type: string
-        default: 19.6.1
+        default: 19.7.2
       kube_eagle_helm_version:
         required: no
         type: string
@@ -77,7 +77,7 @@ node_types:
       grafana_helm_version:
         required: no
         type: string
-        default:  6.52.4
+        default:  6.52.9
       kube_deploy_dashboard:
         required: no
         type: string
@@ -95,7 +95,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.0
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -109,7 +109,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.0/artifacts/dodas/kube_fe_install.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/fix_k8s_1_24/artifacts/dodas/kube_fe_install.yaml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             kube_api_server_public: { get_attribute: [ HOST, public_address, 0 ] }
@@ -167,7 +167,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.0
+        file: git+https://github.com/zinus92/ansible-role-kubernetes.git,k8s_1_24
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -178,7 +178,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.0/artifacts/dodas/kube_wn_install.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/fix_k8s_1_24/artifacts/dodas/kube_wn_install.yaml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -240,7 +240,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.0/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/fix_k8s_1_24/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }

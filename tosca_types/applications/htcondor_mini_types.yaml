@@ -1,0 +1,52 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+# Import Indigo datacloud base types
+imports:
+  - indigo_docker_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/tosca_types/infrastructure/docker_types.yaml
+
+metadata:
+  template_author: INFN-CLOUD
+  template_name: docker_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+
+node_types:
+
+  tosca.nodes.indigo.htcondorMini:
+    derived_from: tosca.nodes.indigo.dockerRun
+    properties:
+      os_users:
+        type: list
+        description: Users creation
+        entry_schema:
+          type: tosca.datatypes.indigo.User
+        default: []
+        required: false
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/docker/htcondor_mini_conf.yaml
+          inputs:
+            os_users: { get_property: [ SELF, os_users ] }
+            role_name:  { get_property: [ SELF, role_name ] }
+            docker_run_appname: { get_property: [ SELF, docker_appname ] }
+            docker_run_image: { get_property: [ SELF, docker_image ] }
+            docker_run_tag: { get_property: [ SELF, docker_tag ] }
+            docker_run_ports: { get_property: [ SELF, docker_ports ] }
+            docker_run_command: { get_property: [ SELF, docker_command ] }
+            docker_run_env_variables: { get_property: [ SELF, environment_variables ] }
+
+

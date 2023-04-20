@@ -10,3 +10,4 @@
       kube_type_of_node: "wn"
       kube_server: "{{ kube_front_end_ip }}"
       kube_api_server: "{{ kube_front_end_ip }}"
+      gpu_support_role: git+https://baltig.infn.it/infn-cloud/ansible-role-gpu-support,v1.2.2

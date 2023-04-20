@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: "{{ role_name }}"
+  tasks:
+    - name: Customization for htcondor mini
+      block: 
+      - name: Create submit file with condor alias
+        copy:
+          content: "alias condor='docker exec -it --user submituser --workdir /home/submituser mini bash'"
+          dest: /etc/profile.d/condor.sh
+          mode: 644
+      - name: Create docker group
+        group:
+          name: docker
+          state: present
+      - name: Add remote user to docker group
+        user:
+          name: "{{ item.os_user_name }}"
+          group: docker
+          append: yes
+        with_items: "{{ os_users }}"
+      become: yes

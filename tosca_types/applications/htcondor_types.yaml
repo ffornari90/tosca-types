@@ -1,12 +1,12 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/tosca_types/infrastructure/kubernetes_types.yaml
+  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.2/tosca_types/infrastructure/kubernetes_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
   template_name: htcondor_types
-  template_version: 2.0.1
+  template_version: 2.0.2
 
 artifact_types:
 
@@ -67,7 +67,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.2/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }

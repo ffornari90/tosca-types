@@ -41,7 +41,7 @@ node_types:
         default: true
       monitoring_image:
         type: string
-        default: grafana/grafana:9.4.7
+        default: grafana/grafana:9.5.1
       iam_url:
         type: string
         default: "https://iam.cloud.infn.it/"

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+declare -a FILES
+
+echo "Git hook executing: pre-commit..."
+
+FILES=(`git ls-files; git ls-files . --exclude-standard --others`)
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+for file in "${FILES[@]}"; do
+  if [[ $file == *.yml || $file == *.yaml ]]; then
+    echo "Checking file $file"
+    python3 ./.githooks/bin/prepare_release.py $CURRENT_BRANCH $file
+  fi
+done
+
+echo -e "\n!!! Some files may have been modified!!!!"
+echo -e "This script validates and corrects URLs so that they point to the current branch/tag.\n"
+echo -e "You have the option to inspect the changes and decide not to proceed.\n"
+
+while : ; do
+    read -p "Do you want to continue with commit? [y/n] " RESPONSE < /dev/tty
+    case "${RESPONSE}" in
+        [Yy]* ) exit 0; break;;
+        [Nn]* ) exit 1;;
+    esac
+done

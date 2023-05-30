@@ -3,7 +3,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 metadata:
   template_author: INDIGO/INFN-CLOUD
   template_name: indigo_custom_types
-  template_version: 1.0.0
+  template_version: 2.0.3
 description: Contains the custom types definition as defined by the INDIGO/INFN-CLOUD team
 
 
@@ -241,7 +241,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/os/configure_system.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.3/artifacts/os/configure_system.yml
           inputs:
             os_users: { get_property: [ SELF, os_users] }
             security_fail2ban_enabled: { get_property: [ SELF, fail2ban_enabled ] }
@@ -274,6 +274,9 @@ node_types:
     properties:
       bucket_name:
         type: string
+      enable_versioning:
+        type: boolean
+        default: true
       aws_access_key:
         type: string
       aws_secret_key:
@@ -283,9 +286,10 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.3/artifacts/aws/s3_bucket.yml
           inputs:
             bucket_name:  { get_property: [ SELF, bucket_name ] }
+            enable_versioning:  { get_property: [ SELF, enable_versioning ] }
             aws_access_key: { get_property: [ SELF, aws_access_key ]}
             aws_secret_key: { get_property: [ SELF, aws_secret_key ]}
             s3_url: { get_property: [ SELF, s3_url ]}

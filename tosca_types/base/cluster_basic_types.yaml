@@ -1,12 +1,11 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/-/raw/master/tosca_types/base/basic_types.yaml
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.0.3/tosca_types/base/basic_types.yaml
 metadata:
   template_author: INFN-CLOUD
   template_name: cluster_basic_types
-  template_version: 1.0.0
-
+  template_version: 2.0.3
 
 artifact_types:
 
@@ -19,7 +18,6 @@ artifact_types:
   tosca.artifacts.AnsibleGalaxy.role:
     derived_from: tosca.artifacts.Root
     description: Ansible Galaxy role to be deployed in the target node
-
 
 capability_types:
 
@@ -36,7 +34,6 @@ capability_types:
         - valid_values: [ local, torque, slurm, sge, condor, mesos, kubernetes ]
 
 node_types:
-
 
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent

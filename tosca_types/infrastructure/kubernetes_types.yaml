@@ -58,6 +58,12 @@ node_types:
         required: no
         type: string
         default: 4.5.2
+      cert_manager_type:
+        required: no      
+        type: string
+        default: letsencrypt-prod
+        constraints:
+          - valid_values: [ 'letsencrypt-prod', 'letsencrypt-staging', 'self-signed' ]
       cert_manager_helm_version:
         required: no
         type: string

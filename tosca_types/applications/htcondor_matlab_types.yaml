@@ -65,7 +65,7 @@ node_types:
         required: no
         default: "iam.cloud.infn.it"
     artifacts:
-      ml_role:
+      htc_matlab_role:
         file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:

@@ -64,6 +64,10 @@ node_types:
         type: string
         required: no
         default: "iam.cloud.infn.it"
+      role_name:
+        type: string
+        required: no
+        default: "ansible-role-htcondor-matlab"
     artifacts:
       htc_matlab_role:
         file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.2

@@ -70,7 +70,7 @@ node_types:
         default: "ansible-role-htcondor-matlab"
     artifacts:
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.4
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

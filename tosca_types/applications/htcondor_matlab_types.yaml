@@ -75,7 +75,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.1.0/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/htcondor_matlab/artifacts/dodas/ansible_htc_matlab.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }

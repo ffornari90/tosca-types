@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  pre_tasks:
+    - name: Install ansible-galaxy
+      become: yes
+      apt:
+        name: ansible
+        state: present
+
+    - name: Ansible POSIX mount module installation
+      become: yes
+      shell: "ansible-galaxy collection install ansible.posix"
+
+  roles:
+    - role: "{{ role_name }}"

@@ -1,16 +1,19 @@
 ---
 - hosts: localhost
   connection: local
-  pre_tasks:
-    - name: Install ansible-galaxy
-      become: yes
-      apt:
-        name: ansible
-        state: present
+  vars:
+    master_host: vnode-0
+  tasks:
+
+    - name: Get hostname
+      shell: hostname
+      register: hostname
+
+    - name: Check if master_host is in hostname
+      set_fact:
+        is_master_host: "{{ master_host in hostname.stdout }}"
 
     - name: Ansible POSIX mount module installation
       become: yes
       shell: "ansible-galaxy collection install ansible.posix"
-
-  roles:
-    - role: "{{ role_name }}"
+      when: is_master_host

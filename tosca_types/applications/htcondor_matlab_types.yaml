@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.1.0/tosca_types/infrastructure/kubernetes_types.yaml
+  - indigo_kubernetes_types: https://baltig.infn.it/fornari/tosca-types/-/raw/htcondor_matlab/tosca_types/infrastructure/kubernetes_htc_matlab_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
@@ -25,69 +25,6 @@ artifact_types:
     description: Docker Container Image
 
 node_types:
-
-  tosca.nodes.DODAS.HelmInstall.HTCondor:
-    derived_from: tosca.nodes.DODAS.HelmInstall
-    properties:
-      condor_host:
-        type: string
-        required: no
-        default: "DUMMY"
-      cluster_secret:
-        type: string
-        required: yes
-      cm_image:
-        type: string
-        required: no
-        default: dodasts/cm
-      cm_tag:
-        type: string
-        required: no
-        default: 8.9.9-el7
-      schedd_image:
-        type: string
-        required: no
-        default: harbor.cloud.infn.it/jupyter-matlab/htcondor_schedd_matlab
-      schedd_tag:
-        type: string
-        required: no
-        default: latest
-      wn_image:
-        type: string
-        required: no
-        default: harbor.cloud.infn.it/jupyter-matlab/htcondor_wn_matlab
-      wn_tag:
-        type: string
-        required: no
-        default: latest
-      iam_server:
-        type: string
-        required: no
-        default: "iam.cloud.infn.it"
-    interfaces:
-      Standard:
-        start:
-          implementation: https://baltig.infn.it/fornari/tosca-types/-/raw/htcondor_matlab/artifacts/dodas/ansible_htc_matlab.yaml
-          inputs:
-            role_name:  { get_property: [ SELF, role_name ] }
-            name: { get_property: [ SELF, name ] }
-            chart: { get_property: [ SELF, chart ] }
-            values_file: { get_property: [ SELF, values_file ] }
-            values_url: { get_property: [ SELF, values_url ] }
-            inline_options: { get_property: [ SELF, inline_options ] }
-            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
-            repos: { get_property: [ SELF, repos ] }
-            condor_host: { get_property: [ SELF, condor_host ] }
-            helm_version: { get_property: [ SELF, helm_version ] }
-            cluster_secret: { get_property: [ SELF, cluster_secret ] }
-            cm_image: { get_property: [ SELF, cm_image ] }
-            cm_tag: { get_property: [ SELF, cm_tag ] }
-            schedd_image: { get_property: [ SELF, schedd_image ] }
-            schedd_tag: { get_property: [ SELF, schedd_tag ] }
-            wn_image: { get_property: [ SELF, wn_image ] }
-            wn_tag: { get_property: [ SELF, wn_tag ] }
-            iam_server: { get_property: [ SELF, iam_server ] }
-
 
   tosca.nodes.DODAS.HelmInstall.HTCondor:
     derived_from: tosca.nodes.DODAS.HelmInstall

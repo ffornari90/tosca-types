@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_kubernetes_types: https://baltig.infn.it/fornari/tosca-types/-/raw/htcondor_matlab/tosca_types/infrastructure/kubernetes_htc_matlab_types.yaml
+  - indigo_kubernetes_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.1.0/tosca_types/infrastructure/kubernetes_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
@@ -70,7 +70,7 @@ node_types:
         default: "ansible-role-htcondor-matlab"
     artifacts:
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.6
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.7
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

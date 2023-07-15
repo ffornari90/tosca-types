@@ -14,9 +14,11 @@
       set_fact:
         is_master_host: "{{ master_host in hostname.stdout }}"
 
-    - name: Ansible POSIX mount module installation
+    - name: Install collection ansible.posix
       become: yes
-      shell: "ansible-galaxy collection install ansible.posix"
+      community.general.ansible_galaxy_install:
+        type: collection
+        name: ansible.posix
       when: is_master_host
 
   roles:

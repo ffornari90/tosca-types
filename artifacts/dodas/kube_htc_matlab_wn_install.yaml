@@ -7,6 +7,7 @@
       openvpn_frontname: "kubeserver"
       when: wn_hybrid_cluster
     - role: ansible-role-htcondor-matlab
+      master_private_ip: "{{ kube_front_end_ip }}"
     - role: ansible-role-kubernetes
       kube_type_of_node: "wn"
       kube_server: "{{ kube_front_end_ip }}"

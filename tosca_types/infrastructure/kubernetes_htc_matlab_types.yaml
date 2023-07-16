@@ -59,7 +59,7 @@ node_types:
         type: string
         default: 4.5.2
       cert_manager_type:
-        required: no      
+        required: no
         type: string
         default: letsencrypt-prod
         constraints:
@@ -72,7 +72,7 @@ node_types:
         required: no
         type: string
         default: 6.0.0
-      prometheus_helm_version: 
+      prometheus_helm_version:
         required: no
         type: string
         default: 19.7.2
@@ -104,13 +104,10 @@ node_types:
         file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.8
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
         file: indigo-dc.openvpn
-        type: tosca.artifacts.AnsibleGalaxy.role
-      htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.8
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -131,7 +128,7 @@ node_types:
             cert_manager_helm_version: { get_property: [ SELF, cert_manager_helm_version ] }
             dashboard_helm_version: { get_property: [ SELF, dashboard_helm_version ] }
             prometheus_helm_version: { get_property: [ SELF, prometheus_helm_version ] }
-            kube_eagle_helm_version: { get_property: [ SELF, kube_eagle_helm_version ] } 
+            kube_eagle_helm_version: { get_property: [ SELF, kube_eagle_helm_version ] }
             grafana_helm_version: { get_property: [ SELF, grafana_helm_version ] }
             enable_gpu: { get_property: [ SELF, enable_gpu ] }
             domain: { get_property: [ SELF, domain ] }
@@ -179,13 +176,10 @@ node_types:
         file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.1.1
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.8
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
         file: indigo-dc.openvpn
-        type: tosca.artifacts.AnsibleGalaxy.role
-      htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.0.8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

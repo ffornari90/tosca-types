@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  connection: local
+  pre_tasks:
+
+    - name: Get username
+      shell: "getent passwd 1001 | cut -d: -f1"
+      register: username
+
+    - name: Store registered username value in a variable
+      set_fact:
+        user_name: "{{ username.stdout }}"
+
+    - name: Update HTCondor cluster pool_password file
+      become: yes
+      shell: "printf '{{ cluster_secret }}' > /etc/pwd/pool_password"
+
+    - name: Update HTCondor user pool_password file
+      become: yes
+      shell: "printf '{{ cluster_secret }}' > /home/{{ user_name }}/.condor/pool_password"
+
+    - name: Set HTCondor user directory owner
+      file:
+        path: "/home/{{ user_name }}/.condor"
+        owner: "{{ user_name }}"
+        state: directory
+        recurse: yes
+
+    - name: restart condor service
+      become: yes
+      service:
+        name: condor
+        state: restarted
+
+  roles:
+    - role: "{{ role_name }}"

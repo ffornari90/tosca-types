@@ -4,7 +4,7 @@
   pre_tasks:
 
     - name: Get username
-      shell: "getent passwd 1001 | cut -d: -f1"
+      shell: "getent passwd 99 | cut -d: -f1"
       register: username
 
     - name: Store registered username value in a variable

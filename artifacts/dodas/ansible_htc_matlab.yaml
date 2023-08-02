@@ -26,11 +26,5 @@
         state: directory
         recurse: yes
 
-    - name: restart condor service
-      become: yes
-      service:
-        name: condor
-        state: restarted
-
   roles:
     - role: "{{ role_name }}"

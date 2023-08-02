@@ -42,6 +42,10 @@ node_types:
     metadata:
       icon: /images/kubernetesFE.png
     properties:
+      client_cidr:
+        required: no
+        type: string
+        default: ""
       admin_username:
         required: no
         type: string
@@ -110,7 +114,7 @@ node_types:
         file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.2.9
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.0
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -127,6 +131,7 @@ node_types:
             kube_admin_token:  { get_property: [ SELF, admin_token ] }
             kube_version:  { get_property: [ SELF, kube_version ] }
             kube_deploy_dashboard: { get_property: [ SELF, kube_deploy_dashboard ] }
+            network_client_cidr:  { get_property: [ SELF, client_cidr ] }
             nginx_ingress_helm_version: { get_property: [ SELF, nginx_ingress_helm_version ] }
             cert_manager_helm_version: { get_property: [ SELF, cert_manager_helm_version ] }
             dashboard_helm_version: { get_property: [ SELF, dashboard_helm_version ] }
@@ -185,7 +190,7 @@ node_types:
         file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.2.9
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

@@ -15,6 +15,7 @@
       openvpn_frontname: "kubeserver"
       when: fe_hybrid_cluster
     - role: ansible-role-htcondor-matlab
+      client_cidr: "{{ network_client_cidr }}"
       master_private_ip: "{{ kube_front_end_ip }}"
       master_public_ip: "{% if IM_NODE_PUBLIC_IP is defined %}{{ IM_NODE_PUBLIC_IP }}{% else %}{{ IM_NODE_PRIVATE_IP }}{% endif %}"
     - role: ansible-role-kubernetes

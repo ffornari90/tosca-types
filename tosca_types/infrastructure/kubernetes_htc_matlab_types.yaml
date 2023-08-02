@@ -114,7 +114,7 @@ node_types:
         file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.0
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -190,7 +190,7 @@ node_types:
         file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
       htc_matlab_role:
-        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.0
+        file: git+https://github.com/ffornari90/ansible-role-htcondor-matlab,v0.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

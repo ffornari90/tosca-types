@@ -1,0 +1,333 @@
+version: "3.7"
+
+volumes:
+  data:
+  trustanchors:
+  cabundle:
+  scripts:
+  certs:
+  conf.d:
+  config:
+  letsencrypt:
+  redis:
+
+networks:
+  net:
+
+services:
+  proxy:
+    container_name: proxy
+    image: harbor.cloud.infn.it/cache/library/traefik:${TRAEFIK_VERSION:-latest}
+    volumes:
+      - cabundle:/etc/pki
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /opt/traefik:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    command: /bin/sh -c "
+        while ! nc -z trust 8086; do sleep 1; done
+        && while ! nc -z iam-be 8080; do sleep 1; done
+        && common_options=\"--log.level=DEBUG 
+        --api.insecure=true 
+        --providers.docker=true 
+        --providers.docker.exposedbydefault=false 
+        --providers.file.directory=/config 
+        --providers.file.watch=true 
+        --entrypoints.web.address=:80 
+        --entrypoints.websecure.address=:443 
+        --entrypoints.web.http.redirections.entryPoint.to=websecure 
+        --certificatesresolvers.myhttpchallenge.acme.httpchallenge=true 
+        --certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web 
+        --certificatesresolvers.myhttpchallenge.acme.email=${CONTACT_EMAIL} 
+        --certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json\"
+        && if [ \"$LETSENCRYPT_TEST\" == \"true\" ]; then
+        options=\"$$common_options --certificatesresolvers.myhttpchallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory\";
+        else options=\"$$common_options\"; fi
+        && traefik $$options
+      "
+    networks:
+      - net
+
+  sidecar:
+    image: ffornari/sidecar:mvn
+    container_name: sidecar
+    command: /bin/bash -c "
+        cp /wait-for-it.sh /scripts/
+        && cp /iam-application.yml /config/
+        && cd /config
+        && if [ ! -f /config/self-signed.key.pem ]; then openssl req -newkey rsa:2048 -nodes -x509 -days 1825 -keyout self-signed.key.pem -out self-signed.cert.pem -subj '/CN='$$IAM_HOST; fi
+        && if [ ! -f /config/self-signed.p12 ]; then openssl pkcs12 -export -inkey self-signed.key.pem -name self-signed -in self-signed.cert.pem -out self-signed.p12 -password pass:$$IAM_SAML_KEY_PASSWORD; fi
+        && if [ ! -f /config/keystore.jwks ]; then git clone https://github.com/mitreid-connect/json-web-key-generator.git; cd json-web-key-generator; git checkout tags/json-web-key-generator-0.7; mvn package;
+        java -jar target/json-web-key-generator-0.7-jar-with-dependencies.jar -t RSA -i rsa1 -s 2048 -S | awk '/^{/,/^}$$/ {print}' > /config/keystore.jwks;
+        cd ..; rm -rf json-web-key-generator; fi
+        && while true; do output=$$(jq -r '.myhttpchallenge | .Certificates[] | select(.domain.main==\"'$$IAM_HOST'\") | .key'
+           /letsencrypt/acme.json 2>/dev/null | base64 -d | tee /certs/hostkey.pem);
+           if [[ -z \"$$output\" || $$? -ne 0 ]]; then sleep 5; else break; fi; done
+        && jq -r '.myhttpchallenge | .Certificates[] | select(.domain.main==\"'$$IAM_HOST'\") | .certificate'
+           /letsencrypt/acme.json | base64 -d > /certs/hostcert.pem
+        && nc -k -l 1337
+      "
+    volumes:
+      - letsencrypt:/letsencrypt
+      - scripts:/scripts
+      - conf.d:/conf.d
+      - config:/config
+      - certs:/certs
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      IAM_HOST: ${DNS_NAME}
+      IAM_SAML_KEY_PASSWORD: ${SAML_KEY_PASSWORD:-changeit}
+    networks:
+      - net
+    depends_on:
+      - proxy
+
+  trust:
+    image: indigoiam/egi-trustanchors:main
+    container_name: trust
+    hostname: trust
+    entrypoint:
+      /bin/sh -c "
+        yum install -y epel-release
+        && yum install -y netcat
+        && /update-trust-anchors.sh
+        && echo '# GEANT eScience Personal CA 4' | tee -a /etc/pki/tls/certs/ca-bundle.crt
+        && cat /etc/grid-security/certificates/GEANTeSciencePersonalCA4.pem | tee -a /etc/pki/tls/certs/ca-bundle.crt
+        && nc -k -l 8086
+      "
+    environment:
+      FORCE_TRUST_ANCHORS_UPDATE: 1
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - cabundle:/etc/pki
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - net
+
+  db:
+    container_name: db
+    hostname: db
+    image: mariadb:10.11.4
+    volumes:
+      - data:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PWD:-pwd}
+      MYSQL_USER: ${DB_USERNAME:-iam}
+      MYSQL_PASSWORD: ${DB_PWD:-pwd}
+      MYSQL_DATABASE: ${DB_NAME:-iam}
+    networks:
+      - net
+
+  iam-be:
+    image: indigoiam/iam-login-service:${IAM_VERSION:-v1.8.2p1}
+    container_name: iam-be
+    hostname: iam-be
+    command: "/bin/bash -c \"
+        /scripts/wait-for-it.sh -t 0 db:3306
+        && curl $$IAM_SAML_IDP_CERT_URL -o /usr/local/share/ca-certificates/idp.crt
+        && update-ca-certificates
+        && openssl x509 -outform der -in /usr/local/share/ca-certificates/idp.crt -out idp.der
+        && if [ ! -f /config/self-signed.jks ]; then keytool -importkeystore -destkeystore /config/self-signed.jks -srckeystore /config/self-signed.p12 -srcstoretype PKCS12 -storepass $$IAM_SAML_KEYSTORE_PASSWORD -srcstorepass $$IAM_SAML_KEY_PASSWORD
+        && keytool -import -alias idp -file idp.der -keystore /config/self-signed.jks -storepass $$IAM_SAML_KEYSTORE_PASSWORD -noprompt; fi
+        && while true; do if [ ! -s /config/keystore.jwks ]; then sleep 5; else break; fi; done
+        && cp /config/keystore.jwks /indigo-iam/WEB-INF/classes/keystore.jwks
+        && while true; do if [ ! -s /config/iam-application.yml ]; then sleep 5; else break; fi; done
+        && cp /config/iam-application.yml /indigo-iam/WEB-INF/classes/application.yml
+        && if [[ $$IAM_VERS =~ \"v1.6.\" ]]; then java $$IAM_JAVA_MEM_OPTS $$IAM_JAVA_OPTS -Dspring.profiles.active=$$IAM_ACTIVE_PROFILES -jar iam-login-service.war;
+         elif [[ $$IAM_VERS =~ \"v1.7.\" ]]; then java $$IAM_JAVA_MEM_OPTS $$IAM_JAVA_OPTS -Dspring.profiles.active=$$IAM_ACTIVE_PROFILES -jar iam-login-service.war;
+         elif [[ $$IAM_VERS =~ \"v1.8.\" ]]; then apt update; apt install -y zip;
+         zip -d /indigo-iam/WEB-INF/lib/angular-ui-bootstrap-2.5.6.jar META-INF/resources/webjars/angular-ui-bootstrap/2.5.6/dist/.DS_Store;
+         java $$IAM_JAVA_OPTS -Dspring.profiles.active=$$IAM_ACTIVE_PROFILES  org.springframework.boot.loader.WarLauncher;
+         else echo 'IAM version '$$IAM_VERS' is not available'; fi
+      \""
+    environment:
+      IAM_JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom -Xdebug -Xrunjdwp:server=y,transport=dt_socket,suspend=n,address=1044
+      IAM_ACTIVE_PROFILES: ${ACTIVE_PROFILES:-prod,registration}
+      IAM_JAVA_MEM_OPTS: -XX:MaxRAMFraction=1 -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+      IAM_VERS: ${IAM_VERSION:-v1.8.2p1}
+      # Basic service configuration
+      IAM_HOST: ${DNS_NAME}
+      IAM_BASE_URL: https://${DNS_NAME}
+      IAM_ISSUER: https://${DNS_NAME}/
+      IAM_KEY_STORE_LOCATION: ${KEY_STORE_LOCATION:-classpath:keystore.jwks}
+      IAM_JWK_CACHE_LIFETIME: ${JWK_CACHE_LIFETIME:-21600}
+      IAM_X509_TRUST_ANCHORS_DIR: ${X509_TRUST_ANCHORS_DIR:-/etc/grid-security/certificates}
+      IAM_X509_TRUST_ANCHORS_REFRESH: ${X509_TRUST_ANCHORS_REFRESH:-14400}
+      IAM_FORWARD_HEADERS_STRATEGY: ${FORWARD_HEADERS_STRATEGY:-native}
+      IAM_TOMCAT_ACCESS_LOG_ENABLED: ${TOMCAT_ACCESS_LOG_ENABLED:-false}
+      IAM_TOMCAT_ACCESS_LOG_DIRECTORY: ${TOMCAT_ACCESS_LOG_DIRECTORY:-/tmp}
+      IAM_ACTUATOR_USER_USERNAME: ${ACTUATOR_USER_USERNAME:-user}
+      IAM_ACTUATOR_USER_PASSWORD: ${ACTUATOR_USER_PASSWORD:-secret}
+      IAM_LOCAL_RESOURCES_ENABLE: ${LOCAL_RESOURCES_ENABLE:-false}
+      IAM_LOCAL_RESOURCES_LOCATION: ${LOCAL_RESOURCES_LOCATION:-file:/indigo-iam/local-resources}
+      # Organisation configuration
+      IAM_ORGANISATION_NAME: ${ORGANISATION_NAME:-indigo-dc}
+      IAM_LOGO_URL: ${LOGO_URL:-resources/images/indigo-logo.png}
+      IAM_LOGO_DIMENSION: ${LOGO_DIMENSION:-200}
+      IAM_LOGO_HEIGTH: ${LOGO_HEIGTH:-150}
+      IAM_LOGO_WIDTH: ${LOGO_WIDTH:-200}
+      IAM_TOPBAR_TITLE: "INDIGO IAM for ${ORGANISATION_NAME:-indigo-dc}"
+      # Access token contents configuration
+      IAM_ACCESS_TOKEN_INCLUDE_AUTHN_INFO: ${ACCESS_TOKEN_INCLUDE_AUTHN_INFO:-true}
+      IAM_ACCESS_TOKEN_INCLUDE_NBF: ${ACCESS_TOKEN_INCLUDE_NBF:-true}
+      IAM_ACCESS_TOKEN_INCLUDE_SCOPE: ${ACCESS_TOKEN_INCLUDE_SCOPE:-true}
+      # Database configuration
+      IAM_DB_HOST: ${DB_HOST:-db}
+      IAM_DB_PORT: ${DB_PORT:-3306}
+      IAM_DB_NAME: ${DB_NAME:-iam}
+      IAM_DB_USERNAME: ${DB_USERNAME:-iam}
+      IAM_DB_PASSWORD: ${DB_PWD:-pwd}
+      IAM_DB_MAX_ACTIVE: ${DB_MAX_ACTIVE:-50}
+      IAM_DB_MAX_IDLE: ${DB_MAX_IDLE:-5}
+      IAM_DB_INITIAL_SIZE: ${DB_INITIAL_SIZE:-8}
+      IAM_DB_TEST_WHILE_IDLE: ${DB_TEST_WHILE_IDLE:-true}
+      IAM_DB_TEST_ON_BORROW: ${DB_TEST_ON_BORROW:-true}
+      IAM_DB_VALIDATION_QUERY: ${DB_VALIDATION_QUERY:-SELECT 1}
+      IAM_DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS: ${DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS:-5000}
+      IAM_DB_MIN_EVICTABLE_IDLE_TIME_MILLIS: ${DB_MIN_EVICTABLE_IDLE_TIME_MILLIS:-60000}
+      # Test Client configuration
+      IAM_CLIENT_ID: ${CLIENT_ID:-client}
+      IAM_CLIENT_SECRET: ${CLIENT_SECRET:-secret}
+      IAM_CLIENT_SCOPES: ${CLIENT_SCOPES:-openid profile email}
+      IAM_CLIENT_FORWARD_HEADERS_STRATEGY: ${CLIENT_FORWARD_HEADERS_STRATEGY:-none}
+      # Redis configuration
+      IAM_SPRING_REDIS_HOST: ${SPRING_REDIS_HOST:-redis}
+      IAM_SPRING_REDIS_PORT: ${SPRING_REDIS_PORT:-6397}
+      IAM_SPRING_REDIS_PASSWORD: ${SPRING_REDIS_PASSWORD}
+      IAM_SESSION_TIMEOUT_SECS: ${SESSION_TIMEOUT_SECS:-1800}
+      IAM_SPRING_SESSION_STORE_TYPE: ${SPRING_SESSION_STORE_TYPE:-none}
+      IAM_HEALTH_REDIS_PROBE_ENABLED: ${HEALTH_REDIS_PROBE_ENABLED:-false}
+      # Registration settings
+      IAM_REGISTRATION_SHOW_REGISTRATION_BUTTON_IN_LOGIN_PAGE: ${REGISTRATION_SHOW_REGISTRATION_BUTTON_IN_LOGIN_PAGE:-true}
+      IAM_REGISTRATION_OIDC_ISSUER: ${REGISTRATION_OIDC_ISSUER:-https://example.org}
+      IAM_REGISTRATION_SAML_ENTITY_ID: ${REGISTRATION_SAML_ENTITY_ID:-urn:example}
+      IAM_REGISTRATION_REQUIRE_EXTERNAL_AUTHENTICATION: ${REGISTRATION_REQUIRE_EXTERNAL_AUTHENTICATION:-false}
+      IAM_REGISTRATION_AUTHENTICATION_TYPE: ${REGISTRATION_AUTHENTICATION_TYPE:-oidc}
+      IAM_REGISTRATION_USERNAME_ATTRIBUTE: ${REGISTRATION_USERNAME_ATTRIBUTE:-preferred_username}
+      IAM_REGISTRATION_NAME_ATTRIBUTE: ${REGISTRATION_NAME_ATTRIBUTE:-given_name}
+      IAM_REGISTRATION_SURNAME_ATTRIBUTE: ${REGISTRATION_SURNAME_ATTRIBUTE:-family_name}
+      IAM_REGISTRATION_EMAIL_ATTRIBUTE: ${REGISTRATION_EMAIL_ATTRIBUTE:-email}
+      IAM_REGISTRATION_USERNAME_READONLY: ${REGISTRATION_USERNAME_READONLY:-false}
+      IAM_REGISTRATION_NAME_READONLY: ${REGISTRATION_NAME_READONLY:-false}
+      IAM_REGISTRATION_SURNAME_READONLY: ${REGISTRATION_SURNAME_READONLY:-false}
+      IAM_REGISTRATION_EMAIL_READONLY: ${REGISTRATION_EMAIL_READONLY:-false}
+      # Local authentication settings 
+      IAM_LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY: ${LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY:-visible}
+      IAM_LOCAL_AUTHN_ENABLED_FOR: ${LOCAL_AUTHN_ENABLED_FOR:-all}
+      # Google authentication settings
+      IAM_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      IAM_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      # SAML authentication settings 
+      IAM_SAML_ENTITY_ID: https://${DNS_NAME}
+      IAM_SAML_LOGIN_BUTTON_TEXT: ${SAML_LOGIN_BUTTON_TEXT:-Sign in with INFN AAI}
+      IAM_SAML_KEYSTORE: ${SAML_KEYSTORE:-file:///config/self-signed.jks}
+      IAM_SAML_KEYSTORE_PASSWORD: ${SAML_KEYSTORE_PASSWORD:-changeit}
+      IAM_SAML_KEY_ID: ${SAML_KEY_ID:-self-signed}
+      IAM_SAML_KEY_PASSWORD: ${SAML_KEY_PASSWORD:-changeit}
+      IAM_SAML_IDP_METADATA: ${SAML_IDP_METADATA:-https://idp.infn.it/saml2/idp/metadata.php}
+      IAM_SAML_IDP_CERT_URL: ${SAML_IDP_CERT_URL:-https://idp.infn.it/module.php/saml/idp/certs.php/idp.crt}
+      IAM_SAML_METADATA_LOOKUP_SERVICE_REFRESH_PERIOD_SEC: ${SAML_METADATA_LOOKUP_SERVICE_REFRESH_PERIOD_SEC:-3600}
+      IAM_SAML_METADATA_REQUIRE_VALID_SIGNATURE: ${SAML_METADATA_REQUIRE_VALID_SIGNATURE:-false}
+      IAM_SAML_METADATA_REQUIRE_SIRTFI: ${SAML_METADATA_REQUIRE_SIRTFI:-false}
+      IAM_SAML_IDP_ENTITY_ID_WHITELIST: ${SAML_IDP_ENTITY_ID_WHITELIST}
+      IAM_SAML_MAX_ASSERTION_TIME: ${SAML_MAX_ASSERTION_TIME:-3000}
+      IAM_SAML_MAX_AUTHENTICATION_AGE: ${SAML_MAX_AUTHENTICATION_AGE:-86400}
+      IAM_SAML_ID_RESOLVERS: ${SAML_ID_RESOLVERS:-eduPersonUniqueId,eduPersonTargetedId,eduPersonPrincipalName}
+      # Notification service settings
+      IAM_MAIL_HOST: ${MAIL_HOST:-smtp-cc.infn.it}
+      IAM_MAIL_PORT: ${MAIL_PORT:-587}
+      IAM_MAIL_USERNAME: ${MAIL_USERNAME:-mail}
+      IAM_MAIL_PASSWORD: ${MAIL_PASSWORD:-pwd}
+      IAM_MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-false}
+      IAM_MAIL_SMTP_STARTTLS: ${MAIL_SMTP_STARTTLS:-false}
+      IAM_NOTIFICATION_DISABLE: ${NOTIFICATION_DISABLE:-false}
+      IAM_NOTIFICATION_FROM: ${NOTIFICATION_FROM:-admin}
+      IAM_NOTIFICATION_ADMIN_ADDRESS: ${NOTIFICATION_ADMIN_ADDRESS:-admin@local.io}
+      IAM_NOTIFICATION_TASK_DELAY: ${NOTIFICATION_TASK_DELAY:-30000}
+      IAM_NOTIFICATION_CLEANUP_AGE: ${NOTIFICATION_CLEANUP_AGE:-30}
+      # Account linking settings
+      IAM_ACCOUNT_LINKING_DISABLE: ${ACCOUNT_LINKING_DISABLE:-false}
+      # Privacy policy settings 
+      IAM_PRIVACY_POLICY_URL: ${PRIVACY_POLICY_URL}
+      IAM_PRIVACY_POLICY_TEXT: ${PRIVACY_POLICY_TEXT:-Privacy policy}
+      # JWT default profile
+      IAM_JWT_DEFAULT_PROFILE: ${JWT_DEFAULT_PROFILE:-iam}
+    volumes:
+      - config:/config
+      - scripts:/scripts
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - trustanchors:/etc/grid-security/certificates
+    networks:
+      - net
+    depends_on:
+      - sidecar
+
+  nginx-iam:
+    image: indigoiam/nginx:latest
+    container_name: nginx-iam
+    hostname: nginx-iam
+    command: /bin/sh -c "
+        /scripts/wait-for-it.sh -t 0 sidecar:1337
+        && cp /certs/hostcert.pem /etc/ssl/certs/iam.cert.pem
+        && cp /certs/hostkey.pem /etc/ssl/private/iam.key.pem
+        && /scripts/wait-for-it.sh -t 0 trust:8086
+        && cp /etc/pki/tls/certs/ca-bundle.crt /usr/local/share/ca-certificates/
+        && update-ca-certificates
+        && /scripts/wait-for-it.sh -t 0 iam-be:8080
+        && /scripts/wait-for-it.sh -t 0 client:8080
+        && nginx -g 'daemon off;'
+      "
+    expose:
+      - "443"
+    volumes:
+      - certs:/certs
+      - scripts:/scripts
+      - cabundle:/etc/pki
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.iam.rule=HostSNI(`${DNS_NAME}`)"
+      - "traefik.tcp.routers.iam.tls.passthrough=true"
+      - "traefik.tcp.routers.iam.tls.certresolver=myhttpchallenge"
+      - "traefik.tcp.routers.iam.entrypoints=websecure"
+      - "traefik.tcp.services.iam.loadbalancer.server.port=443"
+    networks:
+      - net
+    depends_on:
+      - sidecar
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    command: ["--databases", "1"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - net
+
+  client:
+    image: indigoiam/iam-test-client:latest
+    container_name: client
+    hostname: client
+    environment:
+      IAM_CLIENT_PORT: 8080
+    networks:
+      - net

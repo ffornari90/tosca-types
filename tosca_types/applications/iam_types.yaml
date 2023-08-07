@@ -1,0 +1,541 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+# Import Indigo datacloud base types
+imports:
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/tosca_types/base/basic_types.yaml
+metadata:
+  template_author: INFN-CLOUD
+  template_name: docker_types
+  template_version: 1.0.0
+
+
+artifact_types:
+
+  tosca.artifacts.Implementation.YAML:
+    derived_from: tosca.artifacts.Implementation
+    description: YAML Ansible recipe artifact
+    mime_type: text/yaml
+    file_ext: [ yaml, yml ]
+
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
+
+
+node_types:
+
+  tosca.nodes.indigo.dockerRun:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      role_name:
+        type: string
+        required: no
+        default: indigo-dc.docker_run
+      docker_appname:
+        type: string
+        required: no
+        default: ubuntu
+      docker_image:
+        type: string
+        required: no
+        default: ubuntu
+      docker_tag:
+        type: string
+        required: no
+        default: latest
+      docker_ports:
+        type: list
+        entry_schema:
+          type: string
+        required: no
+        default: []
+      docker_command:
+        type: string
+        required: no
+        default: ""
+      environment_variables:
+        required: no
+        default: []
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.2
+        type: tosca.artifacts.AnsibleGalaxy.role
+      dockerrun_role:
+        file: indigo-dc.docker_run,v1.0.1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/dodas/ansible.yaml
+          inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            docker_run_appname: { get_property: [ SELF, docker_appname ] }
+            docker_run_image: { get_property: [ SELF, docker_image ] }
+            docker_run_tag: { get_property: [ SELF, docker_tag ] }
+            docker_run_ports: { get_property: [ SELF, docker_ports ] }
+            docker_run_command: { get_property: [ SELF, docker_command ] }
+            docker_run_env_variables: { get_property: [ SELF, environment_variables ] }
+
+
+  tosca.nodes.indigo.DockerCompose:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      docker_compose_version:
+        type: version
+        required: no
+        default: 1.29.2
+      docker_compose_file_url:
+        type: string
+        required: no
+        default: ""
+      environment_variables:
+        required: no
+        default: []
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
+      project_name:
+        type: string
+        required: no
+        default: iam_voms-aa
+      letsencrypt_test:
+        type: boolean
+        default: true
+      contact_email:
+        type: string
+        required: no
+        default: user@local.io
+      active_profiles:
+        type: string
+        required: no
+      iam_version:
+        type: string
+        required: no
+      key_store_location:
+        type: string
+        required: no
+        default: classpath:keystore.jwks
+      jwk_cache_lifetime:
+        type: string
+        required: no
+      x509_trust_anchors_dir:
+        type: string
+        required: no
+        default: /etc/grid-security/certificates
+      x509_trust_anchors_refresh:
+        type: string
+        required: no
+      forward_headers_strategy:
+        type: string
+        required: no
+      tomcat_access_log_enabled:
+        type: boolean
+        default: false
+      tomcat_access_log_directory:
+        type: string
+        required: no
+      actuator_user_username:
+        type: string
+        required: no
+      actuator_user_password:
+        type: string
+        required: no
+      local_resources_enable:
+        type: boolean
+        required: no
+        default: false
+      local_resources_location:
+        type: string
+        required: no
+        default: file:/indigo-iam/local-resources
+      organisation_name:
+        type: string
+        required: no
+      logo_url:
+        type: string
+        required: no
+      logo_dimension:
+        type: string
+        required: no
+      logo_heigth:
+        type: string
+        required: no
+      logo_width:
+        type: string
+        required: no
+      topbar_title:
+        type: string
+        required: no
+      access_token_include_authn_info:
+        type: boolean
+        default: true
+      access_token_include_nbf:
+        type: boolean
+        default: true
+      access_token_include_scope:
+        type: boolean
+        default: true
+      db_host:
+        type: string
+        required: no
+        default: db
+      db_port:
+        type: string
+        required: no
+        default: 3306
+      db_name:
+        type: string
+        required: no
+        default: iam
+      db_username:
+        type: string
+        required: no
+      db_password:
+        type: string
+        required: no
+      db_max_active:
+        type: string
+        required: no
+        default: 50
+      db_max_idle:
+        type: string
+        required: no
+        default: 5
+      db_initial_size:
+        type: string
+        required: no
+        default: 8
+      db_test_while_idle:
+        type: boolean
+        default: true
+        required: no
+      db_test_on_borrow:
+        type: boolean
+        default: true
+        required: no
+      db_validation_query:
+        type: string
+        required: no
+        default: SELECT 1
+      db_time_between_eviction_runs_millis:
+        type: string
+        required: no
+        default: 5000
+      db_min_evictable_idle_time_millis:
+        type: string
+        required: no
+        default: 60000
+      client_id:
+        type: string
+        required: no
+        default: client
+      client_secret:
+        type: string
+        required: no
+        default: secret
+      client_scopes:
+        type: string
+        required: no
+        default: openid profile email
+      client_forward_headers_strategy:
+        type: string
+        required: no
+        default: none
+      spring_redis_host:
+        type: string
+        required: no
+        default: redis
+      spring_redis_port:
+        type: string
+        required: no
+        default: 6397
+      spring_redis_password:
+        type: string
+        required: no
+        default: ""
+      session_timeout_secs:
+        type: string
+        required: no
+      spring_session_store_type:
+        type: string
+        required: no
+      health_redis_probe_enabled:
+        type: boolean
+        default: false
+      registration_show_registration_button_in_login_page:
+        type: boolean
+        default: true
+      registration_oidc_issuer:
+        type: string
+        required: no
+      registration_saml_entity_id:
+        type: string
+        required: no
+      registration_require_external_authentication:
+        type: boolean
+        default: false
+      registration_authentication_type:
+        type: string
+        required: no
+      registration_username_attribute:
+        type: string
+        required: no
+      registration_name_attribute:
+        type: string
+        required: no
+      registration_surname_attribute:
+        type: string
+        required: no
+      registration_email_attribute:
+        type: string
+        required: no
+      registration_username_readonly:
+        type: boolean
+        default: false
+      registration_name_readonly:
+        type: boolean
+        default: false
+      registration_surname_readonly:
+        type: boolean
+        default: false
+      registration_email_readonly:
+        type: boolean
+        default: false
+      local_authn_login_page_visibility:
+        type: string
+        required: no
+      local_authn_enabled_for:
+        type: string
+        required: no
+      google_client_id:
+        type: string
+        required: no
+        default: client_id
+      google_client_secret:
+        type: string
+        required: no
+        default: client_secret
+      saml_entity_id:
+        type: string
+        required: no
+      saml_login_button_text:
+        type: string
+        required: no
+      saml_keystore:
+        type: string
+        required: no
+        default: file:///config/self-signed.jks
+      saml_keystore_password:
+        type: string
+        required: no
+        default: changeit
+      saml_key_id:
+        type: string
+        required: no
+        default: self-signed
+      saml_key_password:
+        type: string
+        required: no
+        default: changeit
+      saml_idp_metadata:
+        type: string
+        required: no
+      saml_idp_cert_url:
+        type: string
+        required: no
+      saml_metadata_lookup_service_refresh_period_sec:
+        type: string
+        required: no
+      saml_metadata_require_valid_signature:
+        type: boolean
+        default: false
+      saml_metadata_require_sirtfi:
+        type: boolean
+        default: false
+      saml_idp_entity_id_whitelist:
+        type: string
+        required: no
+        default: idp_entity_id_1,idp_entity_id_2
+      saml_max_assertion_time:
+        type: string
+        required: no
+      saml_max_authentication_age:
+        type: string
+        required: no
+      saml_id_resolvers:
+        type: string
+        required: no
+      mail_host:
+        type: string
+        required: no
+      mail_port:
+        type: string
+        required: no
+      mail_username:
+        type: string
+        required: no
+        default: user
+      mail_password:
+        type: string
+        required: no
+        default: password
+      mail_smtp_auth:
+        type: boolean
+        default: false
+      mail_smtp_starttls:
+        type: boolean
+        default: false
+      notification_disable:
+        type: boolean
+        default: false
+      notification_from:
+        type: string
+        required: no
+      notification_admin_address:
+        type: string
+        required: no
+      notification_task_delay:
+        type: string
+        required: no
+      notification_cleanup_age:
+        type: string
+        required: no
+      account_linking_disable:
+        type: boolean
+        default: false
+      privacy_policy_url:
+        type: string
+        required: no
+        default: https://privacy-policy.com
+      privacy_policy_text:
+        type: string
+        required: no
+      jwt_default_profile:
+        type: string
+        required: no
+      server_ip:
+        type: string
+        required: no
+      network_domain:
+        type: string
+        required: no
+        default: myip.cloud.infn.it
+      dns_name:
+        type: string
+        required: no
+    artifacts:
+      docker_role:
+        file: indigo-dc.docker,v2.1.3
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/devel/artifacts/docker/iam/iam_start.yml
+          inputs:
+            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
+            docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
+            project_name:  { get_property: [ SELF, project_name ] }
+            letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }
+            contact_email:  { get_property: [ SELF, contact_email ] }
+            active_profiles:  { get_property: [ SELF, active_profiles ] }
+            iam_version:  { get_property: [ SELF, iam_version ] }
+            key_store_location:  { get_property: [ SELF, key_store_location ] }
+            jwk_cache_lifetime:  { get_property: [ SELF, jwk_cache_lifetime ] }
+            x509_trust_anchors_dir:  { get_property: [ SELF, x509_trust_anchors_dir ] }
+            x509_trust_anchors_refresh:  { get_property: [ SELF, x509_trust_anchors_refresh ] }
+            forward_headers_strategy:  { get_property: [ SELF, forward_headers_strategy ] }
+            tomcat_access_log_enabled:  { get_property: [ SELF, tomcat_access_log_enabled ] }
+            tomcat_access_log_directory:  { get_property: [ SELF, tomcat_access_log_directory ] }
+            actuator_user_username:  { get_property: [ SELF, actuator_user_username ] }
+            actuator_user_password:  { get_property: [ SELF, actuator_user_password ] }
+            local_resources_enable:  { get_property: [ SELF, local_resources_enable ] }
+            local_resources_location:  { get_property: [ SELF, local_resources_location ] }
+            organisation_name:  { get_property: [ SELF, organisation_name ] }
+            logo_url:  { get_property: [ SELF, logo_url ] }
+            logo_dimension:  { get_property: [ SELF, logo_dimension ] }
+            logo_heigth:  { get_property: [ SELF, logo_heigth ] }
+            logo_width:  { get_property: [ SELF, logo_width ] }
+            topbar_title:  { get_property: [ SELF, topbar_title ] }
+            access_token_include_authn_info:  { get_property: [ SELF, access_token_include_authn_info ] }
+            access_token_include_nbf:  { get_property: [ SELF, access_token_include_nbf ] }
+            access_token_include_scope:  { get_property: [ SELF, access_token_include_scope ] }
+            db_host:  { get_property: [ SELF, db_host ] }
+            db_port:  { get_property: [ SELF, db_port ] }
+            db_name:  { get_property: [ SELF, db_name ] }
+            db_username:  { get_property: [ SELF, db_username ] }
+            db_password:  { get_property: [ SELF, db_password ] }
+            db_max_active:  { get_property: [ SELF, db_max_active ] }
+            db_max_idle:  { get_property: [ SELF, db_max_idle ] }
+            db_initial_size:  { get_property: [ SELF, db_initial_size ] }
+            db_test_while_idle:  { get_property: [ SELF, db_test_while_idle ] }
+            db_test_on_borrow:  { get_property: [ SELF, db_test_on_borrow ] }
+            db_validation_query:  { get_property: [ SELF, db_validation_query ] }
+            db_time_between_eviction_runs_millis:  { get_property: [ SELF, db_time_between_eviction_runs_millis ] }
+            db_min_evictable_idle_time_millis:  { get_property: [ SELF, db_min_evictable_idle_time_millis ] }
+            client_id:  { get_property: [ SELF, client_id ] }
+            client_secret:  { get_property: [ SELF, client_secret ] }
+            client_scopes:  { get_property: [ SELF, client_scopes ] }
+            client_forward_headers_strategy:  { get_property: [ SELF, client_forward_headers_strategy ] }
+            spring_redis_host:  { get_property: [ SELF, spring_redis_host ] }
+            spring_redis_port:  { get_property: [ SELF, spring_redis_port ] }
+            spring_redis_password:  { get_property: [ SELF, spring_redis_password ] }
+            session_timeout_secs:  { get_property: [ SELF, session_timeout_secs ] }
+            spring_session_store_type:  { get_property: [ SELF, spring_session_store_type ] }
+            health_redis_probe_enabled:  { get_property: [ SELF, health_redis_probe_enabled ] }
+            registration_show_registration_button_in_login_page:  { get_property: [ SELF, registration_show_registration_button_in_login_page ] }
+            registration_oidc_issuer:  { get_property: [ SELF, registration_oidc_issuer ] }
+            registration_saml_entity_id:  { get_property: [ SELF, registration_saml_entity_id ] }
+            registration_require_external_authentication:  { get_property: [ SELF, registration_require_external_authentication ] }
+            registration_authentication_type:  { get_property: [ SELF, registration_authentication_type ] }
+            registration_username_attribute:  { get_property: [ SELF, registration_username_attribute ] }
+            registration_name_attribute:  { get_property: [ SELF, registration_name_attribute ] }
+            registration_surname_attribute:  { get_property: [ SELF, registration_surname_attribute ] }
+            registration_email_attribute:  { get_property: [ SELF, registration_email_attribute ] }
+            registration_username_readonly:  { get_property: [ SELF, registration_username_readonly ] }
+            registration_name_readonly:  { get_property: [ SELF, registration_name_readonly ] }
+            registration_surname_readonly:  { get_property: [ SELF, registration_surname_readonly ] }
+            registration_email_readonly:  { get_property: [ SELF, registration_email_readonly ] }
+            local_authn_login_page_visibility:  { get_property: [ SELF, local_authn_login_page_visibility ] }
+            local_authn_enabled_for:  { get_property: [ SELF, local_authn_enabled_for ] }
+            google_client_id:  { get_property: [ SELF, google_client_id ] }
+            google_client_secret:  { get_property: [ SELF, google_client_secret ] }
+            saml_entity_id:  { concat: [ "https://", get_property: [ SELF, dns_name ]] }
+            saml_login_button_text:  { get_property: [ SELF, saml_login_button_text ] }
+            saml_keystore:  { get_property: [ SELF, saml_keystore ] }
+            saml_keystore_password:  { get_property: [ SELF, saml_keystore_password ] }
+            saml_key_id:  { get_property: [ SELF, saml_key_id ] }
+            saml_key_password:  { get_property: [ SELF, saml_key_password ] }
+            saml_idp_metadata:  { get_property: [ SELF, saml_idp_metadata ] }
+            saml_idp_cert_url:  { get_property: [ SELF, saml_idp_cert_url ] }
+            saml_metadata_lookup_service_refresh_period_sec:  { get_property: [ SELF, saml_metadata_lookup_service_refresh_period_sec ] }
+            saml_metadata_require_valid_signature:  { get_property: [ SELF, saml_metadata_require_valid_signature ] }
+            saml_metadata_require_sirtfi:  { get_property: [ SELF, saml_metadata_require_sirtfi ] }
+            saml_idp_entity_id_whitelist:  { get_property: [ SELF, saml_idp_entity_id_whitelist ] }
+            saml_max_assertion_time:  { get_property: [ SELF, saml_max_assertion_time ] }
+            saml_max_authentication_age:  { get_property: [ SELF, saml_max_authentication_age ] }
+            saml_id_resolvers:  { get_property: [ SELF, saml_id_resolvers ] }
+            mail_host:  { get_property: [ SELF, mail_host ] }
+            mail_port:  { get_property: [ SELF, mail_port ] }
+            mail_username:  { get_property: [ SELF, mail_username ] }
+            mail_password:  { get_property: [ SELF, mail_password ] }
+            mail_smtp_auth:  { get_property: [ SELF, mail_smtp_auth ] }
+            mail_smtp_starttls:  { get_property: [ SELF, mail_smtp_starttls ] }
+            notification_disable:  { get_property: [ SELF, notification_disable ] }
+            notification_from:  { get_property: [ SELF, notification_from ] }
+            notification_admin_address:  { get_property: [ SELF, notification_admin_address ] }
+            notification_task_delay:  { get_property: [ SELF, notification_task_delay ] }
+            notification_cleanup_age:  { get_property: [ SELF, notification_cleanup_age ] }
+            account_linking_disable:  { get_property: [ SELF, account_linking_disable ] }
+            privacy_policy_url:  { get_property: [ SELF, privacy_policy_url ] }
+            privacy_policy_text:  { get_property: [ SELF, privacy_policy_text ] }
+            jwt_default_profile:  { get_property: [ SELF, jwt_default_profile ] }
+            environment_variables: { get_property: [ SELF, environment_variables ] }
+            server_ip: { get_property: [SELF, server_ip] }
+            dns_name: { concat: [ get_property: [SELF, server_ip], ".", get_property: [ SELF, network_domain ]] }

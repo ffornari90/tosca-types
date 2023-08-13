@@ -60,6 +60,10 @@ node_types:
         type: string
         required: no
         default: latest
+      wn_number:
+        type: integer
+        required: no
+        default: 1
       iam_server:
         type: string
         required: no
@@ -86,4 +90,5 @@ node_types:
             schedd_tag: { get_property: [ SELF, schedd_tag ] }
             wn_image: { get_property: [ SELF, wn_image ] }
             wn_tag: { get_property: [ SELF, wn_tag ] }
+            wn_number: { get_property: [ SELF, wn_number ] }
             iam_server: { get_property: [ SELF, iam_server ] }

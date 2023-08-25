@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+declare -a FILES
+
+FILES=(`git ls-files; git ls-files . --exclude-standard --others`)
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+if [ $CURRENT_BRANCH == 'master' ]; then
+  echo "Nothing to do on the master branch!"
+  exit 0
+fi
+
+if [ $CURRENT_BRANCH == 'HEAD' ]; then
+  echo "Skipping post-checkout script"
+  exit 0
+fi
+
+for file in "${FILES[@]}"; do
+  if [[ $file == *.yml || $file == *.yaml ]]; then
+    echo "Checking file $file"
+    python3 ./.githooks/bin/update_links_with_branch_or_tag_name.py $CURRENT_BRANCH $file
+  fi
+done
+
+git commit -m"Set current branch in links" -a
+exit 0

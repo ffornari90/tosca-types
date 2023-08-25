@@ -15,7 +15,8 @@
         "changelogFile": "CHANGELOG.md"
     }],
    ["@semantic-release/exec", {
-      "prepareCmd": "./.githooks/bin/prepare.sh ${nextRelease.version}"
+      "prepareCmd": "./.githooks/bin/prepare.sh ${nextRelease.version}",
+      "publishCmd": "./.githooks/bin/after-release.sh"
    }],
    [ "@semantic-release/gitlab",
    {

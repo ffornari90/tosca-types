@@ -1,5 +1,14 @@
 stages:
+  - title_check
   - release
+
+title_check:
+  stage: title_check
+  script:
+    - ./.githooks/bin/title_check.sh "${CI_MERGE_REQUEST_TITLE}"
+  only:
+    - merge_requests
+
 
 release:
   image: node:19-buster-slim

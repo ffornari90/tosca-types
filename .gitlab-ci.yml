@@ -15,7 +15,7 @@ release:
   stage: release
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates python3
-    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/changelog @semantic-release/exec conventional-changelog-eslint
+    - npm install -g semantic-release@21.0.7 @semantic-release/gitlab@12.0.5 @semantic-release/changelog@6.0.3 @semantic-release/exec@6.0.3 conventional-changelog-eslint@4.0.0
     - git clone ${CI_REPOSITORY_URL}
     - cd ${CI_PROJECT_NAME}
     - git checkout master

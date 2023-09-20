@@ -1,7 +1,7 @@
 #!/bin/bash
 
 title="$1"
-semantic_pattern="^(Fix|Update|New|Breaking|Docs|Build|Upgrade|Chore): .+"
+semantic_pattern="^(Fix|Update|New|Breaking): .+"
 
 if [[ ! $title =~ $semantic_pattern ]]; then
   echo "Merge request title does not follow semantic commit message format."

@@ -239,10 +239,10 @@ node_types:
       role_name:
         type: string
         required: no
-        default: dodas.helm
+        default: DODAS-TS.helm
     artifacts:
       helm_config_role:
-        file: dodas.helm,v2.0.0-rc5
+        file: DODAS-TS.helm,v2.0.0-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

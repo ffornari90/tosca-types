@@ -10,6 +10,7 @@ volumes:
   config:
   letsencrypt:
   redis:
+  mysql-ssl:
 
 networks:
   net:
@@ -58,6 +59,11 @@ services:
     command: /bin/bash -c "
         cp /wait-for-it.sh /scripts/
         && cp /iam-application.yml /config/
+        && if [ ! -f /mysql-ssl/cert.pem ]; then openssl genrsa 2048 > /mysql-ssl/ca-key.pem
+        && openssl req -new -x509 -nodes -days 365000 -key /mysql-ssl/ca-key.pem -out /mysql-ssl/ca.pem -subj '/CN=mysql-ca'
+        && openssl req -newkey rsa:2048 -days 365000 -nodes -keyout /mysql-ssl/server-key.pem -out /mysql-ssl/server-req.pem -subj '/CN='$$IAM_DB_HOST
+        && openssl rsa -in /mysql-ssl/server-key.pem -out /mysql-ssl/key.pem
+        && openssl x509 -req -in /mysql-ssl/server-req.pem -days 365000 -CA /mysql-ssl/ca.pem -CAkey /mysql-ssl/ca-key.pem -set_serial 01 -out /mysql-ssl/cert.pem; fi
         && cd /config
         && if [ ! -f /config/self-signed.key.pem ]; then openssl req -newkey rsa:2048 -nodes -x509 -days 1825 -keyout self-signed.key.pem -out self-signed.cert.pem -subj '/CN='$$IAM_HOST; fi
         && if [ ! -f /config/self-signed.p12 ]; then openssl pkcs12 -export -inkey self-signed.key.pem -name self-signed -in self-signed.cert.pem -out self-signed.p12 -password pass:$$IAM_SAML_KEY_PASSWORD; fi
@@ -74,6 +80,7 @@ services:
     volumes:
       - letsencrypt:/letsencrypt
       - scripts:/scripts
+      - mysql-ssl:/mysql-ssl
       - conf.d:/conf.d
       - config:/config
       - certs:/certs
@@ -81,6 +88,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       IAM_HOST: ${DNS_NAME}
+      IAM_DB_HOST: ${DB_HOST:-db}
       IAM_SAML_KEY_PASSWORD: ${SAML_KEY_PASSWORD:-changeit}
     networks:
       - net
@@ -118,13 +126,28 @@ services:
       - data:/var/lib/mysql
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      - mysql-ssl:/etc/mysql/ssl
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PWD:-pwd}
       MYSQL_USER: ${DB_USERNAME:-iam}
       MYSQL_PASSWORD: ${DB_PWD:-pwd}
       MYSQL_DATABASE: ${DB_NAME:-iam}
+    entrypoint: /bin/bash
+    command: -c "
+        mkdir -p /home/mysql
+        && while true; do if [ ! -s /etc/mysql/ssl/cert.pem ]; then sleep 5; else break; fi; done
+        && cp /etc/mysql/ssl/ca.pem /usr/local/share/ca-certificates/mysql-ca.crt
+        && update-ca-certificates
+        && cp /etc/mysql/ssl/* /home/mysql/
+        && chmod 400 /home/mysql/key.pem
+        && chmod 444 /home/mysql/cert.pem
+        && chown mysql:mysql -R /home/mysql
+        && /usr/local/bin/docker-entrypoint.sh \"mariadbd\" \"--ssl-ca=/home/mysql/ca.pem\" \"--ssl-cert=/home/mysql/cert.pem\" \"--ssl-key=/home/mysql/key.pem\"
+     "
     networks:
       - net
+    depends_on:
+      - sidecar
 
   iam-be:
     image: indigoiam/iam-login-service:${IAM_VERSION:-v1.8.2p2}
@@ -132,6 +155,7 @@ services:
     hostname: iam-be
     command: "/bin/bash -c \"
         /scripts/wait-for-it.sh -t 0 db:3306
+        && cp /etc/mysql/ssl/ca.pem /usr/local/share/ca-certificates/mysql-ca.crt
         && curl $$IAM_SAML_IDP_CERT_URL -o /usr/local/share/ca-certificates/idp.crt
         && update-ca-certificates
         && openssl x509 -outform der -in /usr/local/share/ca-certificates/idp.crt -out idp.der
@@ -185,6 +209,7 @@ services:
       IAM_DB_NAME: ${DB_NAME:-iam}
       IAM_DB_USERNAME: ${DB_USERNAME:-iam}
       IAM_DB_PASSWORD: ${DB_PWD:-pwd}
+      IAM_DB_USE_SSL: ${DB_USE_SSL:-true}
       IAM_DB_MAX_ACTIVE: ${DB_MAX_ACTIVE:-50}
       IAM_DB_MAX_IDLE: ${DB_MAX_IDLE:-5}
       IAM_DB_INITIAL_SIZE: ${DB_INITIAL_SIZE:-8}
@@ -266,6 +291,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - trustanchors:/etc/grid-security/certificates
+      - mysql-ssl:/etc/mysql/ssl
     networks:
       - net
     depends_on:

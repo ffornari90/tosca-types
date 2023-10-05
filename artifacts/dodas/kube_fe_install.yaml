@@ -29,4 +29,4 @@
         master_private_ip: "{{ kube_front_end_ip }}"
         master_public_ip: "{% if IM_NODE_PUBLIC_IP is defined %}{{ IM_NODE_PUBLIC_IP }}{% else %}{{ IM_NODE_PRIVATE_IP }}{% endif %}" 
         domain: "{{ domain }}"
-      gpu_support_role: git+https://baltig.infn.it/infn-cloud/ansible-role-gpu-support,v1.2.2
+      gpu_support_role: git+https://baltig.infn.it/infn-cloud/ansible-role-gpu-support,v1.2.3

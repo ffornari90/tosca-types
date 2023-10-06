@@ -61,12 +61,16 @@ node_types:
           type: map
           entry_schema:
             type: string
+      docker_volume:
+        type: string
+        required: no
+        default: /data_on_container
     artifacts:
       docker_role:
         file: indigo-dc.docker,v2.1.2
         type: tosca.artifacts.AnsibleGalaxy.role
       dockerrun_role:
-        file: indigo-dc.docker_run,v1.0.1
+        file: indigo-dc.docker_run,v1.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -80,6 +84,7 @@ node_types:
             docker_run_ports: { get_property: [ SELF, docker_ports ] }
             docker_run_command: { get_property: [ SELF, docker_command ] }
             docker_run_env_variables: { get_property: [ SELF, environment_variables ] }
+            docker_run_volume: { get_property: [ SELF, docker_volume ] }
 
 
   tosca.nodes.indigo.DockerCompose:

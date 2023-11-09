@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: ansible-role-kafka
+      kafka_public_ips: "{{ (hostvars[inventory_hostname]['IM_NODE_PUBLIC_IP'] | default(false)) }}"
+      when: is_enabled

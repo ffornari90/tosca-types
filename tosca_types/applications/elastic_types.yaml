@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_docker_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.7.0/tosca_types/infrastructure/docker_types.yaml
+  - indigo_docker_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/tosca_types/infrastructure/docker_types.yaml
 metadata:
   template_author: INFN-CLOUD
   template_name: elastic_types
@@ -27,7 +27,7 @@ node_types:
     properties:
       docker_compose_file_url:
         type: string
-        default: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.7.0/artifacts/docker/elastic/docker-compose.yml
+        default: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/elastic/docker-compose.yml
       #environment_variables:
       #  - ELASTIC_PASSWORD
       #  - KIBANA_PASSWORD
@@ -40,12 +40,12 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.7.0/artifacts/docker/elastic/configure.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/elastic/configure.yml
           inputs:
             project_name:  { get_property: [ SELF, project_name ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.7.0/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }

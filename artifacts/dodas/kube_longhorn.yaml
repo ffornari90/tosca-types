@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: "{{ role_name }}"
+      when: is_enabled

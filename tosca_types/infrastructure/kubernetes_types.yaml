@@ -53,11 +53,11 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.28.1
+        default: 1.28.3
       nginx_ingress_helm_version:
         required: no
         type: string
-        default: 4.7.2
+        default: 4.8.3
       cert_manager_type:
         required: no      
         type: string
@@ -67,7 +67,7 @@ node_types:
       cert_manager_helm_version:
         required: no
         type: string
-        default: v1.12.4
+        default: v1.13.2
       dashboard_helm_version:
         required: no
         type: string
@@ -75,7 +75,7 @@ node_types:
       prometheus_helm_version: 
         required: no
         type: string
-        default: 24.3.0
+        default: 25.4.0
       kube_eagle_helm_version:
         required: no
         type: string
@@ -83,7 +83,7 @@ node_types:
       grafana_helm_version:
         required: no
         type: string
-        default:  6.59.4
+        default:  7.0.3
       kube_deploy_dashboard:
         required: no
         type: string
@@ -101,7 +101,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.1
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.2
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -155,7 +155,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.28.1
+        default: 1.28.3
       nodelabel:
         type: string
         required: no
@@ -174,7 +174,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.1
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.2
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs

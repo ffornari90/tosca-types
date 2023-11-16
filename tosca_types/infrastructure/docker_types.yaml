@@ -2,7 +2,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 # Import Indigo datacloud base types
 imports:
-  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.9.0/tosca_types/base/basic_types.yaml
+  - indigo_basic_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/tosca_types/base/basic_types.yaml
 metadata:
   template_author: INFN-CLOUD
   template_name: docker_types
@@ -75,7 +75,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.9.0/artifacts/dodas/ansible.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/dodas/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             docker_run_appname: { get_property: [ SELF, docker_appname ] }
@@ -116,7 +116,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.9.0/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
           inputs:
             docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }

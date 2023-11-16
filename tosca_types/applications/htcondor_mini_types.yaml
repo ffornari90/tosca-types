@@ -2,12 +2,12 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 # Import Indigo datacloud base types
 imports:
-  - indigo_docker_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/tosca_types/infrastructure/docker_types.yaml
+  - indigo_docker_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.9.0/tosca_types/infrastructure/docker_types.yaml
 
 metadata:
   template_author: INFN-CLOUD
   template_name: docker_types
-  template_version: 2.8.0
+  template_version: 2.9.0
 
 
 artifact_types:
@@ -38,7 +38,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/htcondor_mini_conf.yaml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v2.9.0/artifacts/docker/htcondor_mini_conf.yaml
           inputs:
             os_users: { get_property: [ SELF, os_users ] }
             role_name:  { get_property: [ SELF, role_name ] }

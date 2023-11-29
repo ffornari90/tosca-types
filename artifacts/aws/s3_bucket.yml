@@ -8,9 +8,6 @@
         - botocore >= 1.20.0
       state: present
 
-  - name: Install aws collection
-    ansible.builtin.command: 'ansible-galaxy collection install -p {{ lookup("env", "HOME") }}/.ansible/collections amazon.aws:==4.4.0'
-
   - copy:
       dest: "/tmp/s3.yml"
       content: |

@@ -78,6 +78,9 @@ node_types:
         type: string
         default: ""
     artifacts:
+      aws_collection:
+        file: amazon.aws,4.4.0
+        type: tosca.artifacts.AnsibleGalaxy.collection
       docker_role:
         file: indigo-dc.docker,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role

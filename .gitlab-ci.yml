@@ -3,6 +3,7 @@ stages:
   - release
 
 title_check:
+  image: debian:bookworm-slim
   stage: title_check
   script:
     - ./.githooks/bin/title_check.sh "${CI_MERGE_REQUEST_TITLE}"

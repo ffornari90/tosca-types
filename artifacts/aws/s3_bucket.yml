@@ -14,14 +14,13 @@
        ---
        - name: Create bucket and enable versioning if requested
          amazon.aws.s3_bucket:
-           aws_access_key: '{{ aws_access_key  }}'
-           aws_secret_key: '{{ aws_secret_key  }}'
+           aws_access_key: '{{ aws_access_key }}'
+           aws_secret_key: '{{ aws_secret_key }}'
            name: '{{ bucket_name }}'
-           versioning: "{{ enable_versioning  }}"
+           versioning: "{{ enable_versioning }}"
            state: present
-           s3_url: '{{ s3_url  }}'
+           s3_url: '{{ s3_url }}'
 
   - name: Create bucket
     ansible.builtin.include_tasks:
       file: /tmp/s3.yml
-

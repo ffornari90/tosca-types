@@ -33,15 +33,12 @@ node_types:
       install_docker:
         type: boolean
         default: true
-      install_docker_compose:
-        type: boolean
-        default: true
       monitoring:
         type: boolean
         default: true
       monitoring_image:
         type: string
-        default: grafana/grafana:9.5.7
+        default: grafana/grafana:10.2.1
       iam_url:
         type: string
         default: "https://iam.cloud.infn.it/"
@@ -116,7 +113,7 @@ node_types:
         default: ""
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.3.0
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -126,7 +123,6 @@ node_types:
             contact_email: { get_property: [ SELF, contact_email ] }
             role_name: { get_property: [ SELF, role_name ] }
             install_docker: { get_property: [SELF, install_docker] }
-            install_docker_compose: { get_property: [SELF, install_docker_compose] }
             monitoring: { get_property: [SELF, monitoring] }
             grafana_image: { get_property: [SELF, monitoring_image] }
             iam_url: { get_property: [SELF, iam_url] }
@@ -148,4 +144,3 @@ node_types:
             gpu_partition_flavor: { get_property: [ SELF, gpu_partition_flavor ] }
             dns_name: { get_property: [SELF, dns_name] }
             cert_manager_type: { get_property: [ SELF, cert_manager_type ] }
-

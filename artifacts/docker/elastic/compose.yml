@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   setup:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
     user: "0"
     command: >
       bash -c '

@@ -67,7 +67,7 @@ node_types:
         default: /data_on_container
     artifacts:
       docker_role:
-        file: indigo-dc.docker,v2.1.2
+        file: indigo-dc.docker,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role
       dockerrun_role:
         file: indigo-dc.docker_run,v1.1.0
@@ -90,10 +90,6 @@ node_types:
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      docker_compose_version:
-        type: version
-        required: no
-        default: 1.29.2
       docker_compose_file_url:
         type: string
         required: no
@@ -116,9 +112,8 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/docker-compose_start.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/compose_start.yml
           inputs:
-            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
             environment_variables: { get_property: [ SELF, environment_variables ] }

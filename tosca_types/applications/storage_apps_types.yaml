@@ -79,13 +79,13 @@ node_types:
         default: ""
     artifacts:
       aws_collection:
-        file: amazon.aws,4.4.0
+        file: amazon.aws,4.5.0
         type: tosca.artifacts.AnsibleGalaxy.collection
       docker_role:
         file: indigo-dc.docker,v2.1.3
         type: tosca.artifacts.AnsibleGalaxy.role
       cloudstorage_role:
-        file: git+https://baltig.infn.it/infn-cloud/ansible-role-cloudstorage.git,2.1.0
+        file: git+https://baltig.infn.it/infn-cloud/ansible-role-cloudstorage.git,2.2.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

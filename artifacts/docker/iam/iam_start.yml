@@ -157,15 +157,15 @@
              - { key: "DNS_NAME", value: "{{ dns_name }}" }
              - { key: "HOST_PUBLIC_IP", value: "{% if IM_NODE_PUBLIC_IP is defined %}{{IM_NODE_PUBLIC_IP}}{% else %}{{IM_NODE_PRIVATE_IP}}{% endif %}" }
 
-        - name: "Download the docker-compose file"
+        - name: "Download the docker compose file"
           get_url:
             url: "{{ docker_compose_file_url }}"
-            dest: "/opt/{{ project_name }}/docker-compose.yaml"
+            dest: "/opt/{{ project_name }}/compose.yaml"
 
         - name: "Start the service"
-          docker_service:
-            project_src: "/opt/{{ project_name }}"
-            state: present
+          shell:
+            cmd: docker compose up -d
+            chdir: /opt/{{ project_name }}
 
         - name: "Wait for the IAM service to be ready"
           wait_for:

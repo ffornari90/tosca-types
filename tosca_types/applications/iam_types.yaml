@@ -85,10 +85,6 @@ node_types:
   tosca.nodes.indigo.DockerCompose:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      docker_compose_version:
-        type: version
-        required: no
-        default: 1.29.2
       docker_compose_file_url:
         type: string
         required: no
@@ -439,7 +435,6 @@ node_types:
         start:
           implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/docker/iam/iam_start.yml
           inputs:
-            docker_compose_version: { get_property: [ SELF, docker_compose_version ] }
             docker_compose_file_url:  { get_property: [ SELF, docker_compose_file_url ] }
             project_name:  { get_property: [ SELF, project_name ] }
             letsencrypt_test: { get_property: [ SELF, letsencrypt_test ] }

@@ -51,6 +51,12 @@ node_types:
       iam_admin_groups:
         type: string
         default: "beta_tester"
+      iam_client_id:
+        type: string
+        default: "iam-client-default"
+      iam_token:
+        type: string
+        default: "iam-reg-access-token-default"
       prepare_jupyter:
         type: boolean
         default: true
@@ -113,7 +119,7 @@ node_types:
         default: ""
     artifacts:
       ml_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.3.1
+        file: git+https://github.com/DODAS-TS/ansible-role-jupyterhub-env,v2.4.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -129,6 +135,8 @@ node_types:
             iam_subject: { get_property: [SELF, iam_subject] }
             iam_groups: { get_property: [SELF, iam_groups] }
             iam_admin_groups: { get_property: [SELF, iam_admin_groups] }
+            iam_client_id: { get_property: [SELF, iam_client_id] }
+            iam_token: { get_property: [SELF, iam_token] }
             prepare_jupyter: { get_property: [SELF, prepare_jupyter] }
             run_jupyter: { get_property: [SELF, run_jupyter] }
             jupyter_hub_image: { get_property: [SELF, jupyter_hub_image] }

@@ -245,7 +245,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.2.0/artifacts/os/configure_system.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/os/configure_system.yml
           inputs:
             os_users: { get_property: [ SELF, os_users] }
             security_fail2ban_enabled: { get_property: [ SELF, fail2ban_enabled ] }
@@ -313,7 +313,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.2.0/artifacts/aws/s3_bucket.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/aws/s3_bucket.yml
           inputs:
             bucket_name:  { get_property: [ SELF, bucket_name ] }
             enable_versioning:  { get_property: [ SELF, enable_versioning ] }

@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.4.0/tosca_types/base/cluster_basic_types.yaml
+  - indigo_cluster_types: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/tosca_types/base/cluster_basic_types.yaml
 metadata:
   template_author: INFN-CLOUD
   template_name: mesos_types
@@ -155,7 +155,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.4.0/artifacts/mesos/mesos_master_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
@@ -230,7 +230,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.4.0/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
@@ -277,7 +277,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/v3.4.0/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://baltig.infn.it/infn-cloud/tosca-types/raw/master/artifacts/mesos/mesos_lb_install.yml
           inputs:
             master_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }

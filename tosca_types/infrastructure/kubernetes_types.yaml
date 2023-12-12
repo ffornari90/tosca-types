@@ -57,7 +57,7 @@ node_types:
       nginx_ingress_helm_version:
         required: no
         type: string
-        default: 4.8.3
+        default: 4.8.4
       cert_manager_type:
         required: no      
         type: string
@@ -75,7 +75,7 @@ node_types:
       prometheus_helm_version: 
         required: no
         type: string
-        default: 25.4.0
+        default: 25.8.0
       kube_eagle_helm_version:
         required: no
         type: string
@@ -83,7 +83,7 @@ node_types:
       grafana_helm_version:
         required: no
         type: string
-        default:  7.0.3
+        default:  7.0.11
       kube_deploy_dashboard:
         required: no
         type: string
@@ -96,12 +96,16 @@ node_types:
         required: no
         type: string
         default: myip.cloud.infn.it
+      etcd_in_RAM:
+        required: no
+        type: boolean
+        default: true
     artifacts:
       containerd_role:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.2
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.4.0
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -133,6 +137,7 @@ node_types:
             grafana_helm_version: { get_property: [ SELF, grafana_helm_version ] }
             enable_gpu: { get_property: [ SELF, enable_gpu ] }
             domain: { get_property: [ SELF, domain ] }
+            etcd_in_RAM: { get_property: [ SELF, etcd_in_RAM ] }
 
 
   tosca.nodes.DODAS.WorkerNode.Kubernetes:
@@ -174,7 +179,7 @@ node_types:
         file: geerlingguy.containerd,1.3.1
         type: tosca.artifacts.AnsibleGalaxy.role
       kube_role:
-        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.3.2
+        file: git+https://github.com/DODAS-TS/ansible-role-kubernetes,v3.4.0
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
